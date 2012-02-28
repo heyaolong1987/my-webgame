@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="980" height="590" 
+		   xmlns:game="com.netease.webgame.bitchwar.view.game.*" creationComplete="initResLoader()">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.config.constants.ProfileConstants;
+			import com.netease.webgame.bitchwar.config.constants.RemindConstants;
+			import com.netease.webgame.bitchwar.model.Model;
+			import com.netease.webgame.bitchwar.model.proxy.MainPreloadProxy;
+			import com.netease.webgame.bitchwar.util.AssetUtil;
+			import com.netease.webgame.bitchwar.view.game.GameRemindView;
+			
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import mx.collections.ArrayCollection;
+			
+			private var proxy:MainPreloadProxy;
+			private var interval:int;
+			
+			
+			private function initResLoader():void {
+				proxy = new MainPreloadProxy();
+				proxy.onRegister();
+				proxy.loadBackGroudRes(AssetUtil.clanChiYouRes);
+				proxy.loadBackGroudRes(AssetUtil.clanNvWaRes);
+				proxy.loadBackGroudRes(AssetUtil.clanShenNongRes);
+				proxy.loadBackGroudRes(AssetUtil.clanXuanYuanRes);
+				proxy.loadBackGroudRes(AssetUtil.villageChiYouRes);
+				proxy.loadBackGroudRes(AssetUtil.villageShenNongRes);
+				proxy.loadBackGroudRes(AssetUtil.villageNvWaRes);
+				proxy.loadBackGroudRes(AssetUtil.villageXuanYuanRes);
+				interval = setInterval(checkResLoader, 1000);
+			}
+			
+			private function checkResLoader():void {
+				if(!AssetUtil.villageBuildingRes.complete || !AssetUtil.clanBuildingRes.complete) {
+					return;
+				}
+				clearInterval(interval);
+				var remind:GameRemindView = new GameRemindView();
+				remind.model = Model.getInstance();
+				var array:ArrayCollection = new ArrayCollection();
+				array.addItem(RemindConstants.FIGHTING);
+				array.addItem(RemindConstants.FIGHTING);
+				array.addItem(RemindConstants.FIGHTING);
+				array.addItem(RemindConstants.FIGHTING);
+				array.addItem(RemindConstants.FIGHTING);
+				remind.model.remindList = array;
+				
+				addChild(remind);
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

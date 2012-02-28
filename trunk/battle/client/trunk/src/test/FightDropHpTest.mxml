@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+		   xmlns:component="com.netease.webgame.bitchwar.component.*"
+		   xmlns:fightClasses="com.netease.webgame.bitchwar.view.popup.fightClasses.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.config.constants.FightConstants;
+			import com.netease.webgame.bitchwar.model.vo.fight.FighterVO;
+			import com.netease.webgame.bitchwar.model.vo.fight.event.FightChangeHpVO;
+			import com.netease.webgame.bitchwar.view.popup.fightClasses.effectClasses.FightChangeHpEffect;
+			
+			import mx.collections.ArrayCollection;
+
+
+			private function playEffect(side:int, cr:Boolean=false, incr:Boolean=false):void {
+				var vo:FightChangeHpVO = new FightChangeHpVO();
+					vo.value = int(Math.random()*100)*10;
+					vo.cr = cr;
+					vo.objectId = "1";
+				if(!incr) {
+					vo.value = -vo.value;
+				}
+				fighter.fighterVO = getFighterVO();
+				var effect:FightChangeHpEffect = new FightChangeHpEffect(vo);
+					effect.initEffect(null, null, {1:fighter}, {1:fighter}, {1:side}, {});
+					effect.x = 200;
+					effect.y = 320;
+				addChild(effect);
+			}
+			
+			private function getFighterVO():FighterVO {
+				var fighter:FighterVO = new FighterVO();
+					fighter.fighterId = "1";
+					fighter.type = FightConstants.PLAYER_TERRAN;
+					fighter.buffList = new ArrayCollection();
+				return fighter;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<fightClasses:FighterView id="fighter" x="200" y="320" width="93" height="111" />
+	<mx:HBox top="10" left="10">
+		<component:AdvancedButton styleName="commonButton" click="playEffect(1)" label="左方减血" />
+		<component:AdvancedButton styleName="commonButton" click="playEffect(2)" label="右方减血" />
+		<component:AdvancedButton styleName="commonButton" click="playEffect(1, true)" label="左方暴击减血" />
+		<component:AdvancedButton styleName="commonButton" click="playEffect(2, true)" label="右方暴击减血" />
+		
+		<component:AdvancedButton styleName="commonButton" click="playEffect(1, false, true)" label="左方回血" />
+		<component:AdvancedButton styleName="commonButton" click="playEffect(2, false, true)" label="右方回血" />
+		<component:AdvancedButton styleName="commonButton" click="playEffect(1, true, true)" label="左方暴击回血" />
+		<component:AdvancedButton styleName="commonButton" click="playEffect(2, true, true)" label="右方暴击回血" />
+	</mx:HBox>
+</mx:Canvas>
