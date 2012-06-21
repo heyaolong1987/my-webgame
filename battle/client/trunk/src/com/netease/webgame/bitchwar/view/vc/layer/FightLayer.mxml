@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:pet="com.netease.webgame.bitchwar.model.vo.pet.*"
+		   xmlns:component="com.netease.webgame.bitchwar.view.vc.component.*"
+		   preinitialize="init()" xmlns:fight="com.netease.webgame.bitchwar.view.vc.panel.fight.*" width="{Config.WIDTH}" height="{Config.HEIGHT}">
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.constants.Config;
+			import com.netease.webgame.bitchwar.constants.fight.FightActionConstants;
+			import com.netease.webgame.bitchwar.constants.fight.FightStandConstants;
+			import com.netease.webgame.core.events.GameEvent;
+			import com.netease.webgame.bitchwar.model.vo.fight.FightActionVO;
+			import com.netease.webgame.bitchwar.model.vo.fight.FightFieldVO;
+			import com.netease.webgame.bitchwar.model.vo.fight.FightViewVO;
+			import com.netease.webgame.bitchwar.model.vo.fight.FighterVO;
+			import com.netease.webgame.bitchwar.view.vc.component.Fighter;
+			
+			public static const FIGHTER_CLICK:String = "FIGHTER_CLICK"; 
+			public static const FIGHTER_ROLL_OUT:String = "FIGHTER_ROLL_OUT";
+			public static const FIGHTER_ROLL_OVER:String = "FIGHTER_ROLL_OVER";
+			public static const BLANK_CLICK:String = "BLANK_CLICK"; 
+			[Bindable]
+			private var _actionType:int;
+			[Bindable]
+			private var _actionStep:int;
+			//回合数
+			[Bindable]
+			private var _roundId:int;
+			
+			//回合数
+			[Bindable]
+			private var _roundStr:String;
+			//我的方阵
+			[Bindable]
+			private var _myStand:int;
+			[Bindable]
+			private var _fightFieldVO:FightFieldVO;
+			//战场域
+			[Bindable]
+			private var _fightViewVO:FightViewVO;
+			[Bindable]
+			private var _fighters:Array; //按位置索引
+			[Bindable]
+			private var _fighterViews:Array = []; //按位置索引
+			[Bindable]
+			private var _fightActions:Array = []; //按Id索引
+			private var myStand:int = FightStandConstants.TWO;
+			private function init():void{
+				createFighterViews();
+				addEventListeners();
+			}
+			private function addEventListeners():void{
+				addEventListener(MouseEvent.CLICK,onClickHandler);
+			}
+			private function onClickHandler(event:MouseEvent):void{
+				event.stopImmediatePropagation();
+				if(event.target is  Fighter){		
+					dispatchEvent(new GameEvent(FIGHTER_CLICK,event.target));
+				}
+				else{
+					dispatchEvent(new GameEvent(BLANK_CLICK,this));
+				}
+			}
+			public function set fightViewVO(value:FightViewVO):void{
+				_fightViewVO = value;
+			}
+			public function get fightViewVO():FightViewVO{
+				return _fightViewVO;
+			}
+			public function setFightAction(fightId:int,fightAction:FightActionVO):void{
+				_fightActions[fightId.toString()] = fightAction;
+			}
+			//开始战斗
+			public function startFight(fightViewVO:FightViewVO):void{
+				_fightViewVO = fightViewVO;
+				_fightFieldVO = _fightViewVO.fightFieldVO;
+				_fighters = _fightViewVO.fightFieldVO.fighters;
+				
+				//战斗回合数
+				_roundId = _fightFieldVO.roundId;
+				_roundStr = "第"+_roundId+"回合";
+				
+				_myStand = FightStandConstants.ONE;
+				addFighters();
+				startNextRound();
+				
+			}
+			private function addFighters():void{
+				//战斗视图
+				removeFighters();
+				for(var i:int=0; i<2; i++){
+					for(var j:int=0; j<5; j++){
+						if(_fighters[i][j]!=null){
+							var fighter:Fighter = new Fighter(FighterVO(_fighters[i][j]));
+							fighter.x = 100+ i*700;
+							fighter.y = 150+j*80;
+							_fighterViews[i][j] = fighter;
+							addChild(fighter);
+						}
+					}
+				}
+				
+			}
+			//创建所有的战斗者
+			private function createFighterViews():void{
+				//战斗视图
+				_fighterViews = [];
+				for(var i:int=0; i<2; i++){
+					_fighterViews.push(new Array(5));
+				}
+			}
+			//移除所有战斗者
+			private function removeFighters():void{
+				if(_fighterViews){
+					var len:int = _fighterViews.length;
+					for(var i:int=0; i<2; i++){
+						for(var j:int=0; j<5; j++){
+							if(_fighterViews[i][j]){
+								removeChild(_fighterViews[i][j]);
+								_fighterViews[i][j] = null;
+							}
+						}
+					}
+				}
+			}
+			//移除一个战斗者
+			private function removeFighter(fighterId:int):void{
+				var fighter:FighterVO = _fightFieldVO.fighterAllMap[fighterId];
+				if(fighter){
+					var i:int = fighter.stand;
+					var j:int = fighter.position;
+					if(_fighterViews[i][j]&&Fighter(_fighterViews[i][j]).fighterVO.id == fighterId){
+						removeChild(_fighterViews[i][j]);
+						_fighterViews[i][j] = null;
+					}
+				}
+			}
+			//开始下一回合
+			public function startNextRound():void{
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Canvas id="fighterLayer" mouseEnabled="false">
+		
+	</mx:Canvas>
+	<mx:Canvas id="operateLayer" mouseEnabled="false">
+		
+	</mx:Canvas>
+	<mx:Text id="tRound" fontSize="35" text="{_roundStr}" textAlign="center" width="300" x="350" y="50">
+		
+	</mx:Text>
+	<fight:FightActionSelectPanel id="fightActionSelectPanel" x="700" y ="200" visible="{_fightViewVO.actionStep==FightActionConstants.STEP_CHOOSE_ACTION_TYPE}">
+		
+	</fight:FightActionSelectPanel>
+</mx:Canvas>

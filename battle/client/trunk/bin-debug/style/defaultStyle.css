@@ -1,0 +1,330 @@
+/* CSS file */
+TextInput {
+	border-skin: Embed(source="component.swf", symbol="TextInput_upSkin");
+	padding-left: 2;
+	padding-right: 2;
+	font-size: 12;
+	color: #EEEEEE;
+	disabled-color: #666666;
+	backgroundAlpha: 0;
+	borderStyle:none;
+	backgroundColor: #F0F0F0;
+	focus-thickness: 0;
+}
+UITLFText {
+	color:			#BBBBAA;
+	font-family:	"宋体";
+	font-size:		12;
+	paddingTop:   4;
+	paddingLeft:  2;
+	line-height-model:"textlayout";
+	line-height: "116.7%";/**保证12px的文本上行底与下行顶之间差不多2px间距**/
+}
+
+UITLFText.modelessTipGood {
+	color: #00ff00;
+	font-size: 14;
+	font-weight: bold;
+	horizontal-center: 0;
+	text-align:center;
+	font-family:	"宋体,Arial";
+}
+
+.modelessTipBad {
+	color: #ff0000;
+	font-size: 14;
+	font-weight: bold;
+	horizontal-center: 0;
+	text-align:center;
+	font-family:	"宋体,Arial";
+}
+
+.smallBtn {
+	paddingLeft: 0;
+	paddingRight: 0;
+	cornerRadius: 0;
+	color: #000000;
+	fontSize: 12;
+	textDecoration: none;
+}
+
+ToolTip {
+	fontSize: 12;
+	font-family:	"宋体,Arial";
+	color: #BBBBAA;
+	backgroundColor: #000000;
+	backgroundAlpha: 0.6;
+	cornerRadius: 0;
+	border-skin:Embed(source='container.swf', symbol='TooltipBg');
+}
+
+LinkButton {
+	paddingLeft: 0;
+	paddingRight: 0;
+	textDecoration: underline;
+}
+
+Button {
+	fontWeight: normal;
+	fontFamily: Verdana;
+	fontSize: 12;
+	focusAlpha: 0;
+}
+
+TitleWindow {
+	close-button-up-skin: Embed(source='component.swf', symbol='CloseButton_upSkin');
+	close-button-down-skin: Embed(source='component.swf', symbol='CloseButton_downSkin');
+	close-button-over-skin: Embed(source='component.swf', symbol='CloseButton_overSkin');
+}
+
+ComboBox {
+	up-skin:	Embed(source='component.swf', symbol='CommonComboBox_upSkin');
+	over-skin:	Embed(source='component.swf', symbol='CommonComboBox_overSkin');
+	down-skin:	Embed(source='component.swf', symbol='CommonComboBox_downSkin');
+	disabled-skin:	Embed(source='component.swf', symbol='CommonComboBox_disabledSkin');
+	padding-left: 1;
+	padding-right: -8;
+	text-align: left;
+	font-weight: normal;
+	color: #BBBBAA;
+	dropdownStyleName: "myCustomDropdown";
+}
+
+.myCustomDropdown {
+	verticalScrollBarStyleName: myCustomVertScroll;
+}
+
+.myCustomVertScroll {
+	trackColors: black, black;
+}
+
+CheckBox {
+	color: #BBBBAA;
+	disabled-color: #737373;
+	text-roll-over-color:#FFFFFF;
+	text-selected-color:#FFFFFF;
+	up-icon:	Embed(source='component.swf', symbol='CheckBox_upSkin');
+	over-icon:	Embed(source='component.swf', symbol='CheckBox_upSkin');
+	down-icon:	Embed(source='component.swf', symbol='CheckBox_upSkin');
+	disabled-icon:	Embed(source='component.swf', symbol='CheckBox_disabledSkin');
+	selected-up-icon:	Embed(source='component.swf', symbol='CheckBox_selectedUpSkin');
+	selected-down-icon:	Embed(source='component.swf', symbol='CheckBox_selectedUpSkin');
+	selected-disabled-icon:	Embed(source='component.swf', symbol='CheckBox_disabledSelectedSkin');
+	selected-over-icon:	Embed(source='component.swf', symbol='CheckBox_selectedUpSkin');
+}
+
+RadioButton {
+	color: #BBBBAA;
+	text-roll-over-color:#FFFFFF;
+	text-selected-color:#FFFFFF;
+	disabled-color: #666666;
+	up-icon:	Embed(source='component.swf', symbol='RadioButton_upSkin');
+	over-icon:	Embed(source='component.swf', symbol='RadioButton_overSkin');
+	down-icon:	Embed(source='component.swf', symbol='RadioButton_upSkin');
+	disabled-icon: Embed(source='component.swf', symbol='RadioButton_disabledSkin');
+	selected-up-icon:	Embed(source='component.swf', symbol='RadioButton_selectedUpSkin');
+	selected-down-icon:	Embed(source='component.swf', symbol='RadioButton_selectedUpSkin');
+	selected-disabled-icon:	Embed(source='component.swf', symbol='RadioButton_selectedDisabledSkin');
+	selected-over-icon:	Embed(source='component.swf', symbol='RadioButton_selectedOverSkin');
+}
+
+DataGrid {
+	vertical-align			:middle;
+	horizontal-align		:left;
+	horizontal-grid-lines	:false;
+	vertical-grid-lines		:false;
+	border-style			:none;
+	alternating-item-colors	:#2C281C,#221F18;
+	background-color		:#221F18;
+	use-roll-over			:false;
+	
+	header-colors			:#181512,#181512;
+	roll-over-color			:#181512;
+	icon-color				:#f7c710;
+	selection-color			:#333333;
+	color					:#BBBBAA;
+	text-selected-color		:#BBBBAA;
+	text-indent				:0;
+	
+	text-roll-over-color	:#FFFF00;
+	
+	header-height			:26;
+	
+	sort-arrow-skin			:Embed(source='component.swf', symbol='GridHeaderSortArrowBg');
+	header-background-skin	:Embed(source='component.swf', symbol='GridHeaderBg');
+	header-separator-skin	:Embed(source='component.swf', symbol='GridHeaderSeparatorBg');
+}
+
+
+DataGridHeader {
+	border-style			:none;
+	text-align				:left;
+	roll-over-color			:#FF0000;
+}
+
+CustomDatagridHeader {
+	header-over-skin: Embed(source='component.swf', symbol='GridHeaderOverSkin');
+	header-down-skin: Embed(source='component.swf', symbol='GridHeaderDownSkin');
+}
+
+.dataGridHeader {
+	background-color		:#221F18;
+	use-roll-over			:true;
+	horizontal-align		:left;
+	color					:#666655;
+	border-style			:none;
+	text-align				:center;
+}
+
+List {
+	color: #EEEEEE;
+	textRollOverColor: #EEEEEE;
+	textSelectedColor: #EEEEEE;
+	border-style			:none;
+	background-color		:#221F18;
+	alternating-item-colors	:#2C281C,#221F18;
+	text-align				:left;
+	roll-over-color			:#181512;
+	selection-color			:#333333;
+}
+
+AdvancedMenu {
+	border-skin:Embed(source='container.swf', symbol='TooltipBg');
+	fontSize: 12;
+	color: #ffffff;
+	textRollOverColor: #ffffff;
+	textSelectedColor: #ffffff;
+	text-align :left;
+	rollOverBg: Embed(source="component.swf", symbol="MenuRollOverBg");
+	selectedBg: Embed(source="component.swf", symbol="MenuRollOverBg");
+	background-alpha:0;
+	open-duration :0;
+	paddingLeft: 2;
+	paddingRight: 2;
+	paddingTop: 14;
+	paddingBottom: 14;
+	verticalScrollBarStyleName: menuVerticalScrollBar;
+}
+
+AdvancedTree {
+	defaultLeafIcon: ClassReference(null);
+	disclosureClosedIcon: Embed(source="component.swf", symbol="TreeFolderClosedIcon");
+	disclosureOpenIcon: Embed(source="component.swf", symbol="TreeFolderOpenedIcon");
+	folderClosedIcon: ClassReference(null);
+	folderOpenIcon: ClassReference(null);
+	rollOverBg: Embed(source='component.swf', symbol='TreeRollOverBg');
+	selectedBg: Embed(source='component.swf', symbol='TreeSelectBg');
+	background-alpha:0;
+	paddingTop: 1;
+	paddingBottom: 1;
+	paddingLeft: 4;
+	paddingRight: 4;
+	indentation: 6;
+}
+
+AdvancedTree.RankTree {
+	depth-colors: #bb7722, #ffff00;
+}
+
+
+ScrollBar {
+	downArrowDisabledSkin: Embed(source="component.swf", symbol="ScrollArrowDown_disabledSkin");
+	downArrowDownSkin: Embed(source="component.swf", symbol="ScrollArrowDown_downSkin");
+	downArrowOverSkin: Embed(source="component.swf", symbol="ScrollArrowDown_overSkin");
+	downArrowUpSkin: Embed(source="component.swf", symbol="ScrollArrowDown_upSkin");
+	thumbDownSkin: Embed(source="component.swf", symbol="ScrollThumb_downSkin");
+	thumbIcon: Embed(source="component.swf", symbol="ScrollBar_thumbIcon");
+	thumbOverSkin: Embed(source="component.swf", symbol="ScrollThumb_overSkin");
+	thumbUpSkin: Embed(source="component.swf", symbol="ScrollThumb_upSkin");
+	trackSkin: Embed(source="component.swf", symbol="ScrollTrack_Skin");
+	upArrowDisabledSkin: Embed(source="component.swf", symbol="ScrollArrowUp_disabledSkin");
+	upArrowDownSkin: Embed(source="component.swf", symbol="ScrollArrowUp_downSkin");
+	upArrowOverSkin: Embed(source="component.swf", symbol="ScrollArrowUp_overSkin");
+	upArrowUpSkin: Embed(source="component.swf", symbol="ScrollArrowUp_upSkin"); 
+	
+}
+
+Label {
+	color: #BBBBAA;
+}
+
+PageCommonView.commonPageView {
+	page-last-button-style-name: 'commonButton';
+	page-next-button-style-name: 'commonButton';
+	page-text-style-name: "pageCommonView";
+	horizontal-gap: 3;
+	disabled-color: #BBBBAA;
+}
+
+TextInput.pageCommonView {
+	border-skin: Embed(source="component.swf", symbol="TextInput_upSkin");
+	disabled-skin: Embed(source="component.swf", symbol="TextInput_upSkin");
+	font-size: 12;
+	color:#BBBBAA;
+	backgroundAlpha: 0;
+	borderStyle:none;
+	backgroundColor: #F0F0F0;
+	focus-thickness: 0;
+}
+
+TabBar.chatChannelTabBar
+{
+	horizontalGap: 0;
+	tabStyleName: chatChannelTabBarButton;
+	selectedTabTextStyleName: sChatChannelTabBarButtonText;
+}
+.chatChannelTabBarButton
+{
+	color: #bbbbaa;
+	textRollOverColor: #bbbbaa;
+	textSelectedColor: #bbbbaa;	
+	
+	padding-left: 0;
+	padding-right: 0;
+	
+	downSkin: Embed(source="component.swf", symbol="ChatTabButton_HighlightSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatTabButton_HighlightSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatTabButton_upSkin");
+	
+	selected-up-skin: Embed(source="component.swf", symbol="ChatTabButton_HighlightSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="ChatTabButton_HighlightSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="ChatTabButton_HighlightSkin");
+	
+}
+.sChatChannelTabBarButtonText
+{
+	color: #ffffff;
+	fontWeight: normal;
+}
+
+WealthView {
+	gold-icon:Embed(source='container.swf', symbol='GoldIconBg');
+	silver-icon:Embed(source='container.swf', symbol='SilverIconBg');
+	copper-icon:Embed(source='container.swf', symbol='CopperIconBg');
+}
+.menuVerticalScrollBar
+{
+}
+
+ScrollBar.MiniQuestsScrollBar {
+	/*downArrowDisabledSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowDown_disabledSkin");*/
+	downArrowDownSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowDown_downSkin");
+	downArrowOverSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowDown_overSkin");
+	downArrowUpSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowDown_upSkin");
+	thumbDownSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollThumb_downSkin");
+	thumbIcon: ClassReference(null);
+	thumbOverSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollThumb_overSkin");
+	thumbUpSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollThumb_upSkin");
+	trackSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollTrack_Skin");
+	/*upArrowDisabledSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowUp_disabledSkin");*/
+	upArrowDownSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowUp_downSkin");
+	upArrowOverSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowUp_overSkin");
+	upArrowUpSkin: Embed(source="component.swf", symbol="MiniQuests_ScrollArrowUp_upSkin"); 
+	
+}
+
+HSlider.SoundSlider {
+	thumbSkin:Embed(source='component.swf', symbol='音乐游标');
+	trackSkin:Embed(source='component.swf', symbol='音乐条');
+	trackMargin:0;
+}

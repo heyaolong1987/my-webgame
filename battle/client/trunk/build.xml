@@ -1,0 +1,63 @@
+<project name="bitchwar" default="clean">
+	<taskdef resource="flexTasks.tasks"
+			 classpath="${basedir}/libs/flexTasks.jar"/>
+	<property file="build.properties"/>
+	
+	<target name="update">
+		<exec dir="." executable="${T_SVN_PATH}">
+			<arg line="/command:update /path:. /closeonend:2" />
+		</exec>
+		<exec dir="." executable="${SVN_PATH}" output="ant_svn.properties">
+			<arg line="info -r HEAD" />
+		</exec>
+		<property prefix="svn" file="ant_svn.properties"/>
+	</target>
+
+	<target name="init" depends="update">
+		<delete dir="${DEPLOY_DIR}"/>
+		<mkdir dir="${DEPLOY_DIR}"/>
+		<tstamp><format property="TimeSign" pattern="yyyy-MM-dd HH:mm:ss" locale="cn"/></tstamp>
+	</target>
+
+	<target name="main" depends="init">
+		<mxmlc file="${SRC_DIR}/bitchwar.mxml"
+			   output="${DEPLOY_DIR}/bitchwar_game.swf">
+			<source-path path-element="${PUREMVC_DIR}"/>
+			<include-libraries dir="${LIBS_DIR}" append="true" >
+				<include name="greensock.swc" />
+			</include-libraries>
+			<define name="CONFIG::debug" value="true"/>
+			<define name="CONFIG::release" value="false"/>
+			<define name="CONFIG::version" value="'dev_${TimeSign} svn:${svn.Revision}'" />
+		</mxmlc>
+	</target>
+
+	<target name="wrapper" depends="main">
+		<html-wrapper title="bitchwar_game" file="bitchwar_game.html" height="100%"
+					  width="100%" application="bitchwar_game" swf="bitchwar_game?${TimeSign}"
+					  version-major="10" version-minor="0" version-revision="0"
+					  history="true" template="express-installation"
+					  output="${DEPLOY_DIR}"/>
+	</target>
+
+	<target name="copyRSLs" depends="main">
+		<copy todir="${DEPLOY_DIR}"
+			  file="${FLEX_HOME}/frameworks/rsls/framework_3.4.0.6955.swf"/>
+		<copy todir="${DEPLOY_DIR}"
+			  file="${FLEX_HOME}/frameworks/rsls/framework_3.4.0.6955.swz"/>
+	</target>
+
+	<target name="ftp" depends="main,wrapper,copyRSLs">
+		<ftp password="${FTP_PASSWORD}" server="${FTP_SERVER}"
+			 userid="${FTP_USER}" port="${FTP_PORT}" verbose="no" 
+			 remotedir="${REMOTE_DIR}" depends="yes">
+			<fileset dir="${DEPLOY_DIR}" >
+				<include name="**/*.swf"/>
+			</fileset>
+		</ftp>
+	</target>
+	
+	<target name="clean" depends="ftp">
+		<delete dir="${DEPLOY_DIR}"/>
+	</target>
+</project>

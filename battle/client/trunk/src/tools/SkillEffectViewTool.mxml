@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+		   xmlns:component="com.netease.webgame.bitchwar.component.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.component.AdvancedButton;
+			import com.netease.webgame.bitchwar.view.popup.fightClasses.effectClasses.FightUseSkillEffectFactory;
+			
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			private var list:ArrayCollection;
+			
+			private var mc:MovieClip;
+			
+			public function init():void {
+				var i:int;
+				var mc:MovieClip;
+				list = new ArrayCollection();
+				for(i=0; i<100; i++) {
+					mc = FightUseSkillEffectFactory.getUseSkillEffect(i);
+					if(mc!=null) {
+						mc.stop();
+						list.addItem(i);
+					}
+				}
+			}
+			
+			private function itemClickHandler(event:MouseEvent):void {
+				var label:int = int(AdvancedButton(event.currentTarget).label);
+				if(mc) {
+					mc.stop();
+					mc.parent.removeChild(mc);
+					mc = null;
+				}
+				mc = FightUseSkillEffectFactory.getUseSkillEffect(label);
+				if(mc) {
+					mc.gotoAndPlay(1);
+					mc.x = 560;
+					mc.y = 320;
+					main.addChild(mc);
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:HBox x="120" y="100" width="980" horizontalGap="0" horizontalAlign="center">
+		<mx:Repeater dataProvider="{list}" id="rp">
+			<component:AdvancedButton label="{String(rp.currentItem)}" width="48" height="48" fontWeight="bold" fontSize="14" click="{itemClickHandler(event)}" />
+		</mx:Repeater>
+	</mx:HBox>
+	<mx:UIComponent id="main" width="980" x="120" height="580" />
+</mx:Canvas>

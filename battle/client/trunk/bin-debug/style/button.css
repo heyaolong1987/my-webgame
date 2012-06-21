@@ -1,0 +1,1099 @@
+/* CSS file */
+/*登陆相关*/
+Button.LoginCharName{
+	font-size:20;
+	font-weight:bold;
+}
+Button.CloseButton {
+	up-skin: Embed(source='component.swf', symbol='CloseButton_upSkin');
+	down-skin: Embed(source='component.swf', symbol='CloseButton_downSkin');
+	over-skin: Embed(source='component.swf', symbol='CloseButton_overSkin');
+}
+Button.UserRegisterBtn {
+	up-skin: Embed(source='component.swf', symbol='UserRegisterBtnUp');
+	down-skin: Embed(source='component.swf', symbol='UserRegisterBtnDown');
+	over-skin: Embed(source='component.swf', symbol='UserRegisterBtnOver');
+}
+Button.RectCloseButton {
+	up-skin: Embed(source='component.swf', symbol='RectCloseButton_upSkin');
+	down-skin: Embed(source='component.swf', symbol='RectCloseButton_downSkin');
+	over-skin: Embed(source='component.swf', symbol='RectCloseButton_overSkin');
+}
+
+Button.SkipButton {
+	up-skin: Embed(source='component.swf', symbol='SkipBtn_upSkin');
+	down-skin: Embed(source='component.swf', symbol='SkipBtn_downSkin');
+	over-skin: Embed(source='component.swf', symbol='SkipBtn_overSkin');
+}
+
+Button.AddSkillPoint {
+	up-skin: Embed(source='component.swf', symbol='AddSkillPointBtn_upSkin');
+	over-skin: Embed(source='component.swf', symbol='AddSkillPointBtn_overSkin');
+	down-skin: Embed(source='component.swf', symbol='AddSkillPointBtn_downSkin');
+	disabled-skin: Embed(source='component.swf', symbol='AddSkillPointBtn_upSkin');
+}
+
+Button.AutoFightSettingEnableButton {
+	up-skin: Embed(source='component.swf', symbol='AutoFightSettingEnableButton_upSkin');
+	over-skin: Embed(source='component.swf', symbol='AutoFightSettingButton_overSkin');
+	down-skin: Embed(source='component.swf', symbol='AutoFightSettingButton_downSkin');
+	disabled-skin: Embed(source='component.swf', symbol='AutoFightSettingButton_disableSkin');
+}
+Button.AutoFightSettingDisableButton {
+	up-skin: Embed(source='component.swf', symbol='AutoFightSettingDisableButton_upSkin');
+	over-skin: Embed(source='component.swf', symbol='AutoFightSettingButton_overSkin');
+	down-skin: Embed(source='component.swf', symbol='AutoFightSettingButton_downSkin');
+	disabled-skin: Embed(source='component.swf', symbol='AutoFightSettingButton_disableSkin');
+}
+
+
+Button.SimpleSmallButton {
+	up-skin: Embed(source='component.swf', symbol='SimpleSmallButton_upSkin');
+	over-skin: Embed(source='component.swf', symbol='SimpleSmallButton_overSkin');
+	down-skin: Embed(source='component.swf', symbol='SimpleSmallButton_upSkin');
+	disabled-skin: Embed(source='component.swf', symbol='SimpleSmallButton_disabledSkin');
+}
+
+Button.TeamHideButton {
+	up-skin: Embed(source='component.swf', symbol='TeamHideButton_upSkin');
+	over-skin: Embed(source='component.swf', symbol='TeamHideButton_overSkin');
+	down-skin: Embed(source='component.swf', symbol='TeamHideButton_downSkin');
+}
+
+Button.TeamShowButton {
+	up-skin: Embed(source='component.swf', symbol='TeamOpenButton_upSkin');
+	over-skin: Embed(source='component.swf', symbol='TeamOpenButton_overSkin');
+	down-skin: Embed(source='component.swf', symbol='TeamOpenButton_downSkin');
+}
+
+Button.CorpseBagButton {
+	up-skin: Embed(source='component.swf', symbol='CorpseBag_upSkin');
+	over-skin: Embed(source='component.swf', symbol='CorpseBag_upSkin');
+	down-skin: Embed(source='component.swf', symbol='CorpseBag_upSkin');
+	disabled-skin: Embed(source='component.swf', symbol='CorpseBag_upSkin');
+}
+
+Button.VerticalOkButton {
+	up-skin: Embed(source='component.swf', symbol='VerticalOkButton_upSkin');
+	over-skin: Embed(source='component.swf', symbol='VerticalOkButton_overSkin');
+	down-skin: Embed(source='component.swf', symbol='VerticalOkButton_downSkin');
+	disabled-skin: Embed(source='component.swf', symbol='VerticalOkButton_disabledSkin');
+}
+
+CheckBox.itemCheckBox {
+	color: #CCCCCC;
+	text-roll-over-color:#FFFFFF;
+	text-selected-color:#FFFFFF;
+	up-icon:	Embed(source='component.swf', symbol='ItemCheckBox_upSkin');
+	over-icon:	Embed(source='component.swf', symbol='ItemCheckBox_overSkin');
+	down-icon:	Embed(source='component.swf', symbol='ItemCheckBox_upSkin');
+	disabled-icon:	Embed(source='component.swf', symbol='CheckBox_upSkin');
+	selected-up-icon:	Embed(source='component.swf', symbol='ItemCheckBox_selectedUpSkin');
+	selected-down-icon:	Embed(source='component.swf', symbol='ItemCheckBox_selectedDownSkin');
+	selected-disabled-icon:	Embed(source='component.swf', symbol='ItemCheckBox_selectedUpSkin');
+	selected-over-icon:	Embed(source='component.swf', symbol='ItemCheckBox_selectedOverSkin');
+}
+
+CheckBox.teleportMapCheckBox {
+	color: #FFFFFF;
+	text-roll-over-color:#FFFFFF;
+	text-selected-color:#FFFFFF;
+	up-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_upSkin');
+	over-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_upSkin');
+	down-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_upSkin');
+	disabled-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_upSkin');
+	selected-up-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_selectedUpSkin');
+	selected-down-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_selectedUpSkin');
+	selected-disabled-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_selectedUpSkin');
+	selected-over-icon:	Embed(source='component.swf', symbol='TeleportMapCheckBox_selectedUpSkin');
+	horizontalGap: 1;
+}
+
+Button.SetUpButton {
+	up-skin:	Embed(source='component.swf', symbol='SetUpButton_upSkin');
+	down-skin:	Embed(source='component.swf', symbol='SetUpButton_upSkin');
+	disabled-skin:	Embed(source='component.swf', symbol='SetUpButton_disabledSkin');
+	over-skin:	Embed(source='component.swf', symbol='SetUpButton_overSkin');
+}
+
+Button.SetDownButton {
+	up-skin:	Embed(source='component.swf', symbol='SetDownButton_upSkin');
+	down-skin:	Embed(source='component.swf', symbol='SetDownButton_upSkin');
+	disabled-skin:	Embed(source='component.swf', symbol='SetDownButton_disabledSkin');
+	over-skin:	Embed(source='component.swf', symbol='SetDownButton_overSkin');
+}
+
+Button.commonButtonWithoutGlow {
+	disabledSkin: Embed(source="component.swf", symbol="CommonButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="CommonButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="CommonButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="CommonButton_upSkin");
+	
+	selected-up-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-disabled-skin: Embed(source="component.swf", symbol="CommonButtonSelected_disabledSkin");
+	
+	padding-left: 4;
+	padding-right: 4;
+	padding-top: -1;
+	
+	color: #DDDDDD;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	font-weight: normal;
+}
+
+Button.minimizeButton {
+	disabledSkin: Embed(source="component.swf", symbol="MinimizeButton_downSkin");
+	downSkin: Embed(source="component.swf", symbol="MinimizeButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MinimizeButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MinimizeButton_upSkin");
+}
+
+Button {
+	disabledSkin: Embed(source="component.swf", symbol="CommonButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="CommonButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="CommonButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="CommonButton_upSkin");
+	
+	selected-up-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-disabled-skin: Embed(source="component.swf", symbol="CommonButtonSelected_disabledSkin");
+	
+	font-weight:bold;
+	
+	padding-left: 4;
+	padding-right: 4;
+	
+	color: #FFFFFF;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+Button.commonButton {
+	disabledSkin: Embed(source="component.swf", symbol="CommonButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="CommonButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="CommonButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="CommonButton_upSkin");
+	
+	selected-up-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-disabled-skin: Embed(source="component.swf", symbol="CommonButtonSelected_disabledSkin");
+	
+	font-weight:normal;
+	
+	padding-left: 4;
+	padding-right: 4;
+	
+	color: #FFFFFF;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+/* CSS file */
+Button.commonButtonPaddingNull {
+	disabledSkin: Embed(source="component.swf", symbol="CommonButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="CommonButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="CommonButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="CommonButton_upSkin");
+	
+	selected-up-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-disabled-skin: Embed(source="component.swf", symbol="CommonButtonSelected_disabledSkin");
+	
+	font-weight:bold;
+	
+	padding-left: 1;
+	padding-right: 1;
+	
+	color: #FFFFFF;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+Button.borderButton {
+	disabledSkin: Embed(source="component.swf", symbol="BorderButton_disSkin");
+	downSkin: Embed(source="component.swf", symbol="BorderButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="BorderButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="BorderButton_upSkin");
+	
+	font-weight:bold;
+	
+	padding-left: 4;
+	padding-right: 4;
+	
+	color: #FFFFFF;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+Button.smallCommonButton {
+	disabledSkin: Embed(source="component.swf", symbol="SmallCommonButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="SmallCommonButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="SmallCommonButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="SmallCommonButton_upSkin");
+	
+	padding-left: 0;
+	padding-right: 0;
+	
+	padding-top: -2;
+	
+	font-weight: normal;
+	color: #EEEEEE;
+	text-roll-over-color: #EEEEEE;
+	selection-color: #EEEEEE;
+	disabled-color: #919191;
+}
+
+Button.commonTabButton {
+	disabledSkin: Embed(source="component.swf", symbol="CommonTabButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="CommonTabButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="CommonTabButton_upSkin");
+	upSkin: Embed(source="component.swf", symbol="CommonTabButton_upSkin");
+	
+	padding-left: 3;
+	padding-right: 3;
+	padding-top: 0;
+	
+	color: #BBBBAA; 
+	text-roll-over-color: #BBBBAA;
+	text-selected-color: #BBBBAA;
+	disabled-color: #FFFFFF;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+Button.RmbShopTabButton {
+	disabledSkin: Embed(source="component.swf", symbol="RmbShopTab_disable");
+	downSkin: Embed(source="component.swf", symbol="RmbShopTab_over");
+	overSkin: Embed(source="component.swf", symbol="RmbShopTab_over");
+	upSkin: Embed(source="component.swf", symbol="RmbShopTab_up");
+	
+	padding-left: 3;
+	padding-right: 3;
+	padding-top: 4;
+	
+	color: #BBBBAA; 
+	font-size: 14;
+	font-weight: bold;
+	text-roll-over-color: #BBBBAA;
+	text-selected-color: #BBBBAA;
+	disabled-color: #FFFFFF;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+Button.bagListButton {
+	disabledSkin: Embed(source="component.swf", symbol="CommonButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="CommonButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="CommonButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="CommonButton_upSkin");
+	
+	selected-up-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="CommonButtonSelected_upSkin");
+	selected-disabled-skin: Embed(source="component.swf", symbol="CommonButtonSelected_disabledSkin");
+	
+	icon: Embed(source="component.swf", symbol="BagIcon");
+	
+	font-weight:bold;
+	
+	padding-left: 4;
+	padding-right: 4;
+	
+	color: #FFFFFF;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+
+Button.TradeStartButton {
+	disabledSkin: Embed(source="component.swf", symbol="TradeStartButton_upSkin");
+	downSkin: Embed(source="component.swf", symbol="TradeStartButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="TradeStartButton_upSkin");
+	upSkin: Embed(source="component.swf", symbol="TradeStartButton_upSkin");
+	
+	selected-disabled-skin: Embed(source="component.swf", symbol="TradeStartButtonSelected_upSkin");
+	selected-up-skin: Embed(source="component.swf", symbol="TradeStartButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="TradeStartButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="TradeStartButtonSelected_upSkin");
+}
+
+Button.TradeButton {
+	disabledSkin: Embed(source="component.swf", symbol="TradeButton_upSkin");
+	downSkin: Embed(source="component.swf", symbol="TradeButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="TradeButton_upSkin");
+	upSkin: Embed(source="component.swf", symbol="TradeButton_upSkin");
+	
+	selected-disabled-skin: Embed(source="component.swf", symbol="TradeButtonSelected_upSkin");
+	selected-up-skin: Embed(source="component.swf", symbol="TradeButtonSelected_upSkin");
+	selected-over-skin: Embed(source="component.swf", symbol="TradeButtonSelected_upSkin");
+	selected-down-skin: Embed(source="component.swf", symbol="TradeButtonSelected_upSkin");
+}
+
+Button.PetForgeButton {
+	disabledSkin: Embed(source="component.swf", symbol="PetForgeButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="PetForgeButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="PetForgeButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="PetForgeButton_upSkin");
+}
+
+Button.AddButton {
+	disabledSkin: Embed(source="component.swf", symbol="AddButton_upSkin");
+	downSkin: Embed(source="component.swf", symbol="AddButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="AddButton_upSkin");
+	upSkin: Embed(source="component.swf", symbol="AddButton_upSkin");
+}
+
+Button.SubtractButton {
+	disabledSkin: Embed(source="component.swf", symbol="SubtractButton_upSkin");
+	downSkin: Embed(source="component.swf", symbol="SubtractButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="SubtractButton_upSkin");
+	upSkin: Embed(source="component.swf", symbol="SubtractButton_upSkin");
+}
+
+Button.ReturnVillageButton {
+	disabledSkin: Embed(source="component.swf", symbol="ReturnVillageButton_overSkin");
+	downSkin: Embed(source="component.swf", symbol="ReturnVillageButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ReturnVillageButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ReturnVillageButton_upSkin");
+}
+
+Button.ReturnClanButton {
+	disabledSkin: Embed(source="component.swf", symbol="ReturnClanButton_overSkin");
+	downSkin: Embed(source="component.swf", symbol="ReturnClanButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ReturnClanButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ReturnClanButton_upSkin");
+}
+
+Button.TransMapButton {
+	disabledSkin: Embed(source="component.swf", symbol="TransMapButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="TransMapButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="TransMapButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="TransMapButton_upSkin");
+}
+
+Button.LeaveButton {
+	disabledSkin: Embed(source="component.swf", symbol="LeaveButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="LeaveButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="LeaveButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="LeaveButton_upSkin");
+}
+
+Button.TeamButton {
+	downSkin: Embed(source="component.swf", symbol="TeamButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="TeamButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="TeamButton_upSkin");
+}
+
+Button.PetStatusButton {
+	disabledSkin: Embed(source="component.swf", symbol="PetStatusButton_disabledSkin");
+	downSkin: Embed(source="component.swf", symbol="PetStatusButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="PetStatusButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="PetStatusButton_upSkin");
+}
+
+Button.NavigatePetButton {
+	downSkin: Embed(source="component.swf", symbol="NavigatePetButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigatePetButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigatePetButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigatePetButton_disabledSkin");
+}
+
+Button.NavigateMessageButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateMessageButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateMessageButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateMessageButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateMessageButton_disabledSkin");
+}
+
+Button.NavigateRelationButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateRelationButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateRelationButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateRelationButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateRelationButton_disabledSkin");
+}
+
+Button.NavigateQuestButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateQuestButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateQuestButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateQuestButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateQuestButton_disabledSkin");
+}
+
+Button.NavigateSlaveButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateSlaveButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateSlaveButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateSlaveButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateSlaveButton_disabledSkin");
+}
+
+Button.NavigateHeroButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateHeroButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateHeroButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateHeroButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateHeroButton_disabledSkin");
+}
+
+Button.NavigateSkillButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateSkillButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateSkillButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateSkillButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateSkillButton_disabledSkin");
+}
+
+Button.NavigateProduceButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateProduceButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateProduceButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateProduceButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateProduceButton_disabledSkin");
+}
+Button.NavigateGrowthButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateGrowthButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateGrowthButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateGrowthButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateGrowthButton_disabledSkin");
+}
+Button.NavigateBagButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateBagButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateBagButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateBagButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateBagButton_disabledSkin");
+}
+
+Button.NavigateSystemButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateSystemButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateSystemButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateSystemButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateSystemButton_disabledSkin");
+}
+
+Button.NavigateStoreButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateStoreButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateStoreButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateStoreButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateStoreButton_disabledSkin");
+}
+
+Button.NavigateRankingButton {
+	downSkin: Embed(source="component.swf", symbol="NavigateRankingButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="NavigateRankingButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="NavigateRankingButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="NavigateRankingButton_disabledSkin");
+}
+
+Button.PetUpButton {
+	downSkin: Embed(source="component.swf", symbol="UpButtonDownrSkin");
+	overSkin: Embed(source="component.swf", symbol="UpButtonOverSkin");
+	upSkin: Embed(source="component.swf", symbol="UpButtonUpSkin");
+	disabled-skin:Embed(source="component.swf", symbol="UpButtonDisSkin");
+}
+
+Button.PetDownButton {
+	downSkin: Embed(source="component.swf", symbol="DownButtonDownrSkin");
+	overSkin: Embed(source="component.swf", symbol="DownButtonOverSkin");
+	upSkin: Embed(source="component.swf", symbol="DownButtonUpSkin");
+	disabled-skin:Embed(source="component.swf", symbol="DownButtonDisSkin");
+}
+
+Button.ContribButton {
+	downSkin: Embed(source="component.swf", symbol="ContribButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ContribButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ContribButton_upSkin");
+}
+
+Button.VillageResOpenBtn {
+	downSkin: Embed(source="component.swf", symbol="VillageResOpenBtn_downSkin");
+	overSkin: Embed(source="component.swf", symbol="VillageResOpenBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="VillageResOpenBtn_upSkin");
+}
+
+Button.VillageResCloseBtn {
+	downSkin: Embed(source="component.swf", symbol="VillageResCloseBtn_downSkin");
+	overSkin: Embed(source="component.swf", symbol="VillageResCloseBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="VillageResCloseBtn_upSkin");
+}
+
+/* ===================================MiniMapControl============================================ */
+Button.MapFavoriteButton {
+	downSkin: Embed(source="component.swf", symbol="MapFavoriteButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapFavoriteButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapFavoriteButton_upSkin");
+}
+
+Button.MapConfigButton {
+	downSkin: Embed(source="component.swf", symbol="MapConfigButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapConfigButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapConfigButton_upSkin");
+}
+
+Button.MapLocationButton {
+	downSkin: Embed(source="component.swf", symbol="MapLocationButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapLocationButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapLocationButton_upSkin");
+}
+
+Button.MapLocationHeroButton {
+	downSkin: Embed(source="component.swf", symbol="MapLocationHeroButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapLocationHeroButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapLocationHeroButton_upSkin");
+}
+
+Button.MapLocationVillageButton {
+	downSkin: Embed(source="component.swf", symbol="MapLocationVillageButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapLocationVillageButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapLocationVillageButton_upSkin");
+	disabled-skin:Embed(source="component.swf", symbol="MapLocationVillageButton_disableSkin");
+}
+
+Button.MapLocationClanButton {
+	downSkin: Embed(source="component.swf", symbol="MapLocationClanButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapLocationClanButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapLocationClanButton_upSkin");
+}
+
+Button.MapShowOtherPlayerButton {
+	downSkin: Embed(source="component.swf", symbol="MapShowOtherPlayerButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapShowOtherPlayerButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapShowOtherPlayerButton_upSkin");
+}
+
+Button.MapHideOtherPlayerButton {
+	downSkin: Embed(source="component.swf", symbol="MapHideOtherPlayerButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapHideOtherPlayerButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapHideOtherPlayerButton_upSkin");
+}
+
+Button.MapShowOtherPlayerIdButton {
+	downSkin: Embed(source="component.swf", symbol="MapShowOtherPlayerIdButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapShowOtherPlayerIdButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapShowOtherPlayerIdButton_upSkin");
+}
+
+Button.AutoNavigateButton {
+	downSkin: Embed(source="component.swf", symbol="AutoNavigateButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="AutoNavigateButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="AutoNavigateButton_upSkin");
+}
+
+Button.DownButton {
+	downSkin: Embed(source="component.swf", symbol="DownButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="DownButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="DownButton_upSkin");
+}
+
+Button.UpButton {
+	downSkin: Embed(source="component.swf", symbol="UpButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="UpButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="UpButton_upSkin");
+}
+
+Button.MiniMapShowButton {
+	downSkin: Embed(source="component.swf", symbol="MiniMapShowButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MiniMapShowButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MiniMapShowButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="MiniMapShowButton_disabledSkin");
+}
+Button.MiniMapHideButton {
+	downSkin: Embed(source="component.swf", symbol="MiniMapHideButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MiniMapHideButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MiniMapHideButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="MiniMapHideButton_disabledSkin");
+}
+
+/* ��λ */
+Button.LocationButton {
+	downSkin: Embed(source="component.swf", symbol="MapLocationButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MapLocationButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MapLocationButton_upSkin");
+}
+
+Button.DownArrowButton {
+	downSkin: Embed(source="component.swf", symbol="DownArrowButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="DownArrowButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="DownArrowButton_upSkin");
+}
+
+Button.UpArrowButton {
+	downSkin: Embed(source="component.swf", symbol="UpArrowButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="UpArrowButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="UpArrowButton_upSkin");
+}
+
+Button.RightArrowButton {
+	downSkin: Embed(source="component.swf", symbol="RightArrowButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="RightArrowButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RightArrowButton_upSkin");
+}
+
+Button.BottomArrowButton {
+	downSkin: Embed(source="component.swf", symbol="BottomArrowButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="BottomArrowButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="BottomArrowButton_upSkin");
+}
+
+Button.BottomArrowBlinkButton {
+	downSkin: Embed(source="component.swf", symbol="BottomArrowButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="BottomArrowButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="BottomArrowBlinkButton_upSkin");
+}
+
+Button.ChatChannelButton {
+	color: #DA5921;
+	textRollOverColor: #DA5921;
+	textSelectedColor: #B96000;
+	fontWeight: "normal";
+	padding-left: 1;
+	padding-right: 1;
+	downSkin: Embed(source="component.swf", symbol="ChatChannelButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatChannelButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatChannelButton_upSkin");
+}
+
+Button.ChatSendButton {
+	downSkin: Embed(source="component.swf", symbol="ChatSendButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatSendButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatSendButton_upSkin");
+}
+
+Button.ChatExtendButton {
+	downSkin: Embed(source="component.swf", symbol="ChatExtendButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatExtendButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatExtendButton_upSkin");
+}
+
+Button.ChatOpenButton {
+	downSkin: Embed(source="component.swf", symbol="ChatOpenButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatOpenButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatOpenButton_upSkin");
+}
+
+Button.ChatCloseButton {
+	downSkin: Embed(source="component.swf", symbol="ChatCloseButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatCloseButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatCloseButton_upSkin");
+}
+
+Button.FaceSelectButton {
+	downSkin: Embed(source="component.swf", symbol="FaceSelectButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="FaceSelectButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="FaceSelectButton_upSkin");
+}
+
+Button.SpeakerButton {
+	downSkin: Embed(source="component.swf", symbol="SpeakerButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="SpeakerButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="SpeakerButton_upSkin");
+}
+
+Button.ChatSendButton {
+	color: #FFFFFF;
+	downSkin: Embed(source="component.swf", symbol="ChatSendButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="ChatSendButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="ChatSendButton_upSkin");
+}
+
+Button.SpeakerColorButton{
+	downSkin: Embed(source="component.swf", symbol="SpeakerColorButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="SpeakerColorButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="SpeakerColorButton_upSkin");
+}
+
+Button.SpeakerFaceButton{
+	downSkin: Embed(source="component.swf", symbol="SpeakerFaceButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="SpeakerFaceButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="SpeakerFaceButton_upSkin");
+}
+
+Button.BagIconButton {
+	downSkin: Embed(source="component.swf", symbol="BagIconButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="BagIconButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="BagIconButton_upSkin");
+}
+
+Button.PetIconButton {
+	downSkin: Embed(source="component.swf", symbol="PetIconButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="PetIconButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="PetIconButton_upSkin");
+}
+
+Button.InjectButton {
+	downSkin: Embed(source="component.swf", symbol="InjectButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="InjectButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="InjectButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="InjectButton_disabledSkin");
+}
+
+Button.QuestsContinueButton {
+	downSkin: Embed(source="component.swf", symbol="QuestsContinueButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="QuestsContinueButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="QuestsContinueButton_upSkin");
+}
+
+
+Button.LeaveShenNongSqureButton {
+	downSkin: Embed(source="component.swf", symbol="LeaveShenNongSquareButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="LeaveShenNongSquareButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="LeaveShenNongSquareButton_upSkin");
+}
+Button.LeaveChiYouSqureButton {
+	downSkin: Embed(source="component.swf", symbol="LeaveChiYouSquareButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="LeaveChiYouSquareButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="LeaveChiYouSquareButton_upSkin");
+}
+Button.LeaveNvWaSqureButton {
+	downSkin: Embed(source="component.swf", symbol="LeaveNvWaSquareButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="LeaveNvWaSquareButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="LeaveNvWaSquareButton_upSkin");
+}
+Button.LeaveXuanYuanSqureButton {
+	downSkin: Embed(source="component.swf", symbol="LeaveXuanYuanSquareButton_upSkin");
+	overSkin: Embed(source="component.swf", symbol="LeaveXuanYuanSquareButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="LeaveXuanYuanSquareButton_upSkin");
+}
+
+
+Button.WildSceneBigButton {
+	downSkin: Embed(source="component.swf", symbol="WildSceneBigButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="WildSceneBigButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="WildSceneBigButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="WildSceneBigButton_disableSkin");
+}
+
+Button.WildSceneDodgeCardButton {
+	downSkin: Embed(source="component.swf", symbol="DodgeCardButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="DodgeCardButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="DodgeCardButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="DodgeCardButton_disableSkin");
+}
+
+Button.WildSceneFightCardButton {
+	downSkin: Embed(source="component.swf", symbol="FightCardButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="FightCardButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="FightCardButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="FightCardButton_disableSkin");
+}
+
+
+/*******10.6.29 quests相关iconlinkbutton********/
+IconLinkButton {
+	customOverSkin: Embed(source="component.swf", symbol="Quests_Item_Over_Bg");
+}
+/**用于npc对话面板中显示**/
+LinkButton.QuestsYellowCanAcceptButton {
+	icon: Embed(source="component.swf", symbol="Quests_Yellow_Can_Accept_Icon");
+}
+LinkButton.QuestsGreenCanAcceptButton {
+	icon: Embed(source="component.swf", symbol="Quests_Green_Can_Accept_Icon");
+}
+LinkButton.QuestsPurpleCanAcceptButton {
+	icon: Embed(source="component.swf", symbol="Quests_Purple_Can_Accept_Icon");
+}
+LinkButton.QuestsBlueCanAcceptButton {
+	icon: Embed(source="component.swf", symbol="Quests_Blue_Can_Accept_Icon");
+}
+LinkButton.QuestsDoingButton {
+	icon: Embed(source="component.swf", symbol="Quests_Doing_Icon");
+}
+LinkButton.QuestsYellowDoneButton {
+	icon: Embed(source="component.swf", symbol="Quests_Yellow_Done_Icon");
+}
+LinkButton.QuestsGreenDoneButton {
+	icon: Embed(source="component.swf", symbol="Quests_Green_Done_Icon");
+}
+LinkButton.QuestsPurpleDoneButton {
+	icon: Embed(source="component.swf", symbol="Quests_Purple_Done_Icon");
+}
+LinkButton.QuestsBlueDoneButton {
+	icon: Embed(source="component.swf", symbol="Quests_Blue_Done_Icon");
+}
+LinkButton.QuestsTalkButton {
+	icon: Embed(source="component.swf", symbol="Quests_Talk_Icon");
+}
+LinkButton.QuestsAcceptButton {
+	icon: Embed(source="component.swf", symbol="Quests_Accept_Icon");
+}
+LinkButton.QuestsNotAcceptButton {
+	icon: Embed(source="component.swf", symbol="Quests_Not_Accept_Icon");
+}
+LinkButton.QuestsTalkBranchButton {
+	icon: Embed(source="component.swf", symbol="Quests_Talk_Branch_Icon");
+}
+LinkButton.NpcExitButton {
+	icon: Embed(source="component.swf", symbol="Npc_Exit_Icon");
+}
+LinkButton.NpcLearnProduceSkillButton {
+	icon: Embed(source="component.swf", symbol="Npc_Learn_Produce_Skill_Icon");
+}
+LinkButton.NpcForgetProduceSkillButton {
+	icon: Embed(source="component.swf", symbol="Npc_Forget_Produce_Skill_Icon");
+}
+LinkButton.NpcOpenStorageButton {
+	icon: Embed(source="component.swf", symbol="Npc_Open_Storage_Icon");
+}
+/*用于questsicon显示，如建筑和npc头顶**/
+LinkButton.QuestsYellowCanAcceptButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Yellow_Can_Accept_Icon_big");
+}
+LinkButton.QuestsGreenCanAcceptButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Green_Can_Accept_Icon_big");
+}
+LinkButton.QuestsPurpleCanAcceptButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Purple_Can_Accept_Icon_big");
+}
+LinkButton.QuestsBlueCanAcceptButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Blue_Can_Accept_Icon_big");
+}
+LinkButton.QuestsDoingButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Doing_Icon_big");
+}
+LinkButton.QuestsYellowDoneButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Yellow_Done_Icon_big");
+}
+LinkButton.QuestsGreenDoneButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Green_Done_Icon_big");
+}
+LinkButton.QuestsPurpleDoneButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Purple_Done_Icon_big");
+}
+LinkButton.QuestsBlueDoneButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Blue_Done_Icon_big");
+}
+LinkButton.QuestsTalkButtonBig {
+	icon: Embed(source="component.swf", symbol="Quests_Talk_Icon_big");
+}
+/*用于任务面板的消息*/
+LinkButton.QuestsMessageButton {
+	icon: Embed(source="component.swf", symbol="Quests_Message_Icon");
+}
+/*用于怪物卡片任务icon显示*/
+LinkButton.MonsterQuestsIconButton {
+	icon: Embed(source="component.swf", symbol="Quests_Monster_Icon");
+}
+Button.RollDiceButton {
+	downSkin: Embed(source="component.swf", symbol="RollDiceButton_overSkin");
+	overSkin: Embed(source="component.swf", symbol="RollDiceButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RollDiceButton_upSkin");
+}
+
+Button.GiveUpButton {
+	downSkin: Embed(source="component.swf", symbol="GiveUpButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="GiveUpButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="GiveUpButton_upSkin");
+}
+
+Button.MiniQuestsDragButton {
+	downSkin: Embed(source="component.swf", symbol="MiniQuestsDragButton");
+	overSkin: Embed(source="component.swf", symbol="MiniQuestsDragButton");
+	upSkin: Embed(source="component.swf", symbol="MiniQuestsDragButton");
+}
+
+Button.MiniQuestsMinButton {
+	downSkin: Embed(source="component.swf", symbol="MiniQuestsMinButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MiniQuestsMinButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MiniQuestsMinButton_upSkin");
+}
+
+Button.MiniQuestsMaxButton {
+	downSkin: Embed(source="component.swf", symbol="MiniQuestsMaxButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MiniQuestsMaxButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MiniQuestsMaxButton_upSkin");
+}
+
+Button.MiniQuestsCloseButton {
+	downSkin: Embed(source="component.swf", symbol="MiniQuestsCloseButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="MiniQuestsCloseButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="MiniQuestsCloseButton_upSkin");
+}
+
+Button.RmbQuickByExitButton {
+	disabledSkin: Embed(source="component.swf", symbol="RMBQuickBuyExit_disableSkin");
+	downSkin: Embed(source="component.swf", symbol="RMBQuickBuyExit_downSkin");
+	overSkin: Embed(source="component.swf", symbol="RMBQuickBuyExit_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RMBQuickBuyExit_upSkin");
+}
+
+Button.RmbShopSearchButton {
+	downSkin: Embed(source="component.swf", symbol="RmbShopSearchDown");
+	overSkin: Embed(source="component.swf", symbol="RmbShopSearchOver");
+	upSkin: Embed(source="component.swf", symbol="RmbShopSearchUp");
+}
+
+Button.RmbShopExitButton {
+	downSkin: Embed(source="component.swf", symbol="RmbShopExit_downSkin");
+	overSkin: Embed(source="component.swf", symbol="RmbShopExit_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RmbShopExit_upSkin");
+}
+Button.NewbiePropertyTipButton {
+	downSkin: Embed(source="component.swf", symbol="NewbiePropertyTipDown");
+	overSkin: Embed(source="component.swf", symbol="NewbiePropertyTipOver");
+	upSkin: Embed(source="component.swf", symbol="NewbiePropertyTipUp");
+}
+Button.NewbieMingBaiLeTipButton {
+	downSkin: Embed(source="component.swf", symbol="NewbieMingBaiLeTipDown");
+	overSkin: Embed(source="component.swf", symbol="NewbieMingBaiLeTipOver");
+	upSkin: Embed(source="component.swf", symbol="NewbieMingBaiLeTipUp");
+}
+Button.NewbieGameStartTipButton {
+	downSkin: Embed(source="component.swf", symbol="NewbieGameStartTipDown");
+	overSkin: Embed(source="component.swf", symbol="NewbieGameStartTipOver");
+	upSkin: Embed(source="component.swf", symbol="NewbieGameStartTipUp");
+}
+Button.GrowthNumberMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthNumberMiniBtn_down');
+	over-skin: Embed(source='component.swf', symbol='GrowthNumberMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthNumberMiniBtn_down');
+}
+Button.GrowthNumberEnableMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthNumberMiniBtn_up');
+	over-skin: Embed(source='component.swf', symbol='GrowthNumberMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthNumberMiniBtn_down');
+}
+Button.GrowthPowerMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthPowerMiniBtn_down');
+	over-skin: Embed(source='component.swf', symbol='GrowthPowerMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthPowerMiniBtn_down');
+}
+Button.GrowthPowerEnableMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthPowerMiniBtn_up');
+	over-skin: Embed(source='component.swf', symbol='GrowthPowerMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthPowerMiniBtn_down');
+}
+Button.GrowthMoneyMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthMoneyMiniBtn_down');
+	over-skin: Embed(source='component.swf', symbol='GrowthMoneyMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthMoneyMiniBtn_down');
+}
+Button.GrowthMoneyEnableMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthMoneyMiniBtn_up');
+	over-skin: Embed(source='component.swf', symbol='GrowthMoneyMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthMoneyMiniBtn_down');
+}
+Button.GrowthGainMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthGainMiniBtn_down');
+	over-skin: Embed(source='component.swf', symbol='GrowthGainMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthGainMiniBtn_down');
+}
+Button.GrowthGainEnableMiniButton {
+	up-skin: Embed(source='component.swf', symbol='GrowthGainMiniBtn_up');
+	over-skin: Embed(source='component.swf', symbol='GrowthGainMiniBtn_up');
+	down-skin: Embed(source='component.swf', symbol='GrowthGainMiniBtn_down');
+}
+Button.RmbShopButton {
+	downSkin: Embed(source="component.swf", symbol="RmbShopButton_downSkin");
+	overSkin: Embed(source="component.swf", symbol="RmbShopButton_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RmbShopButton_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="RmbShopButton_disableSkin");
+	font-weight:bold;
+	padding-left: 1;
+	padding-right: 1;
+	color: #FFFFFF;
+	text-roll-over-color: #FFFFFF;
+	text-selected-color: #FFFFFF;
+	disabled-color: #919191;
+	up-glow-color: #000000;
+	down-glow-color: #000000;
+	over-glow-color: #000000;
+	disabled-glow-color: #000000;
+}
+Button.HeroInfoQuanJiaButton {
+	icon: Embed(source="component.swf", symbol="QuanJia_Icon");
+	disabledIcon: Embed(source="component.swf", symbol="QuanJia_Disable_Icon");
+}
+
+Button.LoginPrizeBtn {
+	downSkin: Embed(source="component.swf", symbol="loginPrizeBtn_downSkin");
+	overSkin: Embed(source="component.swf", symbol="loginPrizeBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="loginPrizeBtn_upSkin");
+}
+
+Button.LoginPrizeShineBtn {
+	downSkin: Embed(source="component.swf", symbol="loginPrizeBtn_downSkin");
+	overSkin: Embed(source="component.swf", symbol="loginPrizeBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="loginPrizeBtn_ShineSkin");
+}
+
+Button.OnlinePrizeBtn {
+	downSkin: Embed(source="component.swf", symbol="onlinePrizeBtn_overSkin");
+	overSkin: Embed(source="component.swf", symbol="onlinePrizeBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="onlinePrizeBtn_upSkin");
+}
+
+Button.RefresHeroListBtn {
+	downSkin: Embed(source="component.swf", symbol="RefreshBtn_donwSkin");
+	overSkin: Embed(source="component.swf", symbol="RefreshBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RefreshBtn_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="RefreshBtn_disableSkin");
+}
+
+Button.LeftBtn {
+	downSkin: Embed(source="component.swf", symbol="LeftBtn_downSkin");
+	overSkin: Embed(source="component.swf", symbol="LeftBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="LeftBtn_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="LeftBtn_disableSkin");
+}
+
+Button.RightBtn {
+	downSkin: Embed(source="component.swf", symbol="RightBtn_downSkin");
+	overSkin: Embed(source="component.swf", symbol="RightBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="RightBtn_upSkin");
+	disabledSkin: Embed(source="component.swf", symbol="RightBtn_disableSkin");
+}
+
+Button.PetForgeHelBtn {
+	downSkin: Embed(source="component.swf", symbol="PetForgeHelpBtn_donwSkin");
+	overSkin: Embed(source="component.swf", symbol="PetForgeHelpBtn_overSkin");
+	upSkin: Embed(source="component.swf", symbol="PetForgeHelpBtn_upSkin");
+}
+
+Button.AccountActiveCancelBtn {
+	downSkin: Embed(source="component.swf", symbol="AccountActiveCancel_DOWN");
+	overSkin: Embed(source="component.swf", symbol="AccountActiveCancel_OVER");
+	upSkin: Embed(source="component.swf", symbol="AccountActiveCancel_UP");
+}
+Button.AccountActiveConfirmBtn {
+	downSkin: Embed(source="component.swf", symbol="AccountActiveConfirm_DOWN");
+	overSkin: Embed(source="component.swf", symbol="AccountActiveConfirm_OVER");
+	upSkin: Embed(source="component.swf", symbol="AccountActiveConfirm_UP");
+}
+
