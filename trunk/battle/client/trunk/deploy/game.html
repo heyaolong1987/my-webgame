@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="content-style-type" content="text/css"/>
+	<meta http-equiv="content-script-type" content="text/javascript"/>
+	<title>疯狂蛮蛮</title>
+	<meta name="author" content="netease"/>
+	<meta name="version" content="1.0"/>
+	<meta name="keywords" content="疯狂蛮蛮,fkmm,crazyman,疯狂蛮蛮网页版,网易网页游戏,网页游戏,webgame,网易游戏,休闲游戏,在线游戏"/>
+
+    <meta name="description" content=""/>
+	<style type="text/css">
+		html,img{border:none;}
+		html{background:url(http://g2.bst2.126.net/mm/assets/img/bg1.gif?01.0001);}
+		html{width:100%;height:100%;text-align:center;}
+		body{height:100%;margin:0px;font-size:12px;}
+		.body_bg{background:url(http://g2.bst2.126.net/mm/assets/img/bg.jpg?01.0001) center top no-repeat;}
+		body table{width:100%;height:100%;border:0;}
+	</style>
+	<link rel="shortcut icon" href="http://g2.bst2.126.net/mm/assets/img/favicon.ico" type="image/x-icon" />
+	<script type="text/javascript" src="http://g2.bst2.126.net/mm/assets/js/base.js?01.0001"></script>
+	<script type="text/javascript">
+		function init(){
+			swfobject.embedSWF("bitchwar.swf", "bitchwar", "980", "600", "10.0.0",
+				"playerProductInstall.swf",{assets_prefix:"",swf_version:"01.0001",img_version:"01.0001",server_url:"/server.xml"},{allowScriptAccess:"always"},{bgcolor:"#000000"});
+		}
+		
+		var intervalMap = {};
+		function startAnimationTimer(gapTime){
+			if(document.getElementById("bitchwar") == null) {
+				return false;
+			}
+			if(intervalMap[""+gapTime]) {
+				return true;
+			}
+			var pid = setInterval(function(){
+				var o = document.getElementById("bitchwar");
+				if(o && o.flashEnterFrame){
+					o.flashEnterFrame(gapTime);
+				}
+			}, gapTime);
+			intervalMap[""+gapTime] = pid;
+			return true;
+		}
+ 
+		function stopAnimationTimer(gapTime) {
+			var pid = intervalMap[""+gapTime];
+			if(pid){
+				clearInterval(pid);
+				intervalMap[""+gapTime] = null;
+			}
+			return true;
+		}
+		
+		function changeBg(show){
+			if(show) {
+				document.body.className = "body_bg";
+			}else {
+				document.body.className = "";
+			}
+		}
+	</script>
+</head>
+<body class="body_bg">
+<table cellpadding="0" cellspacing="0">
+	<tr valign="top"><td align="center">
+
+  	<div class="game_zone">
+	<div id="bitchwar">
+		<p style="color:#fff">你没有安装FlashPlayer 10或以上版本，必须安装FlashPlayer 10以上的版本。</p>
+		<p><a href="http://www.adobe.com/go/getflashplayer">下载FlashPlayer</a></p>
+	</div>
+	</div>
+	</td></tr></table>
+</body>
+
+<script type="text/javascript"> 
+	init();
+</script>
+</html>

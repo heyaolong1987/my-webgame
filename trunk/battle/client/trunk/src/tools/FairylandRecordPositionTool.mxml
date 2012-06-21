@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+		   xmlns:game="com.netease.webgame.bitchwar.view.game.*" 
+		   xmlns:fairylandClasses="com.netease.webgame.bitchwar.view.popup.fairylandClasses.*" 
+		   xmlns:component="com.netease.webgame.bitchwar.component.*" 
+		   xmlns:text="com.netease.webgame.bitchwar.component.text.*"
+		   keyDown="keyBoardDownHandler(event)" >
+	
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.component.CommonAlert;
+			import com.netease.webgame.bitchwar.model.proxy.FairylandProxy;
+			import com.netease.webgame.bitchwar.model.vo.scene.FairylandRecordLineVO;
+			import com.netease.webgame.bitchwar.model.vo.scene.FairylandRecordVO;
+			import com.netease.webgame.bitchwar.util.LayOutUtil;
+			import com.netease.webgame.bitchwar.view.popup.fairylandClasses.FairylandRecordItem;
+			import com.netease.webgame.bitchwar.view.popup.fairylandClasses.FairylandRecordLine;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.CollectionEvent;
+			
+			public function initEditor():void {
+				var proxy:FairylandProxy = new FairylandProxy();
+				var item:FairylandRecordVO;
+				var list:ArrayCollection = proxy.setFairylandRecord(1, new ArrayCollection());
+				var lines:ArrayCollection = LayOutUtil.fairylandRecordLineList;
+					lines.addEventListener(CollectionEvent.COLLECTION_CHANGE, lineChangeHandler);
+				for each(item in list) {
+					item.killedIndex = int(Math.random()*5);
+				}
+				recordTree.recordList = list;
+				recordTree.lineList = lines;
+				
+				recordTree.addEventListener("lineSelected", lineSelectHandler, true);
+				recordTree.addEventListener("lineUnSelected", lineUnSelectHandler, true);
+				recordTree.addEventListener("itemSelected", itemSelectedHandler, true);
+				recordTree.addEventListener("lineDoubleClick", lineDoubleClickHandler, true);
+			}
+			
+			private var selectedLine:FairylandRecordLine;
+			[Bindable]
+			private var selectedItem:FairylandRecordItem;
+
+			private function itemSelectedHandler(event:Event):void {
+				if(selectMode) {
+					if(selectedLine) {
+						selectMode = false;
+						selectedLine.lineValues.fairylandTemplateId = FairylandRecordItem(event.target).fairylandRecord.fairylandTemplateId;
+					}
+				}
+				focusManager.setFocus(xpos);
+				if(selectedLine) {
+					selectedLine.selected = false;
+					selectedLine = null;
+				}
+				if(selectedItem) {
+					selectedItem.selected = false;
+				}
+				selectedItem = FairylandRecordItem(event.target);
+				selectedItem.selected = true;
+				xpos.text = String(selectedItem.x);
+				ypos.text = String(selectedItem.y);
+				recordTree.fairylandRecord.invalidateDisplayList();
+			}
+			
+			private function keyBoardDownHandler(event:KeyboardEvent):void {
+				var point:Point;
+				if(selectedLine) {
+					point = new Point();
+					point.x = selectedLine.lineValues.x;
+					point.y = selectedLine.lineValues.y;
+				} else if(selectedItem) {
+					point = LayOutUtil.getFairylandRecordPos(selectedItem.fairylandRecord.fairylandTemplateId);
+				}
+				if(point==null) {
+					return;
+				}
+				switch(event.keyCode) {
+					case Keyboard.LEFT:
+						point.x--;
+						break;
+					case Keyboard.RIGHT:
+						point.x++;
+						break;
+					case Keyboard.UP:
+						point.y--;
+						break;
+					case Keyboard.DOWN:
+						point.y++;
+						break;
+				}
+				if(selectedLine) {
+					selectedLine.lineValues.x = point.x;
+					selectedLine.lineValues.y = point.y;
+				}
+				xpos.text = String(point.x);
+				ypos.text = String(point.y);
+				recordTree.fairylandRecord.invalidateDisplayList();
+			}
+			
+			private var selectMode:Boolean;
+			private function lineDoubleClickHandler(event:Event):void {
+				selectMode = true;
+				lineSelectHandler(event);
+			}
+			
+			private function lineSelectHandler(event:Event):void {
+				focusManager.setFocus(xpos);
+				if(selectedItem) {
+					selectedItem.selected = false;
+					selectedItem = null;
+				}
+				if(selectedLine) {
+					selectedLine.selected = false;
+				}
+				selectedLine = FairylandRecordLine(event.target);
+				selectedLine.selected = true;
+				xpos.text = String(selectedLine.x);
+				ypos.text = String(selectedLine.y);
+				recordTree.fairylandRecord.invalidateDisplayList();
+			}
+			
+			private function changeLinePos():void {
+				var point:Point;
+				if(selectedLine) {
+					selectedLine.lineValues.x = int(xpos.text);
+					selectedLine.lineValues.y = int(ypos.text);
+					recordTree.fairylandRecord.invalidateDisplayList();
+				} else if(selectedItem) {
+					point = LayOutUtil.getFairylandRecordPos(selectedItem.fairylandRecord.fairylandTemplateId);
+					point.x = int(xpos.text);
+					point.y = int(ypos.text);
+					recordTree.fairylandRecord.invalidateDisplayList();
+				}
+			}
+			
+			private function lineUnSelectHandler(event:Event):void {
+				if(selectedLine==event.target) {
+					selectedLine.selected = false;
+					selectedLine = null;
+				}
+			}
+			
+			private function lineChangeHandler(event:CollectionEvent):void {
+				recordTree.lineList = LayOutUtil.fairylandRecordLineList;
+				recordTree.fairylandRecord.invalidateDisplayList(); 
+			}
+			
+			private function addLine(lineLinkage:String):void {
+				var vo:FairylandRecordLineVO = new FairylandRecordLineVO();
+					vo.lineLinkage = lineLinkage;
+					vo.x = 200;
+					vo.y = 200;
+					vo.rotation = 0;
+				LayOutUtil.fairylandRecordLineList.addItem(vo);
+				recordTree.lineList = LayOutUtil.fairylandRecordLineList;
+				recordTree.fairylandRecord.invalidateDisplayList();
+			}
+			
+			private function rotateLine():void {
+				if(selectedLine) {
+					selectedLine.lineValues.rotation = selectedLine.lineValues.rotation + 90;
+				}
+				recordTree.fairylandRecord.invalidateDisplayList();
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Canvas width="980" x="120" height="580">
+		<fairylandClasses:FairylandRecordPopup id="recordTree" selectRecord="{selectedItem.fairylandRecord}" editable="true"  x="94" y="34"/>
+		<mx:HBox width="100%" horizontalAlign="center"  x="10" y="522">
+			<component:AdvancedButton label="添加线一" click="{addLine('FairylandRecordArrow1')}" />
+			<component:AdvancedButton label="添加线二" click="{addLine('FairylandRecordArrow2')}" />
+			<component:AdvancedButton label="添加线三" click="{addLine('FairylandRecordArrow3')}" />
+			<component:AdvancedButton label="添加线四" click="{addLine('FairylandRecordArrow4')}" />
+			<component:AdvancedButton label="添加线五" click="{addLine('FairylandRecordArrow5')}" />
+			<mx:Label text="X:"/>
+			<text:AdvancedTextInput id="xpos" styleName="normalTextBlock" width="48" height="20"
+									restrict="0123456789" maxChars="3" focusOut="changeLinePos()" enter="changeLinePos()" />
+			<mx:Label text="Y:"/>
+			<text:AdvancedTextInput id="ypos" styleName="normalTextBlock" width="48" height="20"
+									restrict="0123456789" maxChars="3" focusOut="changeLinePos()" enter="changeLinePos()" />
+			<component:AdvancedButton label="旋转连接线" click="rotateLine()" />
+		</mx:HBox>
+		<mx:CheckBox id="check" selected="true" change="{recordTree.editable=check.selected;selectedItem=null}" label="编辑坐标" x="700" y="76"/>
+		<mx:Label text="Note：按钮按钮添加不同样式的连接线，按下Ctrl双击连接线可以删除，点击可以选中连接线，选中后可以点旋转按钮旋转方向" fontWeight="bold" color="0xFFFF00"  x="140" y="99"/>
+	</mx:Canvas>
+</mx:Canvas>

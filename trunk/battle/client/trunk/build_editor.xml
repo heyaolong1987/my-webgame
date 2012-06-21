@@ -1,0 +1,66 @@
+<project name="bitchwar_editor" default="clean">
+	<taskdef resource="flexTasks.tasks"
+			 classpath="${basedir}/libs/flexTasks.jar"/>
+	
+	<property file="build.properties"/>
+	
+	<path id="svnant.lib">
+        <pathelement location="${LIBS_DIR}/*.jar"/>
+    </path>
+	
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="svnant.lib"/>
+	
+	<target name="svn">
+		<svn username="${SVN_USERNAME}" password="${SVN_USERPWD}">
+			<update dir="."/>
+		</svn>
+	</target>
+
+	<target name="init" depends="svn">
+		<delete dir="${DEPLOY_DIR}"/>
+		<mkdir dir="${DEPLOY_DIR}"/>
+		<tstamp></tstamp>
+	</target>
+
+	<target name="main" depends="init">
+		<mxmlc file="${SRC_DIR}/bitchwar_editor.mxml"
+			   output="${DEPLOY_DIR}/bitchwar_editor.swf">
+			<source-path path-element="${PUREMVC_DIR}"/>
+			<compiler.include-libraries dir="${LIBS_DIR}">
+				<include name="textLayout.swc"/>
+				<include name="greensock.swc" />
+			</compiler.include-libraries>
+			<define name="CONFIG::debug" value="true"/>
+			<define name="CONFIG::release" value="false"/>
+			<define name="CONFIG::version" value="'dev_${TSTAMP}'" />
+		</mxmlc>
+	</target>
+
+	<target name="wrapper" depends="main">
+		<html-wrapper title="bitchwar_editor" file="bitchwar_editor.html" height="100%"
+					  width="100%" application="bitchwar_editor" swf="bitchwar_editor?${TSTAMP}"
+					  version-major="10" version-minor="0" version-revision="0"
+					  history="true" template="client-side-detection"
+					  output="${DEPLOY_DIR}"/>
+	</target>
+
+	<target name="copyRSLs" depends="main">
+		<copy todir="${DEPLOY_DIR}"
+			  file="${FLEX_HOME}/frameworks/rsls/framework_3.4.0.6955.swf"/>
+		<copy todir="${DEPLOY_DIR}"
+			  file="${FLEX_HOME}/frameworks/rsls/framework_3.4.0.6955.swz"/>
+	</target>
+
+	<target name="ftp" depends="main,wrapper,copyRSLs">
+		<ftp password="${FTP_PASSWORD}" server="${FTP_SERVER}"
+			 userid="${FTP_USER}" port="${FTP_PORT}" verbose="no" depends="true" 
+			 remotedir="${REMOTE_DIR}">
+			<fileset dir="${DEPLOY_DIR}">
+			</fileset>
+		</ftp>
+	</target>
+	
+	<target name="clean" depends="ftp">
+		<delete dir="${DEPLOY_DIR}"/>
+	</target>
+</project>

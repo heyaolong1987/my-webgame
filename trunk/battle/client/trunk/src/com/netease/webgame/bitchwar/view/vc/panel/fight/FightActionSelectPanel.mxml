@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="70" height="185">
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.constants.fight.FightActionConstants;
+			import com.netease.webgame.core.events.GameEvent;
+			
+			public static const CHOOSE_ACTION_TYPE:String = "CHOOSE_ACTION_TYPE";	
+			private function actionClick(event:MouseEvent):void{
+				event.stopImmediatePropagation();
+				switch(event.target.id){
+					case "btnAttack":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.ATTACK));
+						break;
+					case "btnDEFEND":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.DEFEND));
+						break;
+					case "btnEscape":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.ESCAPE));
+						break;
+					case "btnCatch":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.CATCH_PET));
+						break;
+					case "btnProtect":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.PROTECT));
+						break;
+					case "btnAuto":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.AUTO));
+						break;
+					case "btnUseSkill":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.USE_SKILL));
+						break;
+					case "btnUseItem":
+						dispatchEvent(new GameEvent(CHOOSE_ACTION_TYPE,FightActionConstants.USE_ITEM));
+						break;
+				}
+			}
+			
+			
+		]]>
+	</mx:Script>
+	<mx:Button x="5" y="5" width="60" id="btnAttack" label="攻击" click="actionClick(event)"/>
+	<mx:Button x="5" y="30" width="60" id="btnProtect" label="技能" click="actionClick(event)"/>
+	<mx:Button x="5" y="55" width="60" id="btnCatchPet" label="捕捉" click="actionClick(event)"/>
+	<mx:Button x="5" y="80" width="60" id="btnDefend" label="防御" click="actionClick(event)"/>
+	<mx:Button x="5" y="105" width="60" id="btnEscape" label="逃跑" click="actionClick(event)"/>
+	<mx:Button x="5" y="130" width="60" id="btnAuto" label="自动" click="actionClick(event)"/>
+	<mx:Button x="5" y="155" width="60" id="btnUseSkill" label="技能" click="actionClick(event)"/>
+	
+</mx:Canvas>

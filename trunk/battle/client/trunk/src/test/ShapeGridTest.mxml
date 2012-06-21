@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:gridClasses="com.netease.webgame.bitchwar.component.gridClasses.*" 
+	width="100%" height="100%" >
+	
+	<mx:Script>
+		<![CDATA[
+			import com.netease.webgame.bitchwar.component.core.events.DragDropEvent;
+			import com.netease.webgame.bitchwar.model.vo.BaseVO;
+			import com.netease.webgame.bitchwar.util.AssetUtil;
+			
+			import mx.collections.ArrayCollection;
+			
+			public function init():void {
+				flexShapeGrid.initBag(ShapeGridCell, ShapeGridItem, 156, 13, 
+						AssetUtil.getCellBorderImg(26),
+						AssetUtil.getCellHighLightImg(26),
+						AssetUtil.getCellDisabledImg(26),
+						24, 24, 24, 24, 8, 8);
+				flexShapeGrid.dropable = true;
+				flexShapeGrid.dragable = true;
+				flexShapeGrid2.initBag(ShapeGridCell, ShapeGridItem, 156, 13, 
+						AssetUtil.getCellBorderImg(26),
+						AssetUtil.getCellHighLightImg(26),
+						AssetUtil.getCellDisabledImg(26),
+						24, 24, 24, 24, 8, 8);
+				flexShapeGrid2.dropable = true;
+				flexShapeGrid2.dragable = true;
+				
+				first = new ArrayCollection();
+				createShapeItem(first, 1);
+				createShapeItem(first, 6);
+				createShapeItem(first, 54);
+				createShapeItem(first, 58);
+				flexShapeGrid.dataProvider = first;
+				flexShapeGrid.addEventListener(DragDropEvent.DRAG_DROP, dragDropHandler);
+				
+				second = new ArrayCollection();
+				createShapeItem(second, 1);
+				createShapeItem(second, 6);
+				createShapeItem(second, 54);
+				createShapeItem(second, 58);
+				flexShapeGrid2.dataProvider = second;
+				
+				flexShapeGrid2.addEventListener(DragDropEvent.DRAG_DROP, dragDropHandler);
+				
+				addEventListener("createShape", createShapeHandler, true);
+			}
+			
+			private var first:ArrayCollection;
+			private var second:ArrayCollection;
+			
+			private function createShapeHandler(event:Event):void {
+				var item:ShapeGridCell = event.target as ShapeGridCell;
+				if(item) {
+					if(item.parent==flexShapeGrid) {
+						createShapeItem(first, item.cellIndex);
+					} else if(item.parent==flexShapeGrid2) {
+						createShapeItem(second, item.cellIndex);
+					}
+				}
+			}
+			
+			private function createShapeItem(items:ArrayCollection, position:int):void {
+				var shape:Array = [];
+				shape.push([[1,0],[1,0]]);
+				shape.push([[1,0],[1,1]]);
+				shape.push([[1,1],[1,0]]);
+				shape.push([[1,1],[1,1]]);
+				shape.push([[0,1,0],[1,1,1],[0,1,0]]);
+				shape.push([[1,1,0],[0,1,1]]);
+				shape.push([[0,1,1],[1,1,0]]);
+				shape.push([[0,1],[1,1],[1,0]]);
+				shape.push([[1,0],[1,1],[0,1]]);
+				var i:int = int(shape.length * Math.random());
+				var item:BaseVO = new BaseVO();
+					item.shapeData = shape[i];
+					item.position = position;
+				items.addItem(item);
+			}
+			
+			private function dragDropHandler(event:DragDropEvent):void {
+				var data:BaseVO = event.dragData as BaseVO;
+				if(event.dragGrid==event.dropGrid){
+					data.position = event.dropPosition;
+				} else{
+					data.position = event.dropPosition;
+					if(event.dragGrid==flexShapeGrid){
+						first.removeItemAt(first.getItemIndex(event.dragData));
+					}
+					else{
+						second.removeItemAt(second.getItemIndex(event.dragData));
+					}
+					if(event.dropGrid==flexShapeGrid){
+						first.addItem(event.dragData);
+					}
+					else{
+						second.addItem(event.dragData);
+					}
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Label color="0xFFFF00" x="120" y="8" horizontalCenter="0" fontWeight="bold" fontSize="16" text="以你们的智商，肯定觉得这不好玩" />
+	<gridClasses:FlexShapeGrid id="flexShapeGrid" currentPage="1" y="160" x="180" />
+	<gridClasses:FlexShapeGrid id="flexShapeGrid2" y="160" x="624" />
+</mx:Canvas>

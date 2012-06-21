@@ -1,0 +1,10 @@
+/* CSS file */
+global {
+	color:			#BBBBAA;
+	font-family:	"Arial,宋体";
+	font-size:		12;
+	focus-thickness:  0;
+	modalTransparencyColor: #000000;
+	modalTransparencyBlur:  0;
+	modalTransparency:      0.3;
+}

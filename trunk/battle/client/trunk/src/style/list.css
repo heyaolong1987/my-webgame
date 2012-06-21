@@ -1,0 +1,63 @@
+/* CSS file */
+List.favoriteList {
+	alternating-item-colors:#000000, #000000;
+	background-alpha:0;
+	borderSkin: Embed(source='container.swf', symbol='CanvasFavoriteListBg');
+	paddingLeft:	4px;
+	paddingRight:	4px;
+	paddingTop:		3px;
+	paddingBottom:	2px;
+}
+
+List.messageList {
+	left:5;
+	right:5;
+	top:5;
+	bottom:5;
+	use-roll-over:false;
+	border-style:	none;
+	paddingLeft:	0px;
+	paddingRight:	0px;
+	paddingTop:		0px;
+	paddingBottom:	0px;
+}
+
+List.channelList {
+	color: #FFFFFF;
+	border-style: none;
+}
+
+List.chatMessageList {
+	alternating-item-colors: ClassReference(null);
+	background-color: ClassReference(null);
+	border-skin	: Embed(source='container.swf', symbol='NullPanelBg');
+	paddingTop:		2;
+	paddingBottom:	0;
+	font-size: 12px;/**for richtext**/
+}
+
+List.loginPrzieList {
+	alternating-item-colors: ClassReference(null);
+	background-color: ClassReference(null);
+}
+
+Container.chatMessageListBg {
+	borderSkin: Embed(source='container.swf', symbol='CanvasChatListBg');
+}
+
+List.accoutList
+{
+	paddingLeft: 8;
+	border-color: #000000;
+	borderStyle: "solid";
+	color: #E0C185;
+	textRollOverColor: #E0C185;
+	textSelectedColor: #E0C185;
+	fontFamily: "Arial";
+	letterSpacing: 1;
+	alternating-item-colors :#502519, #502519;
+	roll-over-color			:#3c1a12;
+	selection-color			:#3c1a12;
+	fontSize: 12;
+	padding-top: 1;
+}
