@@ -193,7 +193,7 @@ package com.netease.core.algorithm.astar{
 			var arr:Array = [];
 			arr.push([sx,sy]);
 			if(sx == tx && sy == ty){
-				return [[sx,sy]];
+				return arr;
 			}
 			iTag = 0;
 			dx = tx>sx?tx-sx:sx-tx;
@@ -218,15 +218,12 @@ package com.netease.core.algorithm.astar{
 			x = sx;
 			y = sy;
 			inc1 = 2*dy;
-			inc2 = 2*(dx-dy);
-			d = 2*dy - dx;
+			inc2 = 2*dx;
+			d = - dx;
 			while(x != tx){
 				x += stepX;
-				
-				if(d < 0){
-					d += inc1/2;
-				}
-				else{
+				d += inc1/2;
+				if(d >= 0){
 					y += stepY;
 					d -= inc2;
 				}
@@ -237,10 +234,9 @@ package com.netease.core.algorithm.astar{
 					arr.push([x,y]);
 				}
 				
-				if(d < 0){
-					d += inc1/2;
-				}
-				else{
+				
+				d += inc1/2;
+				if(d >= 0){
 					y += stepY;
 					d -= inc2;
 				}
@@ -250,6 +246,7 @@ package com.netease.core.algorithm.astar{
 				else{
 					arr.push([x,y]);
 				}
+				
 				
 			}
 			return arr;
