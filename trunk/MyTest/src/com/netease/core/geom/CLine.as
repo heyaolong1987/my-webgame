@@ -1,4 +1,6 @@
 package com.netease.core.geom{
+	import flash.geom.Point;
+
 	/**
 	 * @author heyaolong
 	 * 
@@ -9,14 +11,23 @@ package com.netease.core.geom{
 		 *共线 
 		 */
 		public static const COLLINEAR:int = 0;
-		public static const LINES_INTERSECT:int = 1;	
-		public static const SEGMENTS_INTERSECT:int = 2;	
-		public static const A_BISECTS_B:int = 3;
-		public static const B_BISECTS_A:int = 4;
 		/**
 		 *平行 
 		 */
-		public static const PARALELL:int = 5;
+		public static const PARALELL:int = 1;
+		/**
+		 *当是两条直线时，才相交
+		 */
+		public static const LINES_INTERSECT:int = 2;	
+		/**
+		 *线段相交 
+		 */
+		public static const SEGMENTS_INTERSECT:int = 3;
+		
+		
+		public static const POINT_ON_LINE:int = 0;
+		public static const POINT_ON_LEFT:int = 1;
+		public static const POINT_ON_RIGHT:int = 2;
 		
 		public var x1:int;
 		public var y1:int;
@@ -36,21 +47,9 @@ package com.netease.core.geom{
 		 */
 		public function intersection(line1:CLine,intersectionPoint:CPoint=null):int
 		{
-			(line1.x1-x1)
-			(line1.y1-y1)
-			
-			
-			var b1:int = (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
-			
-			var b2:int = (a2-x1)*(a2-b2)*(a2-b2)*(a2-b1)>=0 
-				
-			var denom:int = (line1.y2-line1.y1)*(x2-x1)-(line1.x2-line1.x1)*(y2-y1);
-			var u0:int = (line1.x2-line1.x1)*(y1-line1.y1)-(line1.y2-line1.y1)*(x1-line1.x1);
-			var u1:int = (line1.x1-x1)*(y2-y1)-(line1.y1-y1)*(x2-x1);
-			
-			
-			var t0:int = (line1.x1-line1.x2)*(x1*y2-x2*y1)-(x1-x2)*(line1.x1*line1.y2-line1.x2*line1.y1);
-			var t1:int = (line1.y1-line1.y2)*(y1*x2-y2*x1)-(y1-y2)*(line1.y1*line1.x2-line1.y2*line1.x1);
+			var denom:Number = (line1.y2-line1.y1)*(x2-x1)-(line1.x2-line1.x1)*(y2-y1);
+			var u0:Number = (line1.x2-line1.x1)*(y1-line1.y1)-(line1.y2-line1.y1)*(x1-line1.x1);
+			var u1:Number = (line1.x1-x1)*(y2-y1)-(line1.y1-y1)*(x2-x1);
 			if(denom == 0) { 
 				if(u0 == 0 && u1 == 0){ //共线
 					return CLine.COLLINEAR;
@@ -59,26 +58,32 @@ package com.netease.core.geom{
 					return CLine.PARALELL;
 				}
 			}else{
-				
-					
+				u0 = u0/denom;
+				u1 = u1/denom;
 				if (intersectionPoint != null){
-					pIntersectPoint.x = t0/denom;
-					pIntersectPoint.y = t1/denom;
+					intersectionPoint.x = x1 + u0*(x2-x1);
+					intersectionPoint.y = y1 + u0*(y2-y1);
 				}
-				if (u0*denom>=0 && u0<=denomu){
-					if(u1*denom >= 0) && u1 <=denomu){
-						return CLine.SEGMENTS_INTERSECT;
-					}
-					else{
-						return CLine.B_BISECTS_A;
-					}
-				}
-				else if(u1*denom>=0 && u1<=denomu){
-					return CLine.A_BISECTS_B;
+				if (u0>=0 && u0<=1 && u1>=0 && u1 <=1){
+					return CLine.SEGMENTS_INTERSECT;
 				}
 				else{
 					return CLine.LINES_INTERSECT;
 				}
+			}
+		}
+		
+		public function checkPointPos(p:CPoint):int{
+			var t:int = (y2-y1)*(p.x-x1)-(x2-x1)*(p.y-y1);
+			 
+			if(t > 0){
+				return POINT_ON_RIGHT;
+			}
+			else if(t < 0){
+				return POINT_ON_RIGHT;
+			}
+			else if(t == 0){
+				return POINT_ON_LINE;
 			}
 		}
 		
