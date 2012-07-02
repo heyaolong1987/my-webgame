@@ -1,7 +1,9 @@
 package com.netease.core.algorithm{
+	import com.netease.core.geom.CCircle;
 	import com.netease.core.geom.CLine;
 	import com.netease.core.geom.CPoint;
 	import com.netease.core.geom.CPolygon;
+	import com.netease.core.geom.CRectangle;
 	import com.netease.core.geom.CTriangle;
 	
 	import flash.geom.Point;
@@ -12,13 +14,6 @@ package com.netease.core.algorithm{
 	 * 2012-6-29
 	 */ 
 	public class CDelaunay{
-		private var polygonList:Vector.<CPolygon>; //所有多边形的集合
-		private var vertexList:Vector.<CPoint>; //所有顶点列表
-		private var edgeList:Vector.<CLine>; //所有边列表
-		private var triangleList:Vector.<CTriangle>;
-		
-		private var lineStack:Vector.<CLine>; //线段堆栈
-		
 		public function CDelaunay()
 		{
 		}
@@ -35,7 +30,7 @@ package com.netease.core.algorithm{
 			var vertex:CPoint;
 			var edge:CLine;
 			var poly:CPolygon;
-			var p1:Point,p2:Point;
+			var p1:CPoint,p2:CPoint;
 			
 			
 			len = polygonList.length;
@@ -50,22 +45,63 @@ package com.netease.core.algorithm{
 				p1= vertexList[0];
 				for (j=1; j<vertexLen; j++) {
 					p2 = poly.vertexList[j];
-					this.edgeList.push(new CLine(p1, p2));
+					edgeList.push(new CLine(p1.x,p1.y, p2.x, p2.y));
 					p1 = p2;
 				}
 				p2 = poly.vertexList[0];
-				this.edgeList.push(new CLine(p1, p2));
+				edgeList.push(new CLine(p1.x,p1.y, p2.x,p2.y));
 			}
-			var initEdge:CLine = getInitOutEdge();
+			var initEdge:CLine = getInitOutEdge(edgeList,vertexList);
 			edgeStack.push(initEdge);
 			do{
 				edge = edgeStack.pop();
-				vertex = findDT(edge);
-				if(vertex){
-					
+				vertex = findDT(vertexList,edgeList,edge);
+				if(vertex == null){
+					continue;
+				}
+				var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
+				var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
+				
+				var triangle:CTriangle = new CTriangle(edge.x1,edge.y1,edge.x2, edge.y2, vertex.x, vertex.y);
+				triangleList.push(triangle);
+				
+				var index:int;
+				if(isInLineList(line13, edgeList) < 0){
+					index = isInLineList(line13, edgeStack);
+					if(index > -1){
+						edgeStack.splice(index,1);
+					}
+					else{
+						edgeStack.push(line13);
+					}
+				}
+				
+				if(isInLineList(line32, edgeList) < 0){
+					index = isInLineList(line32, edgeStack);
+					if(index > -1){
+						edgeStack.splice(index,1);
+					}
+					else{
+						edgeStack.push(line32);
+					}
+				}
+				
+			}
+			while(edgeStack.length > 0);
+			
+			return triangleList;
+		}
+		private static function isInLineList(line:CLine,lineList:Vector.<CLine>):int{
+			var line2:CLine;
+			var i:int;
+			var len:int = lineList.length;
+			for(i=0; i<len; i++){
+				line2 = lineList[i];
+				if(line.equals(line2)){
+					return i;
 				}
 			}
-				
+			return -1;
 		}
 		/**
 		 * 获取初始外边界
@@ -96,7 +132,7 @@ package com.netease.core.algorithm{
 			return initEdge;
 		}
 		
-		private static function findDT(vertexList:Vector.<CPoint>, edge:CLine):CPoint{
+		private static function findDT(vertexList:Vector.<CPoint>, edgeList:Vector.<CLine>, edge:CLine):CPoint{
 			var allVisibleVertex:Vector.<CPoint> = new Vector.<CPoint>();
 			
 			var line12:CLine = edge;
@@ -131,11 +167,43 @@ package com.netease.core.algorithm{
 				return null;
 			}
 			
-			var point:CPoint = allVisibleVertex[0];
+			var p3:CPoint = allVisibleVertex[0];
+			var isMaxAngle:Boolean;
 			do{
-				
+				isMaxAngle = true;
+				var circle:CCircle = CCircle.createCircle(edge.x1,edge.y1,edge.x2,edge.y2,p3.x,p3.y);
+				var bounds:CRectangle = circleBounds(circle);
+				var angle132:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p3.x, p3.y, edge.x2, edge.y2));
+				for each(var p4:CPoint in allVisibleVertex){
+					if((p4.x == edge.x1 && p4.y == edge.y1)
+						|| (p4.x == edge.x2 && p4.y == edge.y2)
+						|| (p4.x == p3.x && p4.y == p3.y)){
+						continue;
+					}
+					if(bounds.contains(p4.x,p4.y) == false){
+						continue;
+					}
+					
+					var angle142:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p4.x, p4.y, edge.x2, edge.y2));
+					if(angle142 > angle132){
+						p3 = p4;
+						isMaxAngle = false;
+						break;
+					}
+					
+				}
 			}
+			while(isMaxAngle==false);
+			return p3;
 			
+		}
+		/**
+		 * 返回圆的包围盒
+		 * @param c
+		 * @return 
+		 */		
+		private static function circleBounds(c:CCircle):CRectangle {
+			return new CRectangle(c.x-c.r, c.y-c.r, c.r*2, c.r*2);
 		}
 		
 		/**

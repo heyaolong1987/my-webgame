@@ -41,7 +41,7 @@ package com.netease.core.geom{
 			cv1[vertexNum1-1].next = cv1[0];
 			
 			
-			var findEnd:Boolean = false;
+			/*var findEnd:Boolean = false;
 			var startNode0:Node = cv0[0];
 			var startNode1:Node;
 			var line0:CLine;
@@ -139,10 +139,10 @@ package com.netease.core.geom{
 				}
 			}
 			
-			trace("rtV", rtV);
-			return rtV;
+			trace("rtV", rtV);*/
 			
-			
+			//return rtV;
+		
 		}
 		
 	}
@@ -161,7 +161,7 @@ class Node {
 	/** 是否是交点 */
 	public var i:Boolean;
 	/** 是否已处理过 */
-	public var p:Boolean = false;	
+	public var processed:Boolean = false;	
 	/** 进点--false； 出点--true */
 	public var o:Boolean = false;
 	/** 交点的双向引用 */
@@ -173,7 +173,7 @@ class Node {
 	public var next:Node;
 	
 	public function Node(pt:CPoint, isInters:Boolean, main:Boolean) {
-		this.v = pt;
+		this.p = pt;
 		this.i = isInters;
 		this.isMain = main;
 	}
