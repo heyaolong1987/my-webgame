@@ -33,9 +33,12 @@ package com.netease.core.geom{
 		public var y1:int;
 		public var x2:int;
 		public var y2:int;
-		public function CLine()
+		public function CLine(x1:int=0, y1:int=0, x2:int=0, y2:int=0)
 		{
-			
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
 		}
 		
 		/**
@@ -82,9 +85,14 @@ package com.netease.core.geom{
 			else if(t < 0){
 				return POINT_ON_RIGHT;
 			}
-			else if(t == 0){
+			else{
 				return POINT_ON_LINE;
 			}
+		}
+		
+		public function equals(line:CLine):Boolean{
+			return (x1 == line.x1 && y1 == line.y1 && x2 == line.x2 && y2 == line.y2)
+			        || (x2 == line.x1 && y2 == line.y1 && x1 == line.x2 && y1 == line.y2);
 		}
 		
 	}

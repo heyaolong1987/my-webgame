@@ -5,9 +5,16 @@ package com.netease.core.geom{
 	 * 2012-6-26
 	 */ 
 	public class CRectangle{
-		
-		public function CRectangle()
+		public var x:Number;
+		public var y:Number;
+		public var width:Number;
+		public var height:Number;
+		public function CRectangle(x:Number,y:Number,width:Number,height:Number)
 		{
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
 		}
 	}
 }
