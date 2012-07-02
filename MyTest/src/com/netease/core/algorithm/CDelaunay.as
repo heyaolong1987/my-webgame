@@ -19,7 +19,7 @@ package com.netease.core.algorithm{
 		}
 		
 		public static function createDelaunay(polygonList:Vector.<CPolygon>):Vector.<CTriangle>{
-			var vertexList:Vector.<CPoint> = new Vector.<CLine>(); //所有顶点列表
+			var vertexList:Vector.<CPoint> = new Vector.<CPoint>(); //所有顶点列表
 			var edgeList:Vector.<CLine> = new Vector.<CLine>();//所有边列表
 			var triangleList:Vector.<CTriangle> = new Vector.<CTriangle>(); //所有生成的三角形列表
 			var edgeStack:Vector.<CLine> = new Vector.<CLine>(); //线段堆栈
@@ -62,7 +62,7 @@ package com.netease.core.algorithm{
 				var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
 				var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
 				
-				var triangle:CTriangle = new CTriangle(edge.x1,edge.y1,edge.x2, edge.y2, vertex.x, vertex.y);
+				var triangle:CTriangle = new CTriangle(edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
 				triangleList.push(triangle);
 				
 				var index:int;
@@ -156,8 +156,8 @@ package com.netease.core.algorithm{
 					continue;
 				}
 				
-				line23.x2 = vertex.x;
-				line23.y2 = vertex.y;
+				line23.x1 = vertex.x;
+				line23.y1 = vertex.y;
 				if(isIntersectWidthLines(line23,edgeList)== false){
 					continue;
 				}
@@ -206,19 +206,9 @@ package com.netease.core.algorithm{
 			return new CRectangle(c.x-c.r, c.y-c.r, c.r*2, c.r*2);
 		}
 		
-		/**
-		 * 
-		 * @param vertex
-		 * @param line
-		 * @return 
-		 * 
-		 */
-		private static function isVisiblePointOfLine(vertex:CPoint,line:CLine):Boolean{
-			
-		}
 		
 		private static function isIntersectWidthLines(edge:CLine, edgeList:Vector.<CLine>):Boolean{
-			var point:CPoint;
+			var point:CPoint = new CPoint();
 			for each(var line:CLine in edgeList){
 				if(edge.intersection(line,point) == CLine.SEGMENTS_INTERSECT){
 					if((edge.x1 != point.x || edge.y1 != point.y)

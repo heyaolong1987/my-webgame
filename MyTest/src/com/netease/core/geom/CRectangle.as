@@ -16,5 +16,8 @@ package com.netease.core.geom{
 			this.width = width;
 			this.height = height;
 		}
+		public function contains(px:int,py:int):Boolean{
+			return px>=x&&px<=x+width&&py>=y&&py<=y+height;
+		}
 	}
 }

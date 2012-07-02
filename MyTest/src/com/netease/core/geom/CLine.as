@@ -83,7 +83,7 @@ package com.netease.core.geom{
 				return POINT_ON_RIGHT;
 			}
 			else if(t < 0){
-				return POINT_ON_RIGHT;
+				return POINT_ON_LEFT;
 			}
 			else{
 				return POINT_ON_LINE;
