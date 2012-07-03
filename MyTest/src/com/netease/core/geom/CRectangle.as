@@ -19,5 +19,8 @@ package com.netease.core.geom{
 		public function contains(px:int,py:int):Boolean{
 			return px>=x&&px<=x+width&&py>=y&&py<=y+height;
 		}
+		public function intersection(rect:CRectangle):Boolean{
+			return contains(rect.x,rect.y) || contains(rect.x+rect.width,rect.y) || contains(rect.x,rect.y+rect.height) || contains(rect.x+width,rect.y+height);
+		}
 	}
 }

@@ -49,6 +49,40 @@ package com.netease.core.geom{
 				return false;
 			}
 		}
+		/**
+		 * 返回矩形包围盒
+		 * @return 
+		 */		
+		public function rectangle():CRectangle {
+			if (vertexList == null || vertexList.length < 0) return null;
+			
+			if (rect != null) return rect;
+			
+			var lx:Number = vertexList[0].x;
+			var rx:Number = vertexList[0].x;
+			var ty:Number = vertexList[0].y;
+			var by:Number = vertexList[0].y;
+			
+			var v:CPoint;
+			for (var i:int=1; i<vertexNum; i++) {
+				v = vertexList[i];
+				if (v.x < lx) {
+					lx = v.x;
+				}
+				if (v.x > rx) {
+					rx = v.x;
+				}
+				if (v.y < ty) {
+					ty = v.y;
+				}
+				if (v.y > by) {
+					by = v.y;
+				}
+			}
+			
+			rect = new CRectangle(lx,ty,rx-lx,by-ty);
+			return rect;
+		}
 	}
 }
 
