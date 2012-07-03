@@ -7,6 +7,7 @@ package com.netease.core.algorithm{
 	import com.netease.core.geom.CTriangle;
 	
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	
 	/**
 	 * @author heyaolong
@@ -21,6 +22,7 @@ package com.netease.core.algorithm{
 		public static function createDelaunay(polygonList:Vector.<CPolygon>):Vector.<CTriangle>{
 			var vertexList:Vector.<CPoint> = new Vector.<CPoint>(); //所有顶点列表
 			var edgeList:Vector.<CLine> = new Vector.<CLine>();//所有边列表
+			var noVisitEdgeList:Dictionary = new Dictionary(); //所有没有作为三角形边的边列表
 			var triangleList:Vector.<CTriangle> = new Vector.<CTriangle>(); //所有生成的三角形列表
 			var edgeStack:Vector.<CLine> = new Vector.<CLine>(); //线段堆栈
 			
@@ -36,13 +38,14 @@ package com.netease.core.algorithm{
 			len = polygonList.length;
 			for(i=0; i<len; i++){
 				poly = polygonList[i];
-				//放入所有的顶点
-				for each(var vertex:CPoint in poly.vertexList){
-					vertexList.push(vertex);
-				}
 				//放入所有边
 				vertexLen = poly.vertexList.length;
-				p1= vertexList[0];
+				//放入所有的顶点
+				for(j=0; j<vertexLen; j++){
+					vertexList.push(poly.vertexList[j]);
+				}
+				
+				p1= poly.vertexList[0];
 				for (j=1; j<vertexLen; j++) {
 					p2 = poly.vertexList[j];
 					edgeList.push(new CLine(p1.x,p1.y, p2.x, p2.y));
@@ -51,52 +54,68 @@ package com.netease.core.algorithm{
 				p2 = poly.vertexList[0];
 				edgeList.push(new CLine(p1.x,p1.y, p2.x,p2.y));
 			}
-			var initEdge:CLine = getInitOutEdge(edgeList,vertexList);
-			edgeStack.push(initEdge);
-			do{
-				edge = edgeStack.pop();
-				vertex = findDT(vertexList,edgeList,edge);
-				if(vertex == null){
-					continue;
-				}
-				var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
-				var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
-				
-				var triangle:CTriangle = new CTriangle(edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
-				triangleList.push(triangle);
-				
-				var index:int;
-				if(isInLineList(line13, edgeList) < 0){
-					index = isInLineList(line13, edgeStack);
-					if(index > -1){
-						edgeStack.splice(index,1);
-					}
-					else{
-						edgeStack.push(line13);
-					}
-				}
-				
-				if(isInLineList(line32, edgeList) < 0){
-					index = isInLineList(line32, edgeStack);
-					if(index > -1){
-						edgeStack.splice(index,1);
-					}
-					else{
-						edgeStack.push(line32);
-					}
-				}
-				
+			var edgeListLen:int = edgeList.length;
+			for(i=0; i<edgeListLen; i++){
+				noVisitEdgeList[i] = true;
 			}
-			while(edgeStack.length > 0);
+			var initEdge:CLine;
+			initEdge = getInitOutEdge(edgeList,noVisitEdgeList,vertexList);
+			while(initEdge){
+				edgeStack.push(initEdge);
+				do{
+					edge = edgeStack.pop();
+					vertex = findDT(vertexList,edgeList,edge);
+					if(vertex == null){
+						continue;
+					}
+					var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
+					var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
+					
+					var triangle:CTriangle = new CTriangle(edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
+					triangleList.push(triangle);
+					
+					var index:int = isInEdgeList(line13, edgeList);
+					if(index < 0){
+						index = isInEdgeList(line13, edgeStack);
+						if(index > -1){
+							edgeStack.splice(index,1);
+						}
+						else{
+							edgeStack.push(line13);
+						}
+					}
+					else{
+						noVisitEdgeList[index] = null;
+						delete noVisitEdgeList[index];
+					}
+					index = isInEdgeList(line32, edgeList);
+					if(index < 0){
+						index = isInEdgeList(line32, edgeStack);
+						if(index > -1){
+							edgeStack.splice(index,1);
+						}
+						else{
+							edgeStack.push(line32);
+						}
+					}
+					else{
+						noVisitEdgeList[index] = null;
+						delete noVisitEdgeList[index];
+					}
+				}
+				while(edgeStack.length > 0);
+				initEdge = getInitOutEdge(edgeList,noVisitEdgeList,vertexList);
+			}
+			
 			
 			return triangleList;
 		}
-		private static function isInLineList(line:CLine,lineList:Vector.<CLine>):int{
+		private static function isInEdgeList(line:CLine,edgeList:Vector.<CLine>):int{
 			var line2:CLine;
 			var i:int;
-			var len:int = lineList.length;
+			var len:int = edgeList.length;
 			for(i=0; i<len; i++){
-				line2 = lineList[i];
+				line2 = edgeList[i];
 				if(line.equals(line2)){
 					return i;
 				}
@@ -107,29 +126,41 @@ package com.netease.core.algorithm{
 		 * 获取初始外边界
 		 * @return 
 		 */		
-		private static function getInitOutEdge(edgeList:Vector.<CLine>,vertexList:Vector.<CPoint>):CLine {
+		private static function getInitOutEdge(edgeList:Vector.<CLine>,noVisitEdgeList:Dictionary,vertexList:Vector.<CPoint>):CLine {
 			var initEdge:CLine;
-			var hasOnlineVertex:Boolean;
-			var i:int;
-			var len:int = edgeList.length;
-			for(i=0; i<len; i++){
-				initEdge = edgeList[i];
-				hasOnlineVertex = false;
-				for each (var vertex:CPoint in vertexList) {
-					if ((vertex.x == initEdge.x1 && vertex.y == initEdge.y1)
-						||(vertex.x == initEdge.x2 && vertex.y == initEdge.y2)){
+			var i:int,j:int;
+			var allVisibleVertex:Vector.<CPoint> = new Vector.<CPoint>();
+			var line12:CLine;
+			var line13:CLine = new CLine();
+			var line23:CLine = new CLine();
+			for(var k:String in noVisitEdgeList){
+				line12 = edgeList[int(k)];
+				line13.x1 = line12.x1;
+				line13.y1 = line12.y1;
+				line23.x2 = line12.x2;
+				line23.y2 = line12.y2;
+				for each(var vertex:CPoint in vertexList){
+					//左边必定相交
+					if(line12.checkPointPos(vertex) != CLine.POINT_ON_RIGHT){
 						continue;
 					}
-					if (initEdge.checkPointPos(vertex) == CLine.POINT_ON_LINE) {
-						hasOnlineVertex = true;
-						break;
+					line13.x2 = vertex.x;
+					line13.y2 = vertex.y;
+					if(isIntersectWidthLines(line13,edgeList)== false){
+						continue;
 					}
-				}
-				if(hasOnlineVertex == false){
-					break;
+					
+					line23.x1 = vertex.x;
+					line23.y1 = vertex.y;
+					if(isIntersectWidthLines(line23,edgeList)== false){
+						continue;
+					}
+					noVisitEdgeList[k] = null;
+					delete noVisitEdgeList[k];
+					return line12;
 				}
 			}
-			return initEdge;
+			return null;
 		}
 		
 		private static function findDT(vertexList:Vector.<CPoint>, edgeList:Vector.<CLine>, edge:CLine):CPoint{
@@ -218,6 +249,38 @@ package com.netease.core.algorithm{
 				}
 			}
 			return true;
+		}
+		
+		public function unionAllPolygons(polygonList:Vector.<CPolygon>):Vector.<CPolygon>{
+			var i:int,j:int;
+			for (i=1; i<polygonV.length; i++) {
+				var p0:CPolygon = polygonV[i];
+				for (var j:int=i+1; j<polygonV.length; j++) {
+					var p1:CPolygon = polygonV[j];
+					if (p0 != p1 && p0.isClockwise() && p0.isClockwise()) {
+						var v:Vector.<Polygon> = p0.union(p1);	//合并
+						
+						if (v != null && v.length > 0) {
+							trace("delete");
+							polygonV.splice(polygonV.indexOf(p0), 1);
+							polygonV.splice(polygonV.indexOf(p1), 1);
+							
+							for each (var pv:Polygon in v) {
+								polygonV.push(pv);
+							}
+							
+							i = 1;	//重新开始
+							break;
+						}
+					}
+				}
+			}
+			//绘图
+			polySp.graphics.lineStyle(3, 0xaaaaaa);
+			for (var k:int=1; k<polygonV.length; k++) {
+				var ptmp:Polygon = polygonV[k];
+				ptmp.draw(polySp.graphics);
+			}
 		}
 	}
 }
