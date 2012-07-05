@@ -8,6 +8,9 @@ package com.netease.core.algorithm{
 	
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import flash.utils.getTimer;
+	
+	import mx.messaging.errors.NoChannelAvailableError;
 	
 	/**
 	 * @author heyaolong
@@ -60,11 +63,15 @@ package com.netease.core.algorithm{
 			}
 			var initEdge:CLine;
 			initEdge = getInitOutEdge(edgeList,noVisitEdgeList,vertexList);
+			var timeArr:Array = [0,0,0,0,0,0,0,0,0,0];
 			while(initEdge){
+				timeArr[0] -= getTimer();
 				edgeStack.push(initEdge);
 				do{
 					edge = edgeStack.pop();
+					timeArr[1] -= getTimer();
 					vertex = findDT(vertexList,edgeList,edge);
+					timeArr[1] += getTimer();
 					if(vertex == null){
 						continue;
 					}
@@ -73,7 +80,7 @@ package com.netease.core.algorithm{
 					
 					var triangle:CTriangle = new CTriangle(edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
 					triangleList.push(triangle);
-					
+					timeArr[2] -= getTimer();
 					var index:int = isInEdgeList(line13, edgeList);
 					if(index < 0){
 						index = isInEdgeList(line13, edgeStack);
@@ -102,9 +109,15 @@ package com.netease.core.algorithm{
 						noVisitEdgeList[index] = null;
 						delete noVisitEdgeList[index];
 					}
+					timeArr[2] += getTimer();
 				}
 				while(edgeStack.length > 0);
+				timeArr[3] -= getTimer();
 				initEdge = getInitOutEdge(edgeList,noVisitEdgeList,vertexList);
+				timeArr[3] += getTimer();
+				timeArr[0] += getTimer();
+				trace(timeArr[0],timeArr[1],timeArr[2],timeArr[3],timeArr[4],timeArr[5]);
+				
 			}
 			
 			
@@ -251,15 +264,14 @@ package com.netease.core.algorithm{
 			return true;
 		}
 		
-		public function unionAllPolygons(polygonList:Vector.<CPolygon>):Vector.<CPolygon>{
+		public static function unionAllPolygons(polygonList:Vector.<CPolygon>):Vector.<CPolygon>{
 			var i:int,j:int;
-			for (i=1; i<polygonList.length; i++) {
+			for (i=0; i<polygonList.length; i++) {
 				var p0:CPolygon = polygonList[i];
 				for (var j:int=i+1; j<polygonList.length; j++) {
 					var p1:CPolygon = polygonList[j];
-					if ((p0.isClockwise() && p0.isClockwise()) ||(!p0.isClockwise() && !p0.isClockwise())) {
-						var v:Vector.<CPolygon> =union(p0,p1);	//合并
-						
+					if(p0.isClockwise() && p1.isClockwise()){
+						var v:Vector.<CPolygon> = union(p0,p1);	//合并
 						if (v != null && v.length > 0) {
 							trace("delete");
 							polygonList.splice(polygonList.indexOf(p0), 1);
@@ -268,13 +280,13 @@ package com.netease.core.algorithm{
 							for each (var pv:CPolygon in v) {
 								polygonList.push(pv);
 							}
-							
-							i = 1;	//重新开始
+							i--;	//重新开始
 							break;
 						}
 					}
 				}
 			}
+			return polygonList;
 		}
 		
 		
@@ -285,7 +297,7 @@ package com.netease.core.algorithm{
 		 * 			null--两个多边形不相交，合并前后两个多边形不变
 		 * 			Polygon--一个新的多边形
 		 */		
-		public function union(polygon0:CPolygon,polygon1:CPolygon):Vector.<CPolygon> {
+		public static function union(polygon0:CPolygon,polygon1:CPolygon):Vector.<CPolygon> {
 			//包围盒不相交
 			if (polygon0.rectangle().intersection(polygon1.rectangle()) == false) {
 				return null;
@@ -297,7 +309,236 @@ package com.netease.core.algorithm{
 			//初始化
 			var node:Node;
 			for (i=0; i<polygon0.vertexNum; i++) {
-				node = new Node(this.vertexList[i], false, true);
+				node = new Node(polygon0.vertexList[i], false, true);
+				if (i > 0) {
+					cv0[i-1].next = node;
+				}
+				cv0.push(node);
+			}
+			cv0[polygon0.vertexNum-1].next = cv0[0];
+			for (i=0; i<polygon1.vertexNum; i++) {
+				node = new Node(polygon1.vertexList[i], false, false);
+				if (i > 0) {
+					cv1[i-1].next = node;
+				}
+				cv1.push(node);
+			}
+			cv1[polygon1.vertexNum-1].next = cv1[0];
+			
+			
+			var insCnt:int = 0;		//交点数
+			var findEnd:Boolean = false;
+			var startNode0:Node;
+			var startNode1:Node;
+			var endNode0:Node;
+			var endNode1:Node;
+			var line0:CLine;
+			var line1:CLine;
+			var ins:CPoint;
+			var hasIns:Boolean;
+			var result:int;		//进出点判断结果
+			var intersectionType:int;
+			
+			var preNode:Node; 
+			var node:Node;
+			
+			for(i=0; i<polygon0.vertexNum; i++){
+				startNode0 = cv0[i];
+				startNode1 = cv0[(i+1)%polygon0.vertexNum];
+				line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y,startNode1.vertex.x,startNode1.vertex.y);
+				for(j=0; j<polygon1.vertexNum; j++){
+					endNode0 = cv1[j];
+					endNode1 = cv1[(j+1)%polygon1.vertexNum];
+					line1 = new CLine(endNode0.vertex.x,endNode0.vertex.y,endNode1.vertex.x,endNode1.vertex.y);
+					ins = new CPoint();	//接受返回的交点
+					intersectionType = line0.intersection(line1, ins);
+					if(intersectionType != CLine.SEGMENTS_INTERSECT){
+						continue;
+					}
+					//忽略交点已在顶点列表中的
+					insCnt++;
+						
+					///////// 插入交点
+					var node0:Node = new Node(ins, true, true);
+					var node1:Node = new Node(ins, true, false);
+					cv0.push(node0);
+					cv1.push(node1);
+					//双向引用
+					node0.other = node1;
+					node1.other = node0;
+					
+					preNode = startNode0;
+					node = preNode.next;
+					
+					while(node!=startNode1){
+						if((ins.x-startNode0.vertex.x)*(ins.x-startNode0.vertex.x)+(ins.y-startNode0.vertex.y)*(ins.y-startNode0.vertex.y) <= 
+							(node.vertex.x-startNode0.vertex.x)*(node.vertex.x-startNode0.vertex.x)+(node.vertex.y-startNode0.vertex.y)*(node.vertex.y-startNode0.vertex.y)){
+							break;
+						}
+						preNode = node;
+						node = node.next;
+					}
+					preNode.next = node0;
+					node0.next = node;
+					
+					
+					preNode = endNode0;
+					node = preNode.next;
+					while(node!=endNode1){
+						if((ins.x-endNode0.vertex.x)*(ins.x-endNode0.vertex.x)+(ins.y-endNode0.vertex.y)*(ins.y-endNode0.vertex.y) <= 
+							(node.vertex.x-endNode0.vertex.x)*(node.vertex.x-endNode0.vertex.x)+(node.vertex.y-endNode0.vertex.y)*(node.vertex.y-endNode0.vertex.y)){
+							break;
+						}
+						preNode = node;
+						node = node.next;
+					}
+					preNode.next = node1;
+					node1.next = node;
+					
+					
+					//出点
+					if (line0.checkPointPos(new CPoint(line1.x2,line1.y2)) == CLine.POINT_ON_LEFT) {
+						node0.out = true;
+						node1.out = true;
+					}
+				}
+			}
+			
+			/*
+			while (startNode0 != null) {		//主多边形
+				if (startNode0.next == null) {  //最后一个点，跟首点相连
+					line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y, cv0[0].vertex.x, cv0[0].vertex.y);
+				} else {
+					line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y, startNode0.next.vertex.x,startNode0.next.vertex.y);
+				}
+				
+				startNode1 = cv1[0];
+				hasIns = false;
+				
+				while (startNode1 != null) {		//合并多边形
+					if (startNode1.next == null) {
+						line1 = new CLine(startNode1.vertex.x,startNode1.vertex.y, cv1[0].vertex.x, cv1[0].vertex.y);
+					} else {
+						line1 = new CLine(startNode1.vertex.x,startNode1.vertex.y, startNode1.next.vertex.x,startNode1.next.vertex.y);
+					}
+					ins = new CPoint();	//接受返回的交点
+					intersectionType = line0.intersection(line1, ins);
+					if(intersectionType != CLine.SEGMENTS_INTERSECT){
+						startNode1 = startNode1.next;
+						continue;
+					}
+					//忽略交点已在顶点列表中的
+					insCnt++;
+					
+					///////// 插入交点
+					var node0:Node = new Node(ins, true, true);
+					var node1:Node = new Node(ins, true, false);
+					cv0.push(node0);
+					cv1.push(node1);
+					//双向引用
+					node0.other = node1;
+					node1.other = node0;
+					//插入
+					node0.next = startNode0.next;
+					startNode0.next = node0;
+					node1.next = startNode1.next;
+					startNode1.next = node1;
+					//出点
+					if (line0.checkPointPos(new CPoint(line1.x2,line1.y2)) == CLine.POINT_ON_RIGHT) {
+						node0.out = true;
+						node1.out = true;
+					}
+					//todo这里似乎可以优化，不用重头再开始找
+					//有交点，返回重新处理
+					hasIns = true;
+					break;
+				}
+				//如果没有交点继续处理下一个边，否则重新处理该点与插入的交点所形成的线段
+				if (hasIns == false) {
+					startNode0 = startNode0.next;
+				}
+			}
+			*/
+			if (insCnt == 0) {
+				return null;
+			}
+			//保存合并后的多边形数组
+			var rtV:Vector.<CPolygon> = new Vector.<CPolygon>();
+			var testNode:Node
+			//1. 选取任一没有被跟踪过的交点为始点，将其输出到结果多边形顶点表中．
+			for(i=0; i<cv0.length; i++){
+				testNode = cv0[i];
+				//相交，而且还没有处理
+				if (testNode.isIntersection == true && testNode.processed == false) {
+					var rcNodes:Vector.<CPoint> = new Vector.<CPoint>();
+					while (testNode != null) {
+						testNode.processed = true;
+						// 如果是交点
+						if (testNode.isIntersection == true) {
+							testNode.other.processed = true;
+							if ((testNode.out == true &&testNode.isMain == true)
+							||(testNode.out == false &&testNode.isMain == false)){
+								testNode = testNode.other;		//切换到另一个多边形
+							}
+						}
+						rcNodes.push(testNode.vertex);  		////// 如果是多边形顶点，将其输出到结果多边形顶点表中
+						if (testNode.next == null) {	//末尾点返回到开始点
+							if (testNode.isMain) {
+								testNode = cv0[0];
+							} else {
+								testNode = cv1[0];
+							}
+						} else {
+							testNode = testNode.next;
+						}
+						//与首点相同，生成一个多边形
+						if (testNode.vertex.x == rcNodes[0].x && testNode.vertex.y == rcNodes[0].y){
+							break;
+						}
+					}
+					//提取
+					rtV.push(new CPolygon(rcNodes));
+				}
+			}
+			return rtV;
+		}
+		/**
+		 * 取得节点的索引(合并多边形用)
+		 * @param cv
+		 * @param node
+		 * @return 
+		 */		
+		private static function getNodeIndex(cv:Vector.<Node>, node:CPoint):int {
+			var len:int = cv.length;
+			for (var i:int=0; i<len; i++) {
+				if (cv[i].vertex.x == node.x && cv[i].vertex.y == node.y) {
+					return i;
+				}
+			}
+			return -1;
+		}
+		
+		
+		/**
+		 * 合并两个多边形(Weiler-Athenton算法)
+		 * @param polygon
+		 * @return 
+		 * 			null--两个多边形不相交，合并前后两个多边形不变
+		 * 			Polygon--一个新的多边形
+		 */		
+		public static function union1(polygon0:CPolygon,polygon1:CPolygon):Vector.<CPolygon> {
+			//包围盒不相交
+			if (polygon0.rectangle().intersection(polygon1.rectangle()) == false) {
+				return null;
+			}
+			var i:int,j:int;
+			//所有顶点和交点
+			var cv0:Vector.<Node> = new Vector.<Node>();//主多边形
+			var cv1:Vector.<Node> = new Vector.<Node>();//合并多边形
+			//初始化
+			var node:Node;
+			for (i=0; i<polygon0.vertexNum; i++) {
+				node = new Node(polygon0.vertexList[i], false, true);
 				if (i > 0) {
 					cv0[i-1].next = node;
 				}
@@ -313,20 +554,20 @@ package com.netease.core.algorithm{
 			
 			
 			var insCnt:int = 0;		//交点数
-			
 			var findEnd:Boolean = false;
 			var startNode0:Node = cv0[0];
 			var startNode1:Node;
-			var line0:CPoint;
-			var line1:CPoint;
+			var line0:CLine;
+			var line1:CLine;
 			var ins:CPoint;
 			var hasIns:Boolean;
 			var result:int;		//进出点判断结果
+			var intersectionType:int;
 			while (startNode0 != null) {		//主多边形
 				if (startNode0.next == null) {  //最后一个点，跟首点相连
-					line0 = new CPoint(startNode0.v, cv0[0].v);
+					line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y, cv0[0].vertex.x, cv0[0].vertex.y);
 				} else {
-					line0 = new CPoint(startNode0.v, startNode0.next.v);
+					line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y, startNode0.next.vertex.x,startNode0.next.vertex.y);
 				}
 				
 				startNode1 = cv1[0];
@@ -334,45 +575,41 @@ package com.netease.core.algorithm{
 				
 				while (startNode1 != null) {		//合并多边形
 					if (startNode1.next == null) {
-						line1 = new CPoint(startNode1.v, cv1[0].v);
+						line1 = new CLine(startNode1.vertex.x,startNode1.vertex.y, cv1[0].vertex.x, cv1[0].vertex.y);
 					} else {
-						line1 = new CPoint(startNode1.v, startNode1.next.v);
+						line1 = new CLine(startNode1.vertex.x,startNode1.vertex.y, startNode1.next.vertex.x,startNode1.next.vertex.y);
 					}
 					ins = new CPoint();	//接受返回的交点
-					//有交点
-					if (line0.intersection(line1, ins) == LineClassification.SEGMENTS_INTERSECT) {
-						//忽略交点已在顶点列表中的
-						if (this.getNodeIndex(cv0, ins) == -1) {
-							insCnt++;
-							
-							///////// 插入交点
-							var node0:Node = new Node(ins, true, true);
-							var node1:Node = new Node(ins, true, false);
-							cv0.push(node0);
-							cv1.push(node1);
-							//双向引用
-							node0.other = node1;
-							node1.other = node0;
-							//插入
-							node0.next = startNode0.next;
-							startNode0.next = node0;
-							node1.next = startNode1.next;
-							startNode1.next = node1;
-							//出点
-							if (line0.classifyPoint(line1.getPointB()) == PointClassification.RIGHT_SIDE) {
-								node0.o = true;
-								node1.o = true;
-							}
-							//TODO 线段重合
-							//							trace("交点****", node0);
-							
-							hasIns = true;		//有交点
-							
-							//有交点，返回重新处理
-							break;
-						}
+					intersectionType = line0.intersection(line1, ins)
+					if(intersectionType != CLine.SEGMENTS_INTERSECT){
+						startNode1 = startNode1.next;
+						continue;
 					}
-					startNode1 = startNode1.next;
+					//忽略交点已在顶点列表中的
+					insCnt++;
+					
+					///////// 插入交点
+					var node0:Node = new Node(ins, true, true);
+					var node1:Node = new Node(ins, true, false);
+					cv0.push(node0);
+					cv1.push(node1);
+					//双向引用
+					node0.other = node1;
+					node1.other = node0;
+					//插入
+					node0.next = startNode0.next;
+					startNode0.next = node0;
+					node1.next = startNode1.next;
+					startNode1.next = node1;
+					//出点
+					if (line0.checkPointPos(new CPoint(line1.x2,line1.y2)) == CLine.POINT_ON_RIGHT) {
+						node0.out = true;
+						node1.out = true;
+					}
+					//todo这里似乎可以优化，不用重头再开始找
+					//有交点，返回重新处理
+					hasIns = true;
+					break;
 				}
 				//如果没有交点继续处理下一个边，否则重新处理该点与插入的交点所形成的线段
 				if (hasIns == false) {
@@ -380,59 +617,53 @@ package com.netease.core.algorithm{
 				}
 			}
 			
-			if (insCnt > 0) {
-				//保存合并后的多边形数组
-				var rtV:Vector.<CPolygon> = new Vector.<CPolygon>();
-				
-				//1. 选取任一没有被跟踪过的交点为始点，将其输出到结果多边形顶点表中．
-				for each (var testNode:Node in cv0) {
-					//相交，而且还没有处理
-					if (testNode.isIntersection == true && testNode.processed == false) {
-						var rcNodes:Vector.<CPoint> = new Vector.<CPoint>();
-						while (testNode != null) {
-							testNode.processed = true;
-							// 如果是交点
-							if (testNode.isIntersection == true) {
-								testNode.other.processed = true;
-								if (testNode.out == false) {		//该交点为进点（跟踪裁剪多边形边界）
-									if (testNode.isMain == true) {		//当前点在主多边形中
-										testNode = testNode.other;		//切换到裁剪多边形中
-									}
-								} else {					//该交点为出点（跟踪主多边形边界）
-									if (testNode.isMain == false) {		//当前点在裁剪多边形中
-										testNode = testNode.other;		//切换到主多边形中
-									}
-								}
-							}
-							
-							rcNodes.push(testNode.vertex);  		////// 如果是多边形顶点，将其输出到结果多边形顶点表中
-							
-							if (testNode.next == null) {	//末尾点返回到开始点
-								if (testNode.isMain) {
-									testNode = cv0[0];
-								} else {
-									testNode = cv1[0];
-								}
-							} else {
-								testNode = testNode.next;
-							}
-							
-							//与首点相同，生成一个多边形
-							if (testNode.vertex.equals(rcNodes[0])){
-								break;
-							}
-						}
-						//提取
-						rtV.push(new Polygon(rcNodes));
-					}
-				}
-				return rtV;
-				
-			} else {
+			if (insCnt == 0) {
 				return null;
 			}
-			
-			return null;
+			//保存合并后的多边形数组
+			var rtV:Vector.<CPolygon> = new Vector.<CPolygon>();
+			var testNode:Node
+			//1. 选取任一没有被跟踪过的交点为始点，将其输出到结果多边形顶点表中．
+			for(i=0; i<cv0.length; i++){
+				testNode = cv0[i];
+				//相交，而且还没有处理
+				if (testNode.isIntersection == true && testNode.processed == false) {
+					var rcNodes:Vector.<CPoint> = new Vector.<CPoint>();
+					while (testNode != null) {
+						testNode.processed = true;
+						// 如果是交点
+						if (testNode.isIntersection == true) {
+							testNode.other.processed = true;
+							if ((testNode.out == true &&testNode.isMain == true)
+								||(testNode.out == false &&testNode.isMain == false)){
+								testNode = testNode.other;		//切换到另一个多边形
+							}
+						}
+						rcNodes.push(testNode.vertex);  		////// 如果是多边形顶点，将其输出到结果多边形顶点表中
+						if (testNode.next == null) {	//末尾点返回到开始点
+							if (testNode.isMain) {
+								testNode = cv0[0];
+							} else {
+								testNode = cv1[0];
+							}
+						} else {
+							testNode = testNode.next;
+						}
+						//与首点相同，生成一个多边形
+						if (testNode.vertex == testNode.vertex){
+							break;
+						}
+					}
+					for(j=rcNodes.length-1; j>=1; j--){
+						if(rcNodes[j].x == rcNodes[j-1].x && rcNodes[j].y == rcNodes[j-1].y){
+							rcNodes.splice(j,1);
+						}
+					}
+					//提取
+					rtV.push(new CPolygon(rcNodes));
+				}
+			}
+			return rtV;
 		}
 	}
 }
