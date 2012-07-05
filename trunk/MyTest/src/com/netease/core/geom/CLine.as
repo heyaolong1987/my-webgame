@@ -50,24 +50,56 @@ package com.netease.core.geom{
 		 */
 		public function intersection(line1:CLine,intersectionPoint:CPoint=null):int
 		{
-			var denom:Number = (line1.y2-line1.y1)*(x2-x1)-(line1.x2-line1.x1)*(y2-y1);
-			var u0:Number = (line1.x2-line1.x1)*(y1-line1.y1)-(line1.y2-line1.y1)*(x1-line1.x1);
-			var u1:Number = (line1.x1-x1)*(y2-y1)-(line1.y1-y1)*(x2-x1);
-			if(denom == 0) { 
-				if(u0 == 0 && u1 == 0){ //共线
+			var denom:int = (y2-y1)*(line1.x2-line1.x1)-(x2-x1)*(line1.y2-line1.y1);
+			if(denom == 0) {
+				if((y2-y1)*(line1.x2-x1) - (x2-x1)*(line1.y2-y1)==0){ //共线
+					if(x1==line1.x1&&y1==line1.y1 &&(x2-x1)*(line1.x2-x1)<=0){
+						if (intersectionPoint != null){
+							intersectionPoint.x = x1;
+							intersectionPoint.y = y1;		
+						}
+						return CLine.SEGMENTS_INTERSECT;
+					}
+					if(x1==line1.x2&&y1==line1.y2 &&(x2-x1)*(line1.x1-x1)<=0){
+						if (intersectionPoint != null){
+							intersectionPoint.x = x1;
+							intersectionPoint.y = y1;		
+						}
+						return CLine.SEGMENTS_INTERSECT;
+					}
+					if(x2==line1.x1&&y2==line1.y1 &&(x1-x2)*(line1.x2-x2)<=0){
+						if (intersectionPoint != null){
+							intersectionPoint.x = x2;
+							intersectionPoint.y = y2;		
+						}
+						return CLine.SEGMENTS_INTERSECT;
+					}
+					if(x2==line1.x2&&y2==line1.y2 &&(x1-x2)*(line1.x1-x2)<=0){
+						if (intersectionPoint != null){
+							intersectionPoint.x = x2;
+							intersectionPoint.y = y2;		
+						}
+						return CLine.SEGMENTS_INTERSECT;
+					}
 					return CLine.COLLINEAR;
 				}
 				else{ //平行
 					return CLine.PARALELL;
 				}
 			}else{
-				u0 = u0/denom;
-				u1 = u1/denom;
+				var x:Number = 1.0*((x2-x1)*(line1.x2-line1.x1)*(line1.y1-y1)
+					+(y2-y1)*(line1.x2-line1.x1)*x1
+					-(line1.y2-line1.y1)*(x2-x1)*line1.x1)
+					/denom;
+				var y:Number = 1.0*((y2-y1)*(line1.y2-line1.y1)*(line1.x1-x1)
+					+(x2-x1)*(line1.y2-line1.y1)*y1
+					-(line1.x2-line1.x1)*(y2-y1)*line1.y1)
+					/(-denom);
 				if (intersectionPoint != null){
-					intersectionPoint.x = x1 + u0*(x2-x1);
-					intersectionPoint.y = y1 + u0*(y2-y1);
+					intersectionPoint.x = x;
+					intersectionPoint.y = y;		
 				}
-				if (u0>=0 && u0<=1 && u1>=0 && u1 <=1){
+				if ((x-x1)*(x-x2)<=0 && (x-line1.x1)*(x-line1.x2)<=0){
 					return CLine.SEGMENTS_INTERSECT;
 				}
 				else{

@@ -7,23 +7,14 @@
 	<mx:Script>
 		<![CDATA[
 			import com.greensock.TweenMax;
-			import com.netease.core.algorithm.astar.AStar;
 			import com.netease.core.algorithm.quadtree.QuadTree;
 			import com.netease.core.manager.CallLaterManager;
 			import com.netease.core.manager.FrameManager;
 			import com.netease.core.map.moveobj.MoveObj;
-			import com.netease.core.map.moveobj.MoveObjVO;
 			import com.netease.core.utils.MovingTween;
 			import com.netease.manager.MoveManager;
-			import com.netease.model.constants.MapConstants;
 			import com.netease.model.vo.moveobj.OtherPlayerVO;
 			import com.netease.view.map.moveobj.OtherPlayer;
-			
-			import flash.sampler.NewObjectSample;
-			import flash.utils.getTimer;
-			import flash.utils.setTimeout;
-			
-			import mx.effects.Tween;
 			private var objArr:Array = [];
 			private var objNum:int = 1;
 			private var mapWidth:int = 950;
