@@ -53,7 +53,7 @@ package com.netease.core.geom{
 			var denom:int = (y2-y1)*(line1.x2-line1.x1)-(x2-x1)*(line1.y2-line1.y1);
 			if(denom == 0) {
 				if((y2-y1)*(line1.x2-x1) - (x2-x1)*(line1.y2-y1)==0){ //共线
-					if(x1==line1.x1&&y1==line1.y1 &&(x2-x1)*(line1.x2-x1)<=0){
+					/*if(x1==line1.x1&&y1==line1.y1 &&(x2-x1)*(line1.x2-x1)<=0){
 						if (intersectionPoint != null){
 							intersectionPoint.x = x1;
 							intersectionPoint.y = y1;		
@@ -80,7 +80,7 @@ package com.netease.core.geom{
 							intersectionPoint.y = y2;		
 						}
 						return CLine.SEGMENTS_INTERSECT;
-					}
+					}*/
 					return CLine.COLLINEAR;
 				}
 				else{ //平行
@@ -99,7 +99,7 @@ package com.netease.core.geom{
 					intersectionPoint.x = x;
 					intersectionPoint.y = y;		
 				}
-				if ((x-x1)*(x-x2)<=0 && (x-line1.x1)*(x-line1.x2)<=0){
+				if ((x-x1)*(x-x2)<=0&&(y-y1)*(y-y2)<=0 && (x-line1.x1)*(x-line1.x2)<=0&&(y-line1.y1)*(y-line1.y2)<=0){
 					return CLine.SEGMENTS_INTERSECT;
 				}
 				else{

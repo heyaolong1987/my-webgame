@@ -79,6 +79,7 @@ package com.netease.core.algorithm{
 					var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
 					
 					var triangle:CTriangle = new CTriangle(edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
+					trace("triangle",edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
 					triangleList.push(triangle);
 					timeArr[2] -= getTimer();
 					var index:int = isInEdgeList(line13, edgeList);
@@ -150,8 +151,8 @@ package com.netease.core.algorithm{
 				line12 = edgeList[int(k)];
 				line13.x1 = line12.x1;
 				line13.y1 = line12.y1;
-				line23.x2 = line12.x2;
-				line23.y2 = line12.y2;
+				line23.x1 = line12.x2;
+				line23.y1 = line12.y2;
 				for each(var vertex:CPoint in vertexList){
 					//左边必定相交
 					if(line12.checkPointPos(vertex) != CLine.POINT_ON_RIGHT){
@@ -163,8 +164,8 @@ package com.netease.core.algorithm{
 						continue;
 					}
 					
-					line23.x1 = vertex.x;
-					line23.y1 = vertex.y;
+					line23.x2 = vertex.x;
+					line23.y2 = vertex.y;
 					if(isIntersectWidthLines(line23,edgeList)== false){
 						continue;
 					}
@@ -185,8 +186,8 @@ package com.netease.core.algorithm{
 			
 			line13.x1 = edge.x1;
 			line13.y1 = edge.y1;
-			line23.x2 = edge.x2;
-			line23.y2 = edge.y2;
+			line23.x1 = edge.x2;
+			line23.y1 = edge.y2;
 			
 			for each(var vertex:CPoint in vertexList){
 				//左边必定相交
@@ -200,8 +201,8 @@ package com.netease.core.algorithm{
 					continue;
 				}
 				
-				line23.x1 = vertex.x;
-				line23.y1 = vertex.y;
+				line23.x2 = vertex.x;
+				line23.y2 = vertex.y;
 				if(isIntersectWidthLines(line23,edgeList)== false){
 					continue;
 				}
