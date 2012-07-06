@@ -24,8 +24,8 @@ package{
 	public class DolygonTestPanel extends UIComponent{
 		private var mapWidth:int=1000;
 		private var mapHeight:int=600;
-		private var tileWidth:int=100;
-		private var tileHeight:int=100;
+		private var tileWidth:int=20;
+		private var tileHeight:int=20;
 		private var row:int = mapHeight/tileHeight;
 		private var col:int = mapWidth/tileWidth;
 		private var sprite:Sprite = new Sprite();
@@ -53,6 +53,7 @@ package{
 					}else{
 						arcs[i][j] = Math.floor(Math.random()*2) == 0?1:0;
 					}
+					
 					
 				}
 			}
@@ -172,8 +173,8 @@ package{
 				vertexNum = polygon.vertexNum;
 				vertexList = polygon.vertexList;
 				if(vertexNum>3){
-					startPoint = vertexList[vertexNum-2];
-					endPoint = vertexList[vertexNum-1];
+					startPoint = vertexList[vertexNum-1];
+					endPoint = vertexList[0];
 					line.x1 = startPoint.x;
 					line.y1 = startPoint.y;
 					line.x2 = endPoint.x;
@@ -190,6 +191,7 @@ package{
 						}
 					}
 				}
+				polygon.vertexNum = vertexList.length;
 			}
 		}
 		private function dfs(arcs:Array,flag:Array,x:int,y:int,d:int):void{
