@@ -37,25 +37,29 @@ package com.netease.core.algorithm{
 			var poly:CPolygon;
 			var p1:CPoint,p2:CPoint;
 			
-			
 			len = polygonList.length;
 			for(i=0; i<len; i++){
 				poly = polygonList[i];
-				//放入所有边
+				
 				vertexLen = poly.vertexList.length;
 				//放入所有的顶点
 				for(j=0; j<vertexLen; j++){
-					vertexList.push(poly.vertexList[j]);
+					if(isInVertexList(poly.vertexList[j],vertexList)==-1){
+						vertexList.push(poly.vertexList[j]);
+					}
 				}
 				
+				//放入所有边
 				p1= poly.vertexList[0];
 				for (j=1; j<vertexLen; j++) {
 					p2 = poly.vertexList[j];
-					edgeList.push(new CLine(p1.x,p1.y, p2.x, p2.y));
+					edge = new CLine(p1.x,p1.y, p2.x, p2.y);
+					edgeList.push(edge);
 					p1 = p2;
 				}
 				p2 = poly.vertexList[0];
-				edgeList.push(new CLine(p1.x,p1.y, p2.x,p2.y));
+				edge = new CLine(p1.x,p1.y, p2.x,p2.y);
+				edgeList.push(edge);
 			}
 			var edgeListLen:int = edgeList.length;
 			for(i=0; i<edgeListLen; i++){
@@ -93,8 +97,8 @@ package com.netease.core.algorithm{
 						}
 					}
 					else{
-						noVisitEdgeList[index] = null;
-						delete noVisitEdgeList[index];
+						setEdgeVisited(edgeList,noVisitEdgeList,line13);
+						
 					}
 					index = isInEdgeList(line32, edgeList);
 					if(index < 0){
@@ -107,8 +111,7 @@ package com.netease.core.algorithm{
 						}
 					}
 					else{
-						noVisitEdgeList[index] = null;
-						delete noVisitEdgeList[index];
+						setEdgeVisited(edgeList,noVisitEdgeList,line32);
 					}
 					timeArr[2] += getTimer();
 				}
@@ -131,6 +134,30 @@ package com.netease.core.algorithm{
 			for(i=0; i<len; i++){
 				line2 = edgeList[i];
 				if(line.equals(line2)){
+					return i;
+				}
+			}
+			return -1;
+		}
+		private static function setEdgeVisited(edgeList:Vector.<CLine>,noVisitList:Dictionary,line:CLine):void{
+			var line2:CLine;
+			var i:int;
+			var len:int = edgeList.length;
+			for(i=0; i<len; i++){
+				line2 = edgeList[i];
+				if(line.equals(line2)){
+					noVisitList[i] = null;
+					delete noVisitList[i];
+				}
+			}
+		}
+		private static function isInVertexList(point:CPoint,vertexList:Vector.<CPoint>):int{
+			var point2:CPoint;
+			var i:int;
+			var len:int = vertexList.length;
+			for(i=0; i<len; i++){
+				point2 = vertexList[i];
+				if(point.x == point2.x && point.y == point2.y){
 					return i;
 				}
 			}
@@ -405,61 +432,7 @@ package com.netease.core.algorithm{
 				}
 			}
 			
-			/*
-			while (startNode0 != null) {		//主多边形
-				if (startNode0.next == null) {  //最后一个点，跟首点相连
-					line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y, cv0[0].vertex.x, cv0[0].vertex.y);
-				} else {
-					line0 = new CLine(startNode0.vertex.x,startNode0.vertex.y, startNode0.next.vertex.x,startNode0.next.vertex.y);
-				}
-				
-				startNode1 = cv1[0];
-				hasIns = false;
-				
-				while (startNode1 != null) {		//合并多边形
-					if (startNode1.next == null) {
-						line1 = new CLine(startNode1.vertex.x,startNode1.vertex.y, cv1[0].vertex.x, cv1[0].vertex.y);
-					} else {
-						line1 = new CLine(startNode1.vertex.x,startNode1.vertex.y, startNode1.next.vertex.x,startNode1.next.vertex.y);
-					}
-					ins = new CPoint();	//接受返回的交点
-					intersectionType = line0.intersection(line1, ins);
-					if(intersectionType != CLine.SEGMENTS_INTERSECT){
-						startNode1 = startNode1.next;
-						continue;
-					}
-					//忽略交点已在顶点列表中的
-					insCnt++;
-					
-					///////// 插入交点
-					var node0:Node = new Node(ins, true, true);
-					var node1:Node = new Node(ins, true, false);
-					cv0.push(node0);
-					cv1.push(node1);
-					//双向引用
-					node0.other = node1;
-					node1.other = node0;
-					//插入
-					node0.next = startNode0.next;
-					startNode0.next = node0;
-					node1.next = startNode1.next;
-					startNode1.next = node1;
-					//出点
-					if (line0.checkPointPos(new CPoint(line1.x2,line1.y2)) == CLine.POINT_ON_RIGHT) {
-						node0.out = true;
-						node1.out = true;
-					}
-					//todo这里似乎可以优化，不用重头再开始找
-					//有交点，返回重新处理
-					hasIns = true;
-					break;
-				}
-				//如果没有交点继续处理下一个边，否则重新处理该点与插入的交点所形成的线段
-				if (hasIns == false) {
-					startNode0 = startNode0.next;
-				}
-			}
-			*/
+		
 			if (insCnt == 0) {
 				return null;
 			}
