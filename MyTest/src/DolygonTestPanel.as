@@ -24,7 +24,7 @@ package{
 	public class DolygonTestPanel extends UIComponent{
 		private var mapWidth:int=1000;
 		private var mapHeight:int=600;
-		private var tileWidth:int=20;
+		private var tileWidth:int=40;
 		private var tileHeight:int=20;
 		private var row:int = mapHeight/tileHeight;
 		private var col:int = mapWidth/tileWidth;
