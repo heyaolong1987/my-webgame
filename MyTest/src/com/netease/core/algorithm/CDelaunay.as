@@ -82,8 +82,7 @@ package com.netease.core.algorithm{
 					var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
 					var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
 					
-					var triangle:CTriangle = new CTriangle(edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
-					trace("triangle",edge.x1,edge.y1, vertex.x, vertex.y,edge.x2, edge.y2);
+					var triangle:CTriangle = new CTriangle(edge.x1,edge.y1,edge.x2, edge.y2,vertex.x, vertex.y);
 					triangleList.push(triangle);
 					timeArr[2] -= getTimer();
 					var index:int = isInEdgeList(line13, edgeList);
@@ -205,6 +204,7 @@ package com.netease.core.algorithm{
 		}
 		
 		private static function findDT(vertexList:Vector.<CPoint>, edgeList:Vector.<CLine>, edge:CLine):CPoint{
+			var timeArr:Array = [0,0];
 			var allVisibleVertex:Vector.<CPoint> = new Vector.<CPoint>();
 			
 			var line12:CLine = edge;
@@ -215,8 +215,9 @@ package com.netease.core.algorithm{
 			line13.y1 = edge.y1;
 			line23.x1 = edge.x2;
 			line23.y1 = edge.y2;
-			
+			timeArr[0] -= getTimer();
 			for each(var vertex:CPoint in vertexList){
+				
 				//左边必定相交
 				if(line12.checkPointPos(vertex) != CLine.POINT_ON_RIGHT){
 					continue;
@@ -235,10 +236,12 @@ package com.netease.core.algorithm{
 				}
 				allVisibleVertex.push(vertex);
 			}
+			
 			if(allVisibleVertex.length == 0){
 				return null;
 			}
-			
+			timeArr[0] += getTimer();
+			timeArr[1] -= getTimer();
 			var p3:CPoint = allVisibleVertex[0];
 			var isMaxAngle:Boolean;
 			do{
@@ -266,6 +269,8 @@ package com.netease.core.algorithm{
 				}
 			}
 			while(isMaxAngle==false);
+			timeArr[1] += getTimer();
+			trace(timeArr[0],timeArr[1]);
 			return p3;
 			
 		}

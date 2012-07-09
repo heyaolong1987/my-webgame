@@ -12,5 +12,9 @@ package com.netease.core.geom{
 			this.x = x;
 			this.y = y;
 		}
+		
+		public static function distance(p1:CPoint,p2:CPoint):Number{
+			return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y));
+		}
 	}
 }
