@@ -24,6 +24,7 @@
 			private var showObj:Boolean = false;
 			private var useTween:Boolean = false;
 			private function init():void{
+				
 				addChild(new DolygonTestPanel());
 				return;
 				
