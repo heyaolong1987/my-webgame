@@ -95,6 +95,7 @@ package com.netease.core.algorithm.astar{
 							nextNode.preNode = currentNode;
 							temp.value = nextNode.f;
 							openList.up(temp.index);
+							nextNode.setArrivalEdgeIndex(currentNode.id);
 						}
 					}
 					else{
@@ -105,6 +106,7 @@ package com.netease.core.algorithm.astar{
 						temp = new BinaryHeapNode(nextNode.f,nextNode);
 						infoList[nextId] = [NODE_OPEN,temp];
 						openList.insert(temp);
+						nextNode.setArrivalEdgeIndex(currentNode.id);
 					}
 				}
 			}
@@ -112,7 +114,7 @@ package com.netease.core.algorithm.astar{
 			var nodeRoute:Vector.<NavmeshAstarNode> = new Vector.<NavmeshAstarNode>();
 			node = currentNode;
 			while (node){
-				route.unshift(node);
+				nodeRoute.unshift(node);
 				route.unshift([node.centerX, node.centerY]);
 				node = node.preNode;
 				
@@ -140,7 +142,7 @@ package com.netease.core.algorithm.astar{
 			
 			endX = route[route.length-1][0];
 			endY = route[route.length-1][1];
-			currentNode = route[0];
+			currentNode = nodeRoute[0];
 			currentX = route[0][0];
 			currentY = route[0][1];
 			pathArr.push(route[0]);
@@ -148,8 +150,8 @@ package com.netease.core.algorithm.astar{
 				startX = currentX;
 				startY = currentY;
 				lastNode = currentNode;
-				startIndex = nodeRoute.indexOf(currentNode);	//开始路点所在的网格索引
-				outSide = lastNode.edgeArr[currentNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
+				startIndex = nodeRoute.indexOf(lastNode);	//开始路点所在的网格索引
+				outSide = lastNode.edgeArr[lastNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
 				lastX1 = outSide.x1;
 				lastY1 = outSide.y1;
 				lastX2 = outSide.x2;

@@ -20,7 +20,7 @@ package com.netease.core.algorithm.astar{
 		public var sessionId:int;
 		public var arrivalEdgeIndex:int;
 		public var midPointArr:Vector.<CPoint>;
-		public var distanceArr:Vector.<Number>;
+		public var distanceArr:Array;
 		public var linkArr:Vector.<int>;
 		public var centerX:Number;
 		public var centerY:Number;
@@ -37,14 +37,17 @@ package com.netease.core.algorithm.astar{
 			centerX = (x1+x2+x3)/3;
 			centerY = (y1+y2+y3)/3;
 			midPointArr = new Vector.<CPoint>();
-			distanceArr = new Vector.<Number>();
+			distanceArr = [];
 			midPointArr[0] = new CPoint((x1+x2)/2,(y1+y2)/2);
 			midPointArr[1] = new CPoint((x2+x3)/2,(y2+y3)/2);
 			midPointArr[2] = new CPoint((x3+x1)/2,(y3+y1)/2);
 			
-			distanceArr[0] = CPoint.distance(midPointArr[0],midPointArr[1]);
-			distanceArr[1] = CPoint.distance(midPointArr[1],midPointArr[2]);
-			distanceArr[2] = CPoint.distance(midPointArr[2],midPointArr[0]);
+			distanceArr[0] = [];
+			distanceArr[1] = [];
+			distanceArr[2] = [];
+			distanceArr[0][1] = distanceArr[1][0] = CPoint.distance(midPointArr[0],midPointArr[1]);
+			distanceArr[1][2] = distanceArr[2][1] = CPoint.distance(midPointArr[1],midPointArr[2]);
+			distanceArr[2][0] = distanceArr[0][2] = CPoint.distance(midPointArr[2],midPointArr[0]);
 			
 			edgeArr = new Vector.<CLine>();
 			edgeArr[0] = new CLine(x1,y1,x2,y2);
@@ -69,5 +72,22 @@ package com.netease.core.algorithm.astar{
 			}
 			return count == 3;
 		}
+		/**
+		 *根据进入的三角形ID设置入边索引
+		 * @param id
+		 * 
+		 */
+		public function setArrivalEdgeIndex(id:int):void{
+			if(id == linkArr[0]){
+				arrivalEdgeIndex = 0;
+			}
+			else if(id == linkArr[1]){
+				arrivalEdgeIndex = 1;
+			}
+			else if(id == linkArr[2]){
+				arrivalEdgeIndex = 2;
+			}
+		}
+			
 	}
 }
