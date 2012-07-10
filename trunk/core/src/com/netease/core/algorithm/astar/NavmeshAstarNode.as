@@ -18,7 +18,7 @@ package com.netease.core.algorithm.astar{
 		public var preNode:NavmeshAstarNode;
 		public var isOpen:Boolean;
 		public var sessionId:int;
-		public var arrivalIndex:int;
+		public var arrivalEdgeIndex:int;
 		public var midPointArr:Vector.<CPoint>;
 		public var distanceArr:Vector.<Number>;
 		public var linkArr:Vector.<int>;

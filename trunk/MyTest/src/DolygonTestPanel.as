@@ -300,6 +300,7 @@ package{
 				ey = event.localY;
 				path = NavMeshAStar.find(astarNodeList,sx,sy,ex,ey);
 			}
+			
 			drawPath();
 			step = (step+1)%2;
 		}
