@@ -131,7 +131,7 @@ package
 					var p1:Polygon = polygonV[m];
 //					trace("p0", p0.isCW(), p0);
 //					trace("p1", p1.isCW(), p1);
-					if (p0 != p1 && p0.isCW() && p1.isCW()) {
+					if (p0 != p1) {
 						var v:Vector.<Polygon> = p0.union(p1);	//合并
 						
 						if (v != null && v.length > 0) {
