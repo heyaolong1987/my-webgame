@@ -1,20 +1,21 @@
 package com.netease.core.algorithm.astar{
-	import com.netease.core.algorithm.binaryheap.BinaryHeap;
-	import com.netease.core.algorithm.binaryheap.BinaryHeapNode;
+	import com.netease.core.geom.CPoint;
 	
-	import flash.utils.flash_proxy;
+	import flash.geom.Point;
 	import flash.utils.getTimer;
+	
 	
 	/**
 	 * @author heyaolong
-	 * A*寻路
-	 * 2012-6-7
+	 * 
+	 * 2012-7-9
 	 */ 
-	public class AStar{
+	public class NavMeshAStar{
 		private static var dirArr:Array = [[-1, -1],[0, -1],[1, -1],[1, 0],[1, 1],[0, 1],[-1, 1],[-1, 0]];
 		private static const NODE_OPEN:int=0;
-		private static const NODE_CLOSE:int=1
-		public function AStar()
+		private static const NODE_CLOSE:int=1;
+		private static var sessionId:int=0;
+		public function NavMeshAStar()
 		{
 		}
 		/**
@@ -27,117 +28,103 @@ package com.netease.core.algorithm.astar{
 		 * @return 
 		 * 
 		 */
-		public static function find(arcs:Array, sx:int, sy:int, tx:int, ty:int):Array{
-			var timeArr:Array = new Array(20);
-			for(var i:int=0;i<20;i++){
-				timeArr[i] = 0;
-			}
-			//起点等于终点
-			if (sx == tx && sy == ty){
+		public static function find(nodeList:Vector.<NavmeshAstarNode>, sx:int, sy:int, ex:int, ey:int):Array{
+			sessionId++;
+			var startPoint:CPoint = new CPoint(sx,sy);
+			var endPoint:CPoint = new CPoint(ex,ey);
+			var startNode:NavmeshAstarNode = findClosestNode(nodeList,startPoint);
+			var endNode:NavmeshAstarNode = findClosestNode(nodeList,endPoint);
+			if(startNode == null || endNode == null){
 				return null;
 			}
-			//起点不可过或终点不可过
-			if (arcs[sx][sy] != 0 || arcs[tx][ty] != 0){
-				return null;
+			if(startNode == endNode){
+				return [[sx,sy],[ex,ey]];
 			}
-			
-			var minNode:AstarNode;
+			var minNode:NavmeshAstarNode;
 			var dir:int;
 			var openList:BinaryHeap = new BinaryHeap();
 			var infoList:Array = [];
-			var node:AstarNode;
-			var currentNode:AstarNode;
+			var node:NavmeshAstarNode;
+			var currentNode:NavmeshAstarNode;
 			var temp:BinaryHeapNode;
-			var nextNode:AstarNode;
+			var nextNode:NavmeshAstarNode;
 			var dx:int,dy:int;
 			var currentX:int,currentY:int;
 			var nextX:int,nextY:int;
 			var g:int;
-			var count:int = 0;
+			var i:int;
 			
-			node = new AstarNode();
-			node.x = sx;
-			node.y = sy;
+			node = startNode;
+			node.sessionId = sessionId;
 			node.g = 0;
-			dx= tx > sx ? tx - sx  : sx - tx;
-			dy= ty > sy ? ty - sy  : sy - ty;
-			node.h = dx>dy?(dy*14+(dx-dy)*10):(dx*14+(dy-dx)*10);
+			node.isOpen = true;
+			node.h = Math.sqrt((startNode.centerX-endNode.centerX)*(startNode.centerX-endNode.centerX) + (startNode.centerY-endNode.centerY)*(startNode.centerY-endNode.centerY));
 			node.f = node.g + node.h;
 			node.preNode = null;
 			openList.insert(new BinaryHeapNode(node.f,node));
-			infoList[sx] = [];
-			infoList[sx][sy] = [NODE_OPEN,new BinaryHeapNode(node.f,node),count];
-			timeArr[3] = -getTimer();
+			infoList[node.id] = [NODE_OPEN,new BinaryHeapNode(node.f,node)];
 			while(true){
-				timeArr[0]++;
-				count++;
 				if(openList.length == 0){
 					return null;
 				}
 				temp = openList.removeMin();
-				currentNode = AstarNode(temp.data);
-				currentX = currentNode.x;
-				currentY = currentNode.y;
+				currentNode = NavmeshAstarNode(temp.data);
 				//已经寻到目标点了，返回路径
-				if (currentX == tx && currentY == ty){
+				if (currentNode == endNode){
 					break;
 				}
-				infoList[currentX][currentY] = [NODE_CLOSE,temp,count];
-				for(dir = 0; dir<8; dir++){
-					nextX = currentX + dirArr[dir][0];
-					nextY = currentY + dirArr[dir][1];
-					if(arcs[nextX][nextY] != 0){
+				infoList[currentNode.id] = [NODE_CLOSE,temp];
+				var nextId:int;
+				for(i = 0; i<3; i++){
+					nextId = currentNode.linkArr[i];
+					if(nextId<0){
 						continue;
 					}
-					if(infoList[nextX]&&infoList[nextX][nextY]&&infoList[nextX][nextY][0] == NODE_CLOSE){
+					if(infoList[nextId]&&infoList[nextId][0] == NODE_CLOSE){
 						continue;
 					}
-					g = currentNode.g + (dir%2 == 1 ? 10 : 14);
-					if(infoList[nextX]&&infoList[nextX][nextY]){
-						temp = infoList[nextX][nextY][1];
-						nextNode = AstarNode(temp.data);
+					nextNode = nodeList[nextId];
+					g = currentNode.g + Math.sqrt((nextNode.centerX-currentNode.centerX)*(nextNode.centerX-currentNode.centerX)+(nextNode.centerY-currentNode.centerY)*(nextNode.centerY-currentNode.centerY));
+					if(infoList[nextId]){
+						temp = infoList[nextId][1];
+						nextNode = NavmeshAstarNode(temp.data);
 						if (g < nextNode.g){
 							nextNode.g = g;
 							nextNode.f = nextNode.g + nextNode.h;
 							nextNode.preNode = currentNode;
-							infoList[nextX][nextY][2] = count;
 							temp.value = nextNode.f;
 							openList.up(temp.index);
-							timeArr[2]++;
 						}
 					}
 					else{
-						nextNode = new AstarNode();
-						nextNode.x = nextX;
-						nextNode.y = nextY;
 						nextNode.g = g;
-						dx = tx > nextX ? tx - nextX : nextX - tx;
-						dy = ty > nextY ? ty - nextY : nextY - ty;
-						nextNode.h = dx>dy?(dy*14+(dx-dy)*10):(dx*14+(dy-dx)*10);
+						nextNode.h = Math.sqrt((ex-nextNode.centerX)*(ex-nextNode.centerX)+(ey-nextNode.centerY)*(ey-nextNode.centerY));
 						nextNode.f = nextNode.g + nextNode.h;
 						nextNode.preNode = currentNode;
 						temp = new BinaryHeapNode(nextNode.f,nextNode);
-						if(infoList[nextX] == null){
-							infoList[nextX] = [];
-						}
-						infoList[nextX][nextY] = [NODE_OPEN,temp,count];
+						infoList[nextId] = [NODE_OPEN,temp];
 						openList.insert(temp);
-						timeArr[1]++;
 					}
 				}
 			}
-			timeArr[3] += getTimer();
-			trace(timeArr[0],timeArr[1],timeArr[2],timeArr[3]);
-			
 			var route:Array = new Array();
-			var routeNode:AstarNode = currentNode;
+			var routeNode:NavmeshAstarNode = currentNode;
 			while (routeNode){
-				route.unshift([routeNode.x, routeNode.y]);
+				route.unshift([routeNode.centerX, routeNode.centerY]);
 				routeNode = routeNode.preNode;
 			}
-			
-			var path:Array = floydSmoothPath(arcs,route);
-			return [route,path,infoList];
+			route.push([ex,ey]);
+			route.unshift([sx,sy]);
+			//var path:Array = floydSmoothPath(arcs,route);
+			return route;
+		}
+		public static function findClosestNode(nodeList:Vector.<NavmeshAstarNode>, p:CPoint):NavmeshAstarNode{
+			for each(var node:NavmeshAstarNode in nodeList){
+				if(node.isPointIn(p)){
+					return node;
+				}
+			}
+			return null;
 		}
 		/**
 		 * floyd路径平滑
