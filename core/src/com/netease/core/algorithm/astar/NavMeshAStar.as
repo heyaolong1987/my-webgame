@@ -1,4 +1,5 @@
 package com.netease.core.algorithm.astar{
+	import com.netease.core.geom.CLine;
 	import com.netease.core.geom.CPoint;
 	
 	import flash.geom.Point;
@@ -108,16 +109,105 @@ package com.netease.core.algorithm.astar{
 				}
 			}
 			var route:Array = new Array();
-			var routeNode:NavmeshAstarNode = currentNode;
-			while (routeNode){
-				route.unshift([routeNode.centerX, routeNode.centerY]);
-				routeNode = routeNode.preNode;
+			var nodeRoute:Vector.<NavmeshAstarNode> = new Vector.<NavmeshAstarNode>();
+			node = currentNode;
+			while (node){
+				route.unshift(node);
+				route.unshift([node.centerX, node.centerY]);
+				node = node.preNode;
+				
 			}
 			route.push([ex,ey]);
 			route.unshift([sx,sy]);
-			//var path:Array = floydSmoothPath(arcs,route);
+			if(route!=null && route.length>0){
+				route = smoothPath(nodeList,nodeRoute,route);
+			}
 			return route;
 		}
+		private static function smoothPath(nodeList:Vector.<NavmeshAstarNode>,nodeRoute:Vector.<NavmeshAstarNode>,route:Array):Array{
+			var pathArr:Array = new Array();
+			var endX:int,endY:int,currentX:int,currentY:int;
+			var currentNode:NavmeshAstarNode;
+			var startX:int,startY:int;
+			var node:NavmeshAstarNode,lastNode:NavmeshAstarNode;
+			var startIndex:int;	
+			var outSide:CLine;	
+			var lastX1:int,lastY1:int,lastX2:int,lastY2:int;
+			var lastLine1:CLine,lastLine2:CLine;
+			var testX1:int,testY1,testX2,testY2;
+			var i:int;
+			var len:int;
+			
+			endX = route[route.length-1][0];
+			endY = route[route.length-1][1];
+			currentNode = route[0];
+			currentX = route[0][0];
+			currentY = route[0][1];
+			pathArr.push(route[0]);
+			while (currentX!=endX || currentY!=endY) {
+				startX = currentX;
+				startY = currentY;
+				lastNode = currentNode;
+				startIndex = nodeRoute.indexOf(currentNode);	//开始路点所在的网格索引
+				outSide = lastNode.edgeArr[currentNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
+				lastX1 = outSide.x1;
+				lastY1 = outSide.y1;
+				lastX2 = outSide.x2;
+				lastY2 = outSide.y2;
+				lastLine1 = new CLine(startX,startY,lastX1,lastY1);
+				lastLine2 = new CLine(startX,startY,lastX2,lastY2);
+				len = nodeRoute.length;
+				for (i=startIndex+1; i<len; i++) {
+					node = nodeRoute[i];
+					outSide = node.edgeArr[node.arrivalEdgeIndex];
+					if (i == nodeRoute.length-1) {
+						testX1 = testX2 = endX;
+						testY1 = testY2 = endY;
+					} else {
+						testX1 = outSide.x1;
+						testY1 = outSide.y1;
+						testX2 = outSide.x2;
+						testY2 = outSide.y2;
+					}
+					if (lastX1!=testX1 || lastY1!=testY1) {
+						if (lastLine2.checkPointPos(new CPoint(testX1,testY1)) == CLine.POINT_ON_RIGHT) {
+							currentX = lastX2;
+							currentY = lastY2;
+							currentNode = lastNode;
+							break;
+						} else {
+							if (lastLine1.checkPointPos(new CPoint(testX1,testY1)) != CLine.POINT_ON_LEFT) {
+								lastX1 = testX1;
+								lastY1 = testY1;
+								lastNode = node;
+								lastLine1.x2 = lastX1;
+								lastLine1.y2 = lastY1;
+							}
+						}
+					}
+					
+					if (lastX2!=testX2 || lastY2!=testY2){
+						if (lastLine1.checkPointPos(new CPoint(testX2,testY2)) == CLine.POINT_ON_LEFT) {
+							currentX = lastX1;
+							currentY = lastY1;
+							currentNode = lastNode;
+							break;
+						} else {
+							if (lastLine2.checkPointPos(new CPoint(testX2,testY2)) != CLine.POINT_ON_RIGHT) {
+								lastX2 = testX2;
+								lastY2 = testY2;
+								lastNode = node;
+								lastLine2.x2 = lastX2;
+								lastLine2.y2 = lastY2;
+							}
+						}
+					}
+				}
+				pathArr.push([currentX,currentY]);
+			}
+			return pathArr;
+		}
+		
 		public static function findClosestNode(nodeList:Vector.<NavmeshAstarNode>, p:CPoint):NavmeshAstarNode{
 			for each(var node:NavmeshAstarNode in nodeList){
 				if(node.isPointIn(p)){
