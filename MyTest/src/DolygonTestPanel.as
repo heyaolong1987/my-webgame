@@ -176,13 +176,24 @@ package{
 				routeSprite.graphics.beginFill(0xff0000);
 				routeSprite.graphics.drawCircle(ex,ey,2);
 				routeSprite.graphics.endFill();
-				if(path!=null&&path.length>0){
-					routeSprite.graphics.lineStyle(1,0x00ff00);
-					routeSprite.graphics.moveTo(path[0][0],path[0][1]);
-					for(var i:int=1;i<path.length;i++){
-						routeSprite.graphics.lineTo(path[i][0],path[i][1]);
+				if(path!=null){
+					if(path[0]!=null&&path[0].length>0){
+						routeSprite.graphics.lineStyle(3,0x00ff00);
+						routeSprite.graphics.moveTo(path[0][0][0],path[0][0][1]);
+						for(var i:int=1;i<path[0].length;i++){
+							routeSprite.graphics.lineTo(path[0][i][0],path[0][i][1]);
+						}
+					}
+					
+					if(path[1]!=null&&path[1].length>0){
+						routeSprite.graphics.lineStyle(3,0xff0000);
+						routeSprite.graphics.moveTo(path[1][0][0],path[1][0][1]);
+						for(var i:int=1;i<path[1].length;i++){
+							routeSprite.graphics.lineTo(path[1][i][0],path[1][i][1]);
+						}
 					}
 				}
+				
 				
 			}
 		}

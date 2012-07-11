@@ -1,6 +1,6 @@
 package com.netease.core.algorithm.astar{
-	import com.netease.core.algorithm.binaryheap.BinaryHeap;
-	import com.netease.core.algorithm.binaryheap.BinaryHeapNode;
+	import com.netease.core.algorithm.astar.BinaryHeap;
+	import com.netease.core.algorithm.astar.BinaryHeapNode;
 	
 	import flash.utils.flash_proxy;
 	import flash.utils.getTimer;
@@ -251,90 +251,72 @@ package com.netease.core.algorithm.astar{
 			return arr;
 		}
 		public static function isLineWalkAble(arcs:Array,sx:int,sy:int,tx:int,ty:int):Boolean{
+			var dx:int,dy:int;
+			var stepX:int,stepY:int;
+			var inc1:int,inc2:int;
+			var d:int,iTag:int;
+			var x:int,y:int;
+			var temp:int;
 			if(sx == tx && sy == ty){
-				return null;
+				return arcs[sx][sy]==0;
 			}
-			var arr:Array = [];
-			var step:int;
-			var maxStep:int;
-			var i:int;
-			var k:Number;
-			var x:Number;
-			var y:Number;
-			var add:int;
-			if(Math.abs(tx - sx) > Math.abs(ty - sy)){
-				step = tx>sx?1:-1;
-				maxStep = tx-sx;
-				k = (ty-sy)/(tx-sx);
-				if(step>0){
-					add = 0;
-				}		
-				else{
-					add = step;
-				}
-				if(ty>sy){
-					for(i=0; i!=maxStep; i+=step){
-						if(arcs[sx+i+add][Math.floor(sy+k*i+0.5)] != 0){
-							return false;
-						}
-						if(arcs[sx+i+add][Math.ceil(sy+k*(i+step)-0.5)] != 0){
-							return false;
-						}
-					}
-				}
-				else if(ty<sy){
-					for(i=0; i!=maxStep; i+=step){
-						if(arcs[sx+i+add][Math.ceil(sy+k*i-0.5)] != 0){
-							return false;
-						}
-						if(arcs[sx+i+add][Math.floor(sy+k*(i+step)+0.5)] != 0){
-							return false;
-						}
-					}
-				}
-				else{
-					for(i=0; i!=maxStep; i+=step){
-						if(arcs[sx+i+add][sy] != 0){
-							return false;
-						}
-					}
-				}
+			iTag = 0;
+			dx = tx>sx?tx-sx:sx-tx;
+			dy = ty>sy?ty-sy:sy-ty;
+			if(dx < dy){
+				iTag = 1;
+				temp = sx;
+				sx = sy;
+				sy = temp;
+				
+				temp = tx;
+				tx = ty;
+				ty = temp;
+				
+				temp = dx;
+				dx = dy;
+				dy = temp;
 			}
-			else{
-				step = ty>sy?1:-1;
-				maxStep = ty-sy;
-				k = (tx-sx)/(ty-sy);
-				if(step>0){
-					add = 0;
-				}		
-				else{
-					add = step;
+			
+			stepX = tx-sx>0?1:-1;
+			stepY = ty-sy>0?1:-1;
+			x = sx;
+			y = sy;
+			inc1 = 2*dy;
+			inc2 = 2*dx;
+			d = - dx;
+			while(x != tx){
+				x += stepX;
+				d += inc1/2;
+				if(d >= 0){
+					y += stepY;
+					d -= inc2;
 				}
-				if(tx>sx){
-					for(i=0; i!=maxStep; i+=step){
-						if(arcs[Math.floor(sx+k*i+0.5)][sy+i+add] != 0){
-							return false;
-						}
-						if(arcs[Math.ceil(sx+k*(i+step)-0.5)][sy+i+add] != 0){
-							return false;
-						}
-					}
-				}
-				else if(tx<sx){
-					for(i=0; i!=maxStep; i+=step){
-						if(arcs[Math.ceil(sx+k*i-0.5)][sy+i+add] != 0){
-							return false;
-						}
-						if(arcs[Math.floor(sx+k*(i+step)+0.5)][sy+i+add] != 0){
-							return false;
-						}
+				if(iTag){
+					if(arcs[y][x] == 1){
+						return false;
 					}
 				}
 				else{
-					for(i=0; i!=maxStep; i+=step){
-						if(arcs[sx][sy+i+add] != 0){
-							return false;
-						}
+					if(arcs[x][y] == 1){
+						return false;
+					}
+				}
+				
+				
+				d += inc1/2;
+				if(d >= 0){
+					y += stepY;
+					d -= inc2;
+				}
+				if(iTag){
+					if(arcs[y][x] == 1){
+						return false;
+					}
+				}
+				else{
+					if(arcs[x][y] == 1){
+						return false;
 					}
 				}
 			}
