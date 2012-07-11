@@ -39,7 +39,7 @@ package com.netease.core.algorithm.astar{
 				return null;
 			}
 			if(startNode == endNode){
-				return [[sx,sy],[ex,ey]];
+				return [[[sx,sy],[ex,ey]],[[sx,sy],[ex,ey]]];
 			}
 			var minNode:NavmeshAstarNode;
 			var dir:int;
@@ -122,7 +122,7 @@ package com.netease.core.algorithm.astar{
 			route.push([ex,ey]);
 			route.unshift([sx,sy]);
 			if(route!=null && route.length>0){
-				route = smoothPath(nodeList,nodeRoute,route);
+				route = [route,smoothPath(nodeList,nodeRoute,route)];
 			}
 			return route;
 		}
@@ -130,46 +130,43 @@ package com.netease.core.algorithm.astar{
 			var pathArr:Array = new Array();
 			var endX:int,endY:int,currentX:int,currentY:int;
 			var currentNode:NavmeshAstarNode;
-			var startX:int,startY:int;
 			var node:NavmeshAstarNode,lastNode:NavmeshAstarNode;
 			var startIndex:int;	
-			var outSide:CLine;	
+			var inSideEdge:CLine;	
 			var lastX1:int,lastY1:int,lastX2:int,lastY2:int;
 			var lastLine1:CLine,lastLine2:CLine;
 			var testX1:int,testY1,testX2,testY2;
 			var i:int;
 			var len:int;
 			
-			endX = route[route.length-1][0];
-			endY = route[route.length-1][1];
-			currentNode = nodeRoute[0];
-			currentX = route[0][0];
-			currentY = route[0][1];
-			pathArr.push(route[0]);
-			while (currentX!=endX || currentY!=endY) {
-				startX = currentX;
-				startY = currentY;
+			endX = route[0][0];
+			endY = route[0][1];
+			currentNode = nodeRoute[nodeRoute.length-1];
+			currentX = route[route.length-1][0];
+			currentY = route[route.length-1][1];
+			pathArr.unshift(route[route.length-1]);
+			while(currentX!=endX || currentY!=endY) {
 				lastNode = currentNode;
 				startIndex = nodeRoute.indexOf(lastNode);	//开始路点所在的网格索引
-				outSide = lastNode.edgeArr[lastNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
-				lastX1 = outSide.x1;
-				lastY1 = outSide.y1;
-				lastX2 = outSide.x2;
-				lastY2 = outSide.y2;
-				lastLine1 = new CLine(startX,startY,lastX1,lastY1);
-				lastLine2 = new CLine(startX,startY,lastX2,lastY2);
+				inSideEdge = lastNode.edgeArr[lastNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
+				lastX1 = inSideEdge.x1;
+				lastY1 = inSideEdge.y1;
+				lastX2 = inSideEdge.x2;
+				lastY2 = inSideEdge.y2;
+				lastLine1 = new CLine(currentX,currentY,lastX1,lastY1);
+				lastLine2 = new CLine(currentX,currentY,lastX2,lastY2);
 				len = nodeRoute.length;
-				for (i=startIndex+1; i<len; i++) {
+				for (i=startIndex-1; i>=0; i--) {
 					node = nodeRoute[i];
-					outSide = node.edgeArr[node.arrivalEdgeIndex];
-					if (i == nodeRoute.length-1) {
+					inSideEdge = node.edgeArr[node.arrivalEdgeIndex];
+					if (i == 0) {
 						testX1 = testX2 = endX;
 						testY1 = testY2 = endY;
 					} else {
-						testX1 = outSide.x1;
-						testY1 = outSide.y1;
-						testX2 = outSide.x2;
-						testY2 = outSide.y2;
+						testX1 = inSideEdge.x1;
+						testY1 = inSideEdge.y1;
+						testX2 = inSideEdge.x2;
+						testY2 = inSideEdge.y2;
 					}
 					if (lastX1!=testX1 || lastY1!=testY1) {
 						if (lastLine2.checkPointPos(new CPoint(testX1,testY1)) == CLine.POINT_ON_RIGHT) {
@@ -205,7 +202,12 @@ package com.netease.core.algorithm.astar{
 						}
 					}
 				}
-				pathArr.push([currentX,currentY]);
+				if(i<0){
+					currentNode = nodeRoute[0];
+					currentX = endX;
+					currentY = endY;
+				}
+				pathArr.unshift([currentX,currentY]);
 			}
 			return pathArr;
 		}

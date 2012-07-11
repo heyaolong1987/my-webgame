@@ -18,8 +18,8 @@ package{
 	public class AstarTestPanel extends mx.core.UIComponent{
 		private var mapWidth:int=1000;
 		private var mapHeight:int=600;
-		private var tileWidth:int=10;
-		private var tileHeight:int=10;
+		private var tileWidth:int=40;
+		private var tileHeight:int=40;
 		private var row:int = mapHeight/tileHeight;
 		private var col:int = mapWidth/tileWidth;
 		private var sprite:Sprite = new Sprite();
@@ -37,7 +37,7 @@ package{
 					if(i==0 || i==col-1 || j ==0 || j==row-1){
 						arcs[i][j] = 1;
 					}else{
-						arcs[i][j] = Math.floor(Math.random()*7) == 0?1:0;
+						arcs[i][j] = Math.floor(Math.random()*2) == 0?1:0;
 					}
 				}
 			}
@@ -98,29 +98,29 @@ package{
 			for(var i:int=0; i<col; i++){
 				for(var j:int=0; j<row; j++){
 					if(hasVisitArr[i]&&hasVisitArr[i][j]){
-						/*routeSprite.graphics.beginFill(0x00ff00);
+						routeSprite.graphics.beginFill(0x00ff00);
 						routeSprite.graphics.drawRect(i*tileWidth,j*tileHeight,tileWidth,tileHeight);
 						routeSprite.graphics.endFill();
 						var txt:TextField = new TextField();
 						txt.text = hasVisitArr[i][j][1].value;
 						txt.x = i*tileWidth;
 						txt.y = j*tileHeight;
-						txt.textColor = 0x23ff03;
+						txt.textColor = 0x0000ff;
 						addChild(txt);
-						txtArr.push(txt);*/
+						txtArr.push(txt);
 					}
 				}
 			}
 			
 			routeSprite.graphics.moveTo(route[0][0]*tileWidth+tileWidth/2,route[0][1]*tileHeight+tileHeight/2);
 			for(var i:int=1;i<route.length;i++){
-				routeSprite.graphics.lineStyle(1,0x0000ff);
+				routeSprite.graphics.lineStyle(3,0x0000ff);
 				routeSprite.graphics.lineTo(route[i][0]*tileWidth+tileWidth/2,route[i][1]*tileHeight+tileHeight/2);
 			}
 			
 			routeSprite.graphics.moveTo(path[0][0]*tileWidth+tileWidth/2,path[0][1]*tileHeight+tileHeight/2);
 			for(var i:int=1;i<path.length;i++){
-				routeSprite.graphics.lineStyle(1,0x00ffff);
+				routeSprite.graphics.lineStyle(3,0xff0000);
 				routeSprite.graphics.lineTo(path[i][0]*tileWidth+tileWidth/2,path[i][1]*tileHeight+tileHeight/2);
 			}
 			
