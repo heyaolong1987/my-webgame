@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="644" height="346" creationComplete="init()">
+	<mx:Button x="170" y="40" label="加载dat" click="loadWallInfo();"/>
+	<mx:Button x="172" y="87" label="生成dat" click="makeWallInfo();"/>
+	<mx:NumericStepper x="85" y="41" id="stX" value="10"/>
+	<mx:NumericStepper x="87" y="83" id="stY" value="10"/>
+	<mx:Button x="261" y="41" label="清除输出" click="clear();"/>
+	<mx:TextArea x="65" y="121" id="info" editable="false" width="222" height="219"/>
+	<mx:Label x="31" y="43" text="stepX"/>
+	<mx:Label x="32" y="85" text="stepY"/>
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			import mx.events.FileEvent;
+			import flash.utils.getTimer;
+			import flash.filesystem.FileMode;
+			import flash.filesystem.FileStream;
+			import flash.filesystem.File;
+			
+			private var loadShape : Bitmap = new Bitmap();
+			private var makeShape : Sprite = new Sprite();
+			private var loader : Loader = new Loader();
+			
+			private function clear() : void {
+				loader.unload();
+				loadShape.bitmapData = null;
+				makeShape.graphics.clear();
+			}
+			private function init():void{
+			}
+			private function loadWallInfo() : void {
+				if(Data.file.nativePath == null){
+					info.text += "加载文件名不能为空\n";
+					return;
+				}
+				info.text += Data.file.nativePath;
+				var file:File = new File( Data.file.nativePath + Config.datName );
+				var stream:FileStream = new FileStream();
+				var data:ByteArray = new ByteArray;
+				stream.open(file, FileMode.READ);
+				stream.readBytes(data, 0, stream.bytesAvailable);
+				data.uncompress();
+				var mapId : int = data.readInt();
+				var mapWidth : int = data.readInt();
+				var mapHeight : int = data.readInt();
+				var stepX : int = data.readInt();
+				var stepY : int = data.readInt();
+				var itemList:Array = data.readObject();
+				/*
+				var mapId : int = stream.readInt();
+				var mapWidth : int = stream.readInt();
+				var mapHeight : int = stream.readInt();
+				var stepX : int = stream.readInt();
+				var stepY : int = stream.readInt();
+				*/
+				// 显示信息
+				info.text = "MapId:" + mapId
+					+ "\nMapWidth:" + mapWidth
+					+ "\nMapHeight:" + mapHeight
+					+ "\nStepX:" + stepX
+					+ "\nStepY:" + stepY;
+				
+				var byte : ByteArray = new ByteArray();
+				data.readBytes(byte,0,stream.bytesAvailable);
+				//stream.readBytes(byte,0,stream.bytesAvailable);
+				info.text += "\n解压时间(ms)：";
+				var timeStart:Number = getTimer();
+				byte.uncompress();
+				info.text += (getTimer() - timeStart).toString();
+				
+				info.text += "\n绘制时间(ms)：";
+				timeStart = getTimer();
+				var bitmapData : BitmapData = new BitmapData(2000,2000);
+				loadShape.bitmapData = bitmapData;
+				loadShape.alpha = 0.5;
+				for( var i:int = 0 ; i < 2000; i ++ )
+				{
+					for( var j:int = 0 ; j < 2000; j ++ )
+					{
+						var isWall:Boolean = checkHitTest(byte,j,i,stepX,stepY,mapWidth,mapHeight);
+						if( isWall ) {
+							// 绘制不可走区域
+							bitmapData.setPixel(j,i,0xff0000 );
+						}	
+					}
+				}
+				stage.addChild( loadShape );
+				info.text += (getTimer() - timeStart).toString();
+			}
+			
+			public function checkHitTest( bytes : ByteArray, pixX:uint , pixY:uint,stepX:int,stepY:int, mapWidth:int, mapHeight:int ):Boolean {
+				if( pixX < 0 || pixX > mapWidth || pixY < 0 || pixY > mapHeight )
+					return false;
+				if( !bytes ) {
+					return true;
+				}
+				var checkX : int = pixX/stepX;
+				var checkY : int = pixY/stepY;
+				var index_total:int = checkY * int(mapWidth/stepX) + checkX;
+				var index_array:int = index_total / 8;
+				var index_bit:int = index_total % 8;
+				var mask:uint = 1 << index_bit;
+				var ori:uint = bytes[index_array] ;
+				var result:uint = ori & mask;		
+				return Boolean(result);
+			} 
+			
+			private function makeWallInfo() : void {
+				// 根据swf文件来生成一个二进制的wall info。
+				// 用loader加载进来，判断hitTest，然后写成位的形式。
+				if(Data.file.nativePath == null){
+					info.text += "文件路径不能为空\n";
+					return;
+				}
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE,makeWallFile );
+				loader.load( new URLRequest(Data.file.nativePath + Config.swfName) );
+			}
+			
+			private function makeWallFile(e:Event) : void {
+				
+				var loadInfo :LoaderInfo = e.currentTarget as LoaderInfo;
+				loadInfo.removeEventListener(Event.COMPLETE,makeWallFile );
+				var loader : Loader = loadInfo.loader;
+				// 添加到舞台上可视化比较
+				loader.alpha = 0.5;
+				stage.addChild( loader );
+				
+				var mapId : int = 0;
+				var mapWidth : int = loader.width;
+				var mapHeight : int = loader.height;
+				// 记录2个方向的步长，可以动态调整以适应不同的环境。
+				var stepX : int = stX.value;
+				var stepY : int = stY.value;
+				
+				var bytes:ByteArray = new ByteArray();
+				
+				// 原本的做法是每个像素都记录。
+				// 测试下用10*10的方块来表示可走区域。
+				// 生成时绘制图形动态比较
+				makeShape.graphics.beginFill(0x00ff00,0.5);
+				
+				for( var i:int = 0 ; i < mapHeight; i += stepY )
+				{
+					for( var j:int = 0 ; j < mapWidth; j += stepX )
+					{
+						var checkX : int = j/stepX;
+						var checkY : int = i/stepY;
+						var index_total:int = checkY * int(mapWidth/stepX) + checkX;
+						var index_array:int = index_total / 8;
+						var index_bit:int = index_total % 8;
+						
+						var isWall:Boolean = loader.hitTestPoint(j,i,true);
+						var ori:uint = bytes[index_array] ;
+						if( isWall ) {
+							var mask:uint = 1 << index_bit;
+							bytes[index_array] = ori | mask ;
+							// 绘制不可走区域
+							makeShape.graphics.drawRect(j,i,stepX,stepY);
+						} else {
+							bytes[index_array] = ( ori == 0 ? 0 : ori );
+						}
+						
+					}
+				}
+				makeShape.graphics.endFill();
+				stage.addChild( makeShape );
+				bytes.compress();
+				var file:File = new File( Data.file.nativePath + Config.datName );
+				var stream:FileStream = new FileStream();
+				var data:ByteArray = new ByteArray();
+				
+				
+				data.writeInt( mapId );
+				data.writeInt( mapWidth );
+				data.writeInt( mapHeight );
+				data.writeInt( stepX );
+				data.writeInt( stepY );
+				data.writeObject( null );
+				// 加上遮罩层信息[[path,x,y],[path,x,y],...]
+				data.writeBytes( bytes );
+				data.compress();
+				stream.open(file, FileMode.WRITE);
+				stream.writeBytes(data)
+				/*
+				stream.position = 0;
+				stream.writeInt( mapId );
+				stream.writeInt( mapWidth );
+				stream.writeInt( mapHeight );
+				stream.writeInt( stepX );
+				stream.writeInt( stepY );
+				// stream.writeObject( itemList );
+				// 加上遮罩层信息[[path,x,y],[path,x,y],...]
+				stream.writeBytes( bytes );
+				*/
+				stream.close();
+				
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>

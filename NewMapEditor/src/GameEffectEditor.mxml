@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="588" height="368" creationComplete="init()">
+	<mx:Button x="319" y="61" label="加载swf" click="loadSwf();"/>
+	<mx:Button x="318" y="27" label="加载dat" click="loadEffect();"/>
+	<mx:TextArea x="32" y="172" id="info" editable="false" width="353" height="165"/>
+	<mx:Button x="318" y="96" label="生成dat" click="makeDat();"/>
+	<mx:Button x="236" y="28" label="打开" click="click1Handler()"/>
+	<mx:Button x="237" y="61" label="打开" click="click2Handler()"/>
+	<mx:Button x="236" y="96" label="保存" click="click3Handler()"/>
+	<mx:TextInput x="28" y="28" id="input1"/>
+	<mx:TextInput x="28" y="62" id="input2"/>
+	<mx:TextInput x="29" y="95" id="input3"/>
+	<mx:Button x="317" y="136" label="清除" click="clear()"/>
+	<mx:Script>
+		<![CDATA[
+			import flash.utils.getTimer;
+			
+			private var loadShape : Bitmap = new Bitmap();
+			private var makeShape : Sprite = new Sprite();
+			private var loader : Loader = new Loader();
+			private var effectAry :Array = [];
+			private var file1:File = new File;
+			private var file2:File = new File;
+			private var file3:File = new File;
+			
+			private function clear() : void {
+				loader.unload();
+				loadShape.bitmapData = null;
+				makeShape.graphics.clear();
+			}
+			private function init():void{
+				file1.addEventListener(Event.SELECT, file1Handler);
+				file2.addEventListener(Event.SELECT, file2Handler);
+				file3.addEventListener(Event.SELECT, file3Handler);
+			}
+			private function click1Handler():void{
+				file1.browse([new FileFilter("dat", "*.dat")]);	
+			}
+			private function click2Handler():void{
+				file2.browse([new FileFilter("swf", "*.swf")]);
+			}
+			private function click3Handler():void{
+				file3.browseForSave("dat");
+			}
+			private function file1Handler(e:Event):void{
+				input1.text = file1.nativePath;
+			}
+			private function file2Handler(e:Event):void{
+				input2.text = file2.nativePath;
+			}
+			private function file3Handler(e:Event):void{
+				input3.text = file3.nativePath;
+			}
+			private function loadEffect() : void {
+				
+				if(input1.text == null){
+					info.text += "加载文件名不能为空\n";
+					return;
+				}
+				var file:File = new File( input1.text );
+				var stream:FileStream = new FileStream();
+				stream.open(file, FileMode.READ);
+				var byte : ByteArray = new ByteArray();
+				stream.readBytes(byte,0,stream.bytesAvailable);
+				info.text += "\n解压时间(ms): ";
+				var timeStart:Number = getTimer();
+				
+				var ary :Array = new BitmapReader(byte).data;
+				var i :int = 0;
+				while( i < ary.length ){
+					var obj :Object = ary[i];
+					var bmp :BitmapData = obj.data;
+					var pic:Bitmap = new Bitmap(bmp);
+					stage.addChild( pic );
+					pic.y = 100;
+					pic.x = i * pic.width;
+					pic.x += obj.x;
+					pic.y += obj.y;
+					i++;
+				}
+				info.text += (getTimer() - timeStart).toString();
+			}
+			
+			private function loadSwf() : void {
+				if(input2.text == null){
+					info.text += "加载文件名不能为空\n";
+					return;
+				}
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE,makeEffectFile );
+				loader.load( new URLRequest(input2.text) );
+			}
+			
+			
+			private function makeEffectFile(e:Event) : void {
+				var loadInfo :LoaderInfo = e.currentTarget as LoaderInfo;
+				loadInfo.removeEventListener(Event.COMPLETE,makeEffectFile );
+				var loader : Loader = loadInfo.loader;
+				
+				var mc : MovieClip = loader.content as MovieClip;
+				if( !mc ){ 
+					info.text += "可能是旧版本的swf。";
+					return;
+				}
+				
+				effectAry = new BitmapWriter(mc).data;
+				info.text += "加载swf完成\n";
+			}
+			
+			private function makeDat() : void {
+				if(input3.text == null){
+					info.text += "请指定保存文件名\n";
+					return;
+				}
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeObject( effectAry );
+				trace( bytes.length );
+				var file:File = new File( input3.text );
+				var stream:FileStream = new FileStream();
+				stream.open(file, FileMode.WRITE);
+				stream.position = 0;
+				stream.writeBytes( bytes );
+				stream.close();
+				info.text += "生成dat成功\n";
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

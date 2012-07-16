@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="800" height="600" xmlns:local="*">
+	<mx:Script>
+		<![CDATA[
+			import flash.filesystem.File;
+			private var _itemList:Array;
+			private var _cmItemList:Array;
+			
+			public static var instance:MaskerEditorWindow;
+			
+			public function set cmItemList(arr:Array):void{
+				_cmItemList = arr;
+				instance = this;
+			}
+			public function set itemList(ary:Array):void {
+				_itemList = ary;
+				instance = this;
+				callLater(addIcon, [itemTile, _itemList]);
+			}
+			
+			private function addIcon(tile:Tile, arr:Array) : void {
+				tile.removeAllChildren();
+				for each(var file:File in arr){
+					if( file.extension == "swf" ){
+						var itemIcon:ItemIcon = new ItemIcon();
+						itemIcon.source = file.nativePath;
+						tile.addChild(itemIcon);
+					}
+				}	
+			}
+			
+			protected function saveBtn_clickHandler(event:MouseEvent):void
+			{
+				var list:Array = [];
+				var file:File = new File;
+				file.nativePath = Data.file.nativePath + "/..";
+				for each(var item:* in maskerCanvas.getChildren() ){
+					if( item is MapItem ){
+						var info:Object = {};
+						info.url = String(item.source).replace(file.nativePath, "");
+						/*test
+						trace(info.url);
+						var ff:File = new File;
+						ff.nativePath = file.nativePath+info.url;
+						trace(ff.nativePath);
+						*/
+						info.width = item.width;
+						info.height = item.height;
+						info.x = item.x;
+						info.y = item.y;
+						list.push( info );
+					}
+				}
+				Data.itemInfoList = list;
+				
+				var file:File = new File( Data.file.nativePath + Config.datName );
+				var stream:FileStream = new FileStream();
+				var data:ByteArray = new ByteArray();
+				data.writeInt( Data.mapId );
+				data.writeInt( Data.mapWidth );
+				data.writeInt( Data.mapHeight );
+				data.writeInt( Data.stepX );
+				data.writeInt( Data.stepY );
+				data.writeObject( Data.itemInfoList );
+				// 加上遮罩层信息[[path,x,y],[path,x,y],...]
+				data.writeBytes( Data.wallInfo );
+				data.compress();
+				stream.open(file, FileMode.WRITE);
+				stream.writeBytes(data)
+				stream.close();
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Canvas id="maskerWrapper" label="生成地图基础信息" width="100%" height="100%">
+		<local:MaskerEditorCanvas id="maskerCanvas"/>
+	</mx:Canvas>
+	<mx:Canvas x="{width-230}" y="{height-height}" id="toolPanel" borderStyle="solid" width="200" height="{height*0.9}" backgroundColor="#000000" backgroundAlpha="0.3" borderThickness="5">
+		<mx:TabNavigator id="tab" y="25" width="100%" height="70%" backgroundAlpha="0.0">
+			<mx:Canvas label="遮罩" width="100%" height="100%" backgroundAlpha="0.0">
+				<mx:TabNavigator width="100%" height="97%" backgroundAlpha="0.0">
+					<mx:Canvas label="私有" width="100%" height="100%">
+						<mx:Tile width="100%" height="100%" x="12" y="9" id="itemTile">
+						</mx:Tile>
+					</mx:Canvas>
+					<mx:Canvas label="公共" width="100%" height="100%">
+						<mx:Tile width="100%" height="100%" x="12" y="9" id="cmItemTile" creationComplete="{callLater(addIcon, [cmItemTile, _cmItemList]);}">
+						</mx:Tile>
+					</mx:Canvas>
+				</mx:TabNavigator>
+			</mx:Canvas>
+			<mx:Canvas label="怪" width="100%" height="100%" backgroundAlpha="0.0">
+			</mx:Canvas>
+			<mx:Canvas label="NPC" width="100%" height="100%" backgroundAlpha="0.0">
+			</mx:Canvas>
+		</mx:TabNavigator>
+		<mx:TextArea y="{tab.height+35}" width="100%" height="20%" id="info" alpha="0.7">
+		</mx:TextArea>
+		<mx:Button id="saveBtn" click="saveBtn_clickHandler(event)" label="保存"/>
+		<mx:Button x="100" id="btn" label="缩小" click="{if(btn.label=='放大'){btn.label='缩小';toolPanel.height=height*0.9} else{btn.label='放大';toolPanel.height=35;}}"/>
+	</mx:Canvas>
+	
+</mx:Canvas>
