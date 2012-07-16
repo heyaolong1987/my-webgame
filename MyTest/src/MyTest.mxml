@@ -25,7 +25,7 @@
 			private var useTween:Boolean = false;
 			private function init():void{
 				
-				addChild(new DolygonTestPanel());
+				addChild(new LineWalkAbleTestPanel());
 				return;
 				
 				

@@ -126,6 +126,14 @@ package com.netease.core.algorithm.astar{
 			}
 			return route;
 		}
+		/**
+		 *采用LOS视线算法平滑路径 
+		 * @param nodeList
+		 * @param nodeRoute
+		 * @param route
+		 * @return 
+		 * 
+		 */
 		private static function smoothPath(nodeList:Vector.<NavmeshAstarNode>,nodeRoute:Vector.<NavmeshAstarNode>,route:Array):Array{
 			var pathArr:Array = new Array();
 			var endX:int,endY:int,currentX:int,currentY:int;

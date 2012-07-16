@@ -99,7 +99,6 @@ package com.netease.core.res{
 			var info:LoaderInfo = e.currentTarget as LoaderInfo;
 			var loader:Loader = info.loader;
 			var url:String = _loadingLoaderList[loader][1];
-			addLoaderToFreeList(loader);
 			var funcList:Array = _loadingFuncList[url];
 			_loadingFuncList[url] = null;
 			_loadingLoaderList[loader] = null;
@@ -111,9 +110,14 @@ package com.netease.core.res{
 					func[1](func[0],info.content);
 				}
 			}
+			addLoaderToFreeList(loader);
 		}
 		protected function addLoaderToFreeList(loader:Loader):void{
-			loader.close();
+			try{
+				loader.close();
+			}
+			catch(e:Error){
+			}
 			loader.unloadAndStop();
 			_freeLoaderList.push(loader);
 			if(_freeLoaderList.length==1&&_waitingFuncList.length>0){
