@@ -18,8 +18,8 @@ package{
 	public class LineWalkAbleTestPanel extends mx.core.UIComponent{
 		private var mapWidth:int=1000;
 		private var mapHeight:int=600;
-		private var tileWidth:int=10;
-		private var tileHeight:int=10;
+		private var tileWidth:int=20;
+		private var tileHeight:int=20;
 		private var row:int = mapHeight/tileHeight;
 		private var col:int = mapWidth/tileWidth;
 		private var sprite:Sprite = new Sprite();
@@ -37,7 +37,7 @@ package{
 					if(i==0 || i==col-1 || j ==0 || j==row-1){
 						arcs[i][j] = 1;
 					}else{
-						arcs[i][j] = Math.floor(Math.random()*7) == 0?1:0;
+						arcs[i][j] = 1;//Math.floor(Math.random()*7) == 0?1:0;
 					}
 				}
 			}
