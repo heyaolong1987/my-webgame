@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.images.JPGEncoder;
+			
+			import flash.filesystem.File;
+			import flash.filesystem.FileMode;
+			import flash.filesystem.FileStream;
+			
+			import mx.events.FileEvent;
+			import mx.messaging.channels.StreamingAMFChannel;
+		
+			private var file1:File = new File;
+			private var file2:File = new File;
+			private var bitmapData:BitmapData;
+			private function cutHandler():void{
+				if(Data.file.nativePath==null){
+					output.text += "文件路径不能为空\n";
+					return;
+				}
+				if(Data.bitmapData==null){
+					output.text += "地图资源不存在或未加载完\n";
+					return;
+				}
+				btn1.enabled = false;
+				bitmapData = Data.bitmapData;
+				var w:Number = Number(inWidth.text);
+				var h:Number = Number(inHeight.text);
+				if(w>0 && h>0){
+					output.text += "开始切割\n";
+					
+					var x:Number = 0;
+					var y:Number = 0;
+					var i:int = 0;
+					var j:int = 0;
+					while(y<bitmapData.height){
+						while(x<bitmapData.width){
+							var bmd:BitmapData = new BitmapData(w, h);
+							bmd.draw(bitmapData, new Matrix(1, 0, 0, 1, -x, -y), null, null, new Rectangle(0, 0, w, h));
+							var jpg:JPGEncoder = new JPGEncoder(80);
+							var data:ByteArray = jpg.encode(bmd);
+							var fileStream:FileStream = new FileStream;
+							fileStream.open(new File(Data.file.nativePath+"\\"+j+"\\"+i+".jpg"), FileMode.WRITE);
+							fileStream.writeBytes(data);
+							x += w;
+							i++;
+							output.text += Data.file.nativePath+"\\"+j+"\\"+i+".jpg 完成\n";
+						}
+						i = 0;
+						j ++;
+						x = 0;
+						y += h;
+					}
+					output.text += "切割完成\n";
+					btn1.enabled = true;
+				}
+				else{
+					output.text += "请正确设置切割尺寸\n";
+				}
+			}
+			private function loadHandler(client:Object,loadData:Object):void{
+				
+			}
+		]]>
+	</mx:Script>
+	<mx:TextArea x="43" y="105" id="output" width="282"/>
+	<mx:Button x="255" y="59" label="切割" click="cutHandler()" id="btn1"/>
+	<mx:TextInput x="88" y="60" width="47" id="inWidth" text="200"/>
+	<mx:TextInput x="188" y="60" width="46" id="inHeight" text="120"/>
+	<mx:Label x="46" y="59" text="width:"/>
+	<mx:Label x="142" y="59" text="height:"/>
+	
+</mx:Canvas>

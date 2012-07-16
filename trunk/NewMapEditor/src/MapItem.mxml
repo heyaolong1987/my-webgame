@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:SWFLoader xmlns:mx="http://www.adobe.com/2006/mxml"
+	mouseDown="onMouseDown()" mouseUp="onMouseUp()" rightClick="onRightClick()">
+	<mx:Script>
+		<![CDATA[
+			
+			private function onRightClick():void{
+				// 删除该物件
+				parent.removeChild( this );
+			}
+			
+			private function onMouseDown() : void {
+				startDrag();
+			}
+			
+			private function onMouseUp() : void {
+				stopDrag();
+			}
+			
+		]]>
+	</mx:Script>
+</mx:SWFLoader>

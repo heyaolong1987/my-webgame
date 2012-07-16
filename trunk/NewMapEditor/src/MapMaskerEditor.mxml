@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="644" height="346" xmlns:local="*">
+	<mx:Canvas id="canvas0" width="100%" height="100%">
+		<mx:Button x="58" y="30" label="加载地图" click="loadWallInfo();"/>
+		<mx:Button x="158" y="31" label="清除输出" click="clear();"/>
+		<mx:TextArea x="44" y="73" id="info" editable="false" width="222" height="219"/>
+	</mx:Canvas>
+	
+	<mx:Canvas id="canvas1" width="100%" height="100%">
+		<local:MaskerEditorWindow width="100%" height="100%" id="win">
+		</local:MaskerEditorWindow>
+	</mx:Canvas>
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FileEvent;
+			import flash.utils.getTimer;
+			import flash.filesystem.FileMode;
+			import flash.filesystem.FileStream;
+			import flash.filesystem.File;
+			
+			private var loadShape : Bitmap = new Bitmap();
+			private var makeShape : Sprite = new Sprite();
+			private var loader : Loader = new Loader();
+			private var file1:File = new File;
+			private var file2:File = new File;
+			
+			public function init():void{
+				canvas0.visible = true;
+				canvas1.visible = false;
+			}
+			
+			private function clear() : void {
+				loader.unload();
+				loadShape.bitmapData = null;
+				makeShape.graphics.clear();
+			}
+			private function saveWallInfo():void{
+				
+			}
+			private function loadWallInfo() : void {
+				if(Data.file.nativePath == null)
+					return;
+				file1.nativePath = Data.file.nativePath + "/../common_item";
+				file2.nativePath = Data.file.nativePath + "/item";
+				win.cmItemList = file1.getDirectoryListing();
+				win.itemList = file2.getDirectoryListing();
+				canvas0.visible = false;
+				canvas1.visible = true;
+				win.maskerCanvas.mapLoader.source = Data.file.nativePath + "/map.jpg";
+				
+				//加载dat数据
+				var file:File = new File( Data.file.nativePath + Config.datName );
+				var stream:FileStream = new FileStream();
+				var data:ByteArray = new ByteArray;
+				stream.open(file, FileMode.READ);
+				stream.readBytes(data, 0, stream.bytesAvailable);
+				data.uncompress();
+				Data.mapId = data.readInt();
+				Data.mapWidth = data.readInt();
+				Data.mapHeight = data.readInt();
+				Data.stepX = data.readInt();
+				Data.stepY = data.readInt();
+				var o:Array = data.readObject();
+				Data.itemInfoList = o;
+				
+				Data.wallInfo.clear();
+				data.readBytes(Data.wallInfo,0,stream.bytesAvailable);
+				
+				var byte : ByteArray = new ByteArray();
+				byte.writeBytes(Data.wallInfo);
+				//stream.readBytes(byte,0,stream.bytesAvailable);
+				
+				// 显示信息
+				win.info.text = "MapId:" + Data.mapId
+					+ "\nMapWidth:" + Data.mapWidth
+					+ "\nMapHeight:" + Data.mapHeight
+					+ "\nStepX:" + Data.stepX
+					+ "\nStepY:" + Data.stepY;
+				/*
+				info.appendText("\n解压时间(ms)：");
+				var timeStart:Number = getTimer();
+				//byte.被解压了
+				byte.uncompress();
+				info.appendText( (getTimer() - timeStart).toString() );
+				
+				info.appendText("\n绘制时间(ms)：");
+				timeStart = getTimer();
+				var bitmapData : BitmapData = new BitmapData(2000,2000);
+				loadShape.bitmapData = bitmapData;
+				loadShape.alpha = 0.5;
+				for( var i:int = 0 ; i < 2000; i ++ )
+				{
+				for( var j:int = 0 ; j < 2000; j ++ )
+				{
+				var isWall:Boolean = checkHitTest(byte,j,i,Data.stepX,Data.stepY,Data.mapWidth,Data.mapHeight);
+				if( isWall ) {
+				// 绘制不可走区域
+				bitmapData.setPixel(j,i,0xff0000 );
+				}	
+				}
+				}
+				stage.addChild( loadShape );
+				info.appendText( (getTimer() - timeStart).toString() );
+				*/
+				for each(var item:* in MaskerEditorWindow.instance.maskerCanvas.getChildren() ){
+					if( item is MapItem ){
+						item.parent.removeChild(item);
+					}
+				}
+				var ff:File = new File;
+				ff.nativePath = Data.file.nativePath + "/..";
+				
+				for(var i:int=0; Data.itemInfoList && i<Data.itemInfoList.length; i++){
+					
+					var item:Object = Data.itemInfoList[i];
+					if(item == null)
+						continue;
+					var mapItem :MapItem = new MapItem();
+					var f:File = new File;
+					f.nativePath = ff.nativePath + item.url;
+					mapItem.source = f.nativePath;
+					MaskerEditorWindow.instance.maskerCanvas.addChild( mapItem );
+					mapItem.x = item.x;
+					mapItem.y = item.y;
+				}
+			}
+			
+			public function checkHitTest( bytes : ByteArray, pixX:uint , pixY:uint,stepX:int,stepY:int, mapWidth:int, mapHeight:int ):Boolean {
+				if( pixX < 0 || pixX > mapWidth || pixY < 0 || pixY > mapHeight )
+					return false;
+				if( !bytes ) {
+					return true;
+				}
+				var checkX : int = pixX/stepX;
+				var checkY : int = pixY/stepY;
+				var index_total:int = checkY * int(mapWidth/stepX) + checkX;
+				var index_array:int = index_total / 8;
+				var index_bit:int = index_total % 8;
+				var mask:uint = 1 << index_bit;
+				var ori:uint = bytes[index_array] ;
+				var result:uint = ori & mask;		
+				return Boolean(result);
+			} 
+			
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>
