@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
-						width="1000" height="600" layout="absolute" xmlns:local="*" creationComplete="init()">
+						width="1000" height="600" layout="absolute" xmlns:local="*" addedToStage="init()">
 	<mx:Script>
 		<![CDATA[
-			import mx.controls.FlexNativeMenu;
-			import mx.events.FlexNativeMenuEvent;
-			import mx.events.MenuEvent;
-			import mx.managers.PopUpManager;
+			
 			
 			private var file:File = new File(File.applicationDirectory.nativePath);
 			
 			private static var _instance:NewMapEditor;
-			private var _bmp:Bitmap;
 			private var loader:ResLoader = new ResLoader();
 			public static function getInstance():NewMapEditor{
 				if(_instance == null){
@@ -23,8 +19,6 @@
 			private function init() : void {
 				Data.file = file;
 				file.addEventListener(Event.SELECT, onFileSelect);
-				_bmp = new Bitmap();
-				uiBitmap.addChild(_bmp);
 			}
 			
 			private function changeVisible(name:* = null):void{
@@ -32,6 +26,7 @@
 				cutImage.visible = false;
 				mapMaskerEditor.visible = false;
 				gameEffectEditor.visible = false;
+				mapTerrainEditor.visible = false;
 				if(name != null)
 					name.visible = true;
 			}
@@ -41,7 +36,6 @@
 			}
 			private function loadHandler(client:Object,data:Object):void{
 				Data.bitmapData = (data as Bitmap).bitmapData;
-				_bmp.bitmapData = Data.bitmapData;
 			}
 			private function chooseFileDirectory(event:MouseEvent):void{
 				file.browseForDirectory("directory");
@@ -49,6 +43,9 @@
 			}
 			private function cutMap():void{
 				changeVisible(cutImage);
+			}
+			private function editTerrainInfo():void{
+				changeVisible(mapTerrainEditor);
 			}
 			private function editorMap():void{
 				changeVisible(gameMapEditor);
@@ -73,22 +70,19 @@
 	<mx:Canvas y="40">
 		<mx:HBox horizontalGap="5">
 			<mx:Button label="切分地图" click="{cutMap()}" />
+			<mx:Button label="编辑地表信息" click="{editTerrainInfo()}"/>
 			<mx:Button label="生成地图信息" click="{editorMap()}"/>
 			<mx:Button label="编辑地图遮蔽物" click="{editorMasker()}" />
 			<mx:Button label="效果编辑器" click="{EditorGameEffect()}" />
 		</mx:HBox>
 	</mx:Canvas>
 	<mx:Canvas x="0" y="70" width="100%" height="100%">
-		<mx:UIComponent id="uiBitmap" />
 		<mx:Canvas id="mainCanvas" x="0" y="40" width="100%" height="100%">
-			<local:GameMapEditor id="gameMapEditor" x="0" y="0" width="100%" height="100%" visible="false">
-			</local:GameMapEditor>
-			<local:CutImage id="cutImage" x="0" y="0" width="100%" height="100%" visible="false">
-			</local:CutImage>
-			<local:MapMaskerEditor id="mapMaskerEditor" x="0" y="0" width="100%" height="100%" visible="false">
-			</local:MapMaskerEditor>
-			<local:GameEffectEditor id="gameEffectEditor" x="0" y="0" width="100%" height="100%" visible="false">
-			</local:GameEffectEditor>
+			<local:CutImage id="cutImage" x="0" y="0" width="100%" height="100%" visible="false" />
+			<local:MapTerrainEditor id="mapTerrainEditor" x="0" y="0" width="100%" height="100%" visible="false" />
+			<local:GameMapEditor id="gameMapEditor" x="0" y="0" width="100%" height="100%" visible="false" />
+			<local:MapMaskerEditor id="mapMaskerEditor" x="0" y="0" width="100%" height="100%" visible="false" />
+			<local:GameEffectEditor id="gameEffectEditor" x="0" y="0" width="100%" height="100%" visible="false" /> 
 		</mx:Canvas>
 	</mx:Canvas>
 	

@@ -7,13 +7,20 @@
 			import flash.filesystem.File;
 			import flash.filesystem.FileMode;
 			import flash.filesystem.FileStream;
+			import flash.utils.setTimeout;
 			
+			import mx.core.Window;
 			import mx.events.FileEvent;
 			import mx.messaging.channels.StreamingAMFChannel;
 		
 			private var file1:File = new File;
 			private var file2:File = new File;
+			private var bitmap:Bitmap;
 			private var bitmapData:BitmapData;
+			private function init():void{
+				bitmap = new Bitmap();
+				uiImage.addChild(bitmap);
+			}
 			private function cutHandler():void{
 				if(Data.file.nativePath==null){
 					output.text += "文件路径不能为空\n";
@@ -27,48 +34,47 @@
 				bitmapData = Data.bitmapData;
 				var w:Number = Number(inWidth.text);
 				var h:Number = Number(inHeight.text);
-				if(w>0 && h>0){
+				if( w>0 && h>0){
 					output.text += "开始切割\n";
-					
-					var x:Number = 0;
-					var y:Number = 0;
-					var i:int = 0;
-					var j:int = 0;
-					while(y<bitmapData.height){
-						while(x<bitmapData.width){
-							var bmd:BitmapData = new BitmapData(w, h);
-							bmd.draw(bitmapData, new Matrix(1, 0, 0, 1, -x, -y), null, null, new Rectangle(0, 0, w, h));
-							var jpg:JPGEncoder = new JPGEncoder(80);
-							var data:ByteArray = jpg.encode(bmd);
-							var fileStream:FileStream = new FileStream;
-							fileStream.open(new File(Data.file.nativePath+"\\"+j+"\\"+i+".jpg"), FileMode.WRITE);
-							fileStream.writeBytes(data);
-							x += w;
-							i++;
-							output.text += Data.file.nativePath+"\\"+j+"\\"+i+".jpg 完成\n";
-						}
-						i = 0;
-						j ++;
-						x = 0;
-						y += h;
-					}
-					output.text += "切割完成\n";
-					btn1.enabled = true;
+					cutImage(bitmapData,w,h,0,0);
 				}
 				else{
 					output.text += "请正确设置切割尺寸\n";
 				}
 			}
-			private function loadHandler(client:Object,loadData:Object):void{
-				
+			private function cutImage(bitmapData:BitmapData,w:int,h:int,x:int,y:int):void{
+				var bmd:BitmapData = new BitmapData(w, h);
+				bmd.draw(bitmapData, new Matrix(1, 0, 0, 1, -x, -y), null, null, new Rectangle(0, 0, w, h));
+				bitmap.bitmapData = bmd;
+				var jpg:JPGEncoder = new JPGEncoder(80);
+				var data:ByteArray = jpg.encode(bmd);
+				var fileStream:FileStream = new FileStream;
+				fileStream.open(new File(Data.file.nativePath+"\\"+(y/h)+"\\"+(x/w)+".jpg"), FileMode.WRITE);
+				fileStream.writeBytes(data);
+				output.text += Data.file.nativePath+"\\"+(y/h)+"\\"+(x/w)+".jpg 完成\n";
+				output.verticalScrollPosition = output.maxVerticalScrollPosition;
+				if(x<bitmapData.width){
+					x += w;
+				}
+				else{
+					x = 0;
+					y += h;
+				}
+				if(y<bitmapData.height){
+					setTimeout(cutImage,10,bitmapData,w,h,x,y);
+				}
+				else{
+					output.text += "切割完成\n";
+					btn1.enabled = true;
+				}
 			}
 		]]>
 	</mx:Script>
-	<mx:TextArea x="43" y="105" id="output" width="282"/>
-	<mx:Button x="255" y="59" label="切割" click="cutHandler()" id="btn1"/>
-	<mx:TextInput x="88" y="60" width="47" id="inWidth" text="200"/>
-	<mx:TextInput x="188" y="60" width="46" id="inHeight" text="120"/>
-	<mx:Label x="46" y="59" text="width:"/>
-	<mx:Label x="142" y="59" text="height:"/>
-	
+	<mx:Label x="40" y="15" text="切割图片宽:"/>
+	<mx:Label x="150" y="15" text="切割图片高:"/>
+	<mx:TextInput x="100" y="10" width="45" id="inWidth" text="200"/>
+	<mx:TextInput x="210" y="10" width="45" id="inHeight" text="120"/>
+	<mx:Button x="270" y="11" label="切割" click="cutHandler()" id="btn1"/>
+	<mx:TextArea x="30" y="55" id="output" width="300" height="400"/>
+	<mx:UIComponent id="uiImage" x="360" y="55" width="{int(inWidth.text)}" height="{int(inHeight.text)}" />
 </mx:Canvas>
