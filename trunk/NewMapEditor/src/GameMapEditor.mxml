@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="644" height="346" creationComplete="init()">
-	<mx:Button x="170" y="40" label="加载dat" click="loadWallInfo();"/>
-	<mx:Button x="172" y="87" label="生成dat" click="makeWallInfo();"/>
-	<mx:NumericStepper x="85" y="41" id="stX" value="10"/>
-	<mx:NumericStepper x="87" y="83" id="stY" value="10"/>
-	<mx:Button x="261" y="41" label="清除输出" click="clear();"/>
-	<mx:TextArea x="65" y="121" id="info" editable="false" width="222" height="219"/>
-	<mx:Label x="31" y="43" text="stepX"/>
-	<mx:Label x="32" y="85" text="stepY"/>
 	<mx:Script>
 		<![CDATA[
 			import mx.managers.PopUpManager;
@@ -199,4 +191,13 @@
 			
 		]]>
 	</mx:Script>
+	<mx:Button x="170" y="40" label="加载dat" click="loadWallInfo();"/>
+	<mx:Button x="172" y="87" label="生成dat" click="makeWallInfo();"/>
+	<mx:NumericStepper x="85" y="41" id="stX" value="10"/>
+	<mx:NumericStepper x="87" y="83" id="stY" value="10"/>
+	<mx:Button x="261" y="41" label="清除输出" click="clear();"/>
+	<mx:TextArea x="65" y="121" id="info" editable="false" width="222" height="219"/>
+	<mx:Label x="31" y="43" text="stepX"/>
+	<mx:Label x="32" y="85" text="stepY"/>
+	
 </mx:Canvas>

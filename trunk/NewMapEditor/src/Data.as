@@ -8,6 +8,7 @@ package{
 	 * 
 	 * 2012-7-16
 	 */ 
+	[Bindable]
 	public class Data{
 		public static var file:File = null;
 		public static var main:NewMapEditor = null;
