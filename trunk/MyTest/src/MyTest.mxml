@@ -7,6 +7,7 @@
 	<mx:Script>
 		<![CDATA[
 			import com.greensock.TweenMax;
+			import com.netease.core.algorithm.CNavMesh;
 			import com.netease.core.algorithm.quadtree.QuadTree;
 			import com.netease.core.manager.CallLaterManager;
 			import com.netease.core.manager.FrameManager;
@@ -24,7 +25,6 @@
 			private var showObj:Boolean = false;
 			private var useTween:Boolean = false;
 			private function init():void{
-				
 				addChild(new LineWalkAbleTestPanel());
 				return;
 				

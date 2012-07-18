@@ -1,42 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties mainApplicationPath="NewMapEditor.mxml" projectUUID="5fdfd693-85ec-469f-bc6e-cb91ebe74b96" version="6">
-  <compiler additionalCompilerArguments="-locale zh_CN" autoRSLOrdering="false" copyDependentFiles="true" flexSDK="Flex 4.0" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="true" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="" autoRSLOrdering="false" copyDependentFiles="true" flexSDK="Flex 3.5" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="true" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
-        <modifiedEntries>
-          <libraryPathEntry index="1" kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/framework.swc" useDefaultLinkType="true">
-            <crossDomainRsls>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="framework_3.4.0.6955.swz"/>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="framework_3.4.0.6955.swf"/>
-            </crossDomainRsls>
-          </libraryPathEntry>
-          <libraryPathEntry index="8" kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/osmf.swc" useDefaultLinkType="true">
-            <crossDomainRsls>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="http://fpdownload.adobe.com/pub/swz/crossdomain.xml" rslUrl="http://fpdownload.adobe.com/pub/swz/flex/4.5.1.21328/osmf_1.0.0.16316.swz"/>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="osmf_1.0.0.16316.swz"/>
-            </crossDomainRsls>
-          </libraryPathEntry>
-          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/rpc.swc" useDefaultLinkType="false"/>
-          <libraryPathEntry index="3" kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/spark.swc" useDefaultLinkType="true">
-            <crossDomainRsls>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="http://fpdownload.adobe.com/pub/swz/crossdomain.xml" rslUrl="http://fpdownload.adobe.com/pub/swz/flex/4.5.1.21328/spark_4.5.1.21489.swz"/>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="spark_4.5.1.21489.swz"/>
-            </crossDomainRsls>
-          </libraryPathEntry>
-          <libraryPathEntry index="4" kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/sparkskins.swc" useDefaultLinkType="true">
-            <crossDomainRsls>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="http://fpdownload.adobe.com/pub/swz/crossdomain.xml" rslUrl="http://fpdownload.adobe.com/pub/swz/flex/4.5.1.21328/sparkskins_4.5.1.21328.swz"/>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="sparkskins_4.5.1.21328.swz"/>
-            </crossDomainRsls>
-          </libraryPathEntry>
-          <libraryPathEntry index="2" kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/textLayout.swc" useDefaultLinkType="true">
-            <crossDomainRsls>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="http://fpdownload.adobe.com/pub/swz/crossdomain.xml" rslUrl="http://fpdownload.adobe.com/pub/swz/tlf/2.0.0.232/textLayout_2.0.0.232.swz"/>
-              <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="textLayout_2.0.0.232.swz"/>
-            </crossDomainRsls>
-          </libraryPathEntry>
-        </modifiedEntries>
         <excludedEntries>
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
         </excludedEntries>
