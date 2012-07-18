@@ -7,6 +7,7 @@ package {
 	import flash.net.URLRequest;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	import mx.messaging.AbstractConsumer;
@@ -24,7 +25,7 @@ package {
 		private var _waitingFuncList:Array = [];
 		private var _resCacher:ResCacher = ResCacher.getInstance();
 		protected var _loaderContext:LoaderContext;
-		
+		private var _loadingBytesLoaderList:Dictionary = new Dictionary();
 		private static var _instance:ResLoader;
 		public function ResLoader()
 		{
@@ -140,6 +141,23 @@ package {
 				//Console.warn("未处理的SecurityErrorEvent：", e.toString());
 			}
 			
+		}
+		
+		public function loadBytes(bytes:ByteArray,client:Object=null,callBack:Function=null):void{
+			var loader:Loader = new Loader();
+			var loaderInfo:LoaderInfo = loader.contentLoaderInfo;
+			loaderInfo.addEventListener(Event.COMPLETE, onLoadBytesComplete);
+			_loadingBytesLoaderList[loader] = [client,callBack];
+			loader.loadBytes(bytes,_loaderContext);
+		}
+		private function onLoadBytesComplete(e:Event):void{
+			var info:LoaderInfo = e.currentTarget as LoaderInfo;
+			var loader:Loader = info.loader;
+			var loadInfo:Array = _loadingBytesLoaderList[loader];
+			_loadingBytesLoaderList[loader] = null;
+			if(loadInfo){
+				loadInfo[1](loadInfo[0],info.content);
+			}
 		}
 	}
 }
