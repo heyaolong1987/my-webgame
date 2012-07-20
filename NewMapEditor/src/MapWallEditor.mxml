@@ -50,7 +50,7 @@
 				win.maskerCanvas.mapLoader.source = Data.file.nativePath + "/map.jpg";
 				
 				//加载dat数据
-				var file:File = new File( Data.file.nativePath + Config.datName );
+				var file:File = new File( Data.file.nativePath + Config.wallName );
 				var stream:FileStream = new FileStream();
 				var data:ByteArray = new ByteArray;
 				stream.open(file, FileMode.READ);

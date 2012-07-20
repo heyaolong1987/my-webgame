@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
-				layout="absolute" width="1000" height="600" addedToStage="init()" frameRate="40" backgroundColor="0x00ff00"
+				layout="absolute" width="1000" height="600" addedToStage="init()" frameRate="40" backgroundColor="0x000000"
 				xmlns:component="com.netease.webgame.bitchwar.component.*" xmlns:local="*"
 				verticalScrollPolicy="off" horizontalScrollPolicy="off" 
 				xmlns:display="com.netease.core.display.*">
@@ -25,27 +25,12 @@
 			private var showObj:Boolean = false;
 			private var useTween:Boolean = false;
 			private function init():void{
-				addChild(new LineWalkAbleTestPanel());
+				addChild(new CircleTestPanel());
 				return;
 				
 				
 				FrameManager.getInstance().init(stage);
 				CallLaterManager.getInstance().init(stage);
-				var quadTree:QuadTree = new QuadTree();
-				for(var i:int=0;i<objNum;i++){
-					var obj:OtherPlayer = new OtherPlayer();
-					obj.x = Math.floor(Math.random()*mapWidth);
-					obj.y = Math.floor(Math.random()*mapHeight);
-					obj.moveData = new OtherPlayerVO();
-					obj.moveData.container = obj;
-					obj.moveData.route = new MovingTween();
-					obj.moveData.route.container = obj.moveData;
-					obj.moveData.id = i;
-					objArr.push(obj);
-					MoveManager.getInstance().addOtherPalyer(obj);
-					addChild(obj);
-					quadTree.addOrUpdateObj(obj.x,obj.y,obj);
-				}
 				setTimeout(onTime,0);
 			}
 			private function onTime():void{

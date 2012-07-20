@@ -54,7 +54,7 @@
 				}
 				Data.itemInfoList = list;
 				
-				var file:File = new File( Data.file.nativePath + Config.datName );
+				var file:File = new File( Data.file.nativePath + Config.wallName );
 				var stream:FileStream = new FileStream();
 				var data:ByteArray = new ByteArray();
 				data.writeInt( Data.mapId );

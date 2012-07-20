@@ -1,5 +1,6 @@
 package com.netease.core.geom{
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
 	/**
 	 * @author heyaolong
@@ -121,7 +122,9 @@ package com.netease.core.geom{
 				return POINT_ON_LINE;
 			}
 		}
-		
+		public function getRect():Rectangle{
+			return new Rectangle(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x1-x2),Math.abs(y1-y2));
+		}
 		public function equals(line:CLine):Boolean{
 			return (x1 == line.x1 && y1 == line.y1 && x2 == line.x2 && y2 == line.y2)
 			        || (x2 == line.x1 && y2 == line.y1 && x1 == line.x2 && y1 == line.y2);

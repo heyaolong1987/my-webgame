@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import com.netease.core.algorithm.quadtree.QuadTree;
+			private function init():void{
+				var rectList:Array = [];
+				rectList.push(new Rectangle(0,0,100,100));
+				rectList.push(new Rectangle(50,50,200,200));
+				rectList.push(new Rectangle(20,30,150,30));
+				rectList.push(new Rectangle(40,30,50,50));
+				rectList.push(new Rectangle(80,120,30,20));
+				rectList.push(new Rectangle(10,10,10,10));
+				rectList.push(new Rectangle(90,130,100,300));
+				var rect:Rectangle;
+				var len:int;
+				len = rectList.length;
+				var i:int;
+				for(i=0; i<len; i++){
+					rect = rectList[i] as Rectangle;
+					graphics.lineStyle(1,0xff0000);
+					graphics.moveTo(rect.left,rect.top);
+					graphics.lineTo(rect.right,rect.top);
+					graphics.lineTo(rect.right,rect.bottom);
+					graphics.lineTo(rect.left,rect.bottom);
+					graphics.lineTo(rect.left,rect.top);
+				}
+				
+				var quadTree:QuadTree = new QuadTree();
+				len = rectList.length;
+				for(i=0; i<len; i++){
+					quadTree.addOrUpdateObj(rectList[i],rectList[i]);
+				}
+				var findRect:Rectangle = new Rectangle(100,50,70,90);
+				var dataList:Array = quadTree.findOjectsInRect(findRect);
+				
+				graphics.lineStyle(1,0x7f7f7f);
+				graphics.moveTo(findRect.left,findRect.top);
+				graphics.lineTo(findRect.right,findRect.top);
+				graphics.lineTo(findRect.right,findRect.bottom);
+				graphics.lineTo(findRect.left,findRect.bottom);
+				graphics.lineTo(findRect.left,findRect.top);
+				
+				len = dataList.length;
+				for(i=0; i<len; i++){
+					rect = dataList[i] as Rectangle;
+					graphics.lineStyle(1,0x0000ff);
+					graphics.moveTo(rect.left,rect.top);
+					graphics.lineTo(rect.right,rect.top);
+					graphics.lineTo(rect.right,rect.bottom);
+					graphics.lineTo(rect.left,rect.bottom);
+					graphics.lineTo(rect.left,rect.top);
+				}
+				
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>
