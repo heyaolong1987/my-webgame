@@ -13,7 +13,7 @@ package com.netease.core.algorithm.astar{
 	public class AStar{
 		private static var dirArr:Array = [[-1, -1],[0, -1],[1, -1],[1, 0],[1, 1],[0, 1],[-1, 1],[-1, 0]];
 		private static const NODE_OPEN:int=0;
-		private static const NODE_CLOSE:int=1
+		private static const NODE_CLOSE:int=1;
 		public function AStar()
 		{
 		}
@@ -216,12 +216,16 @@ package com.netease.core.algorithm.astar{
 			stepY = ty-sy>0?1:-1;
 			x = sx;
 			y = sy;
-			inc1 = 2*dy;
+			inc1 = dy
 			inc2 = 2*dx;
 			d = - dx;
+			var flag:Boolean;
 			while(x != tx){
-				x += stepX;
-				d += inc1/2;
+				d += inc1;
+				flag = d<=0;
+				if(flag){
+					x += stepX;
+				}
 				if(d >= 0){
 					y += stepY;
 					d -= inc2;
@@ -232,9 +236,10 @@ package com.netease.core.algorithm.astar{
 				else{
 					arr.push([x,y]);
 				}
-				
-				
-				d += inc1/2;
+				if(!flag){
+					x += stepX;
+				}
+				d += inc1;
 				if(d >= 0){
 					y += stepY;
 					d -= inc2;
@@ -245,21 +250,20 @@ package com.netease.core.algorithm.astar{
 				else{
 					arr.push([x,y]);
 				}
-				
-				
 			}
 			return arr;
 		}
 		public static function isLineWalkAble(arcs:Array,sx:int,sy:int,tx:int,ty:int):Boolean{
+			if(sx == tx && sy == ty){
+				return arcs[sx][sy]==0;
+			}
 			var dx:int,dy:int;
 			var stepX:int,stepY:int;
 			var inc1:int,inc2:int;
 			var d:int,iTag:int;
 			var x:int,y:int;
 			var temp:int;
-			if(sx == tx && sy == ty){
-				return arcs[sx][sy]==0;
-			}
+			var flag:Boolean;
 			iTag = 0;
 			dx = tx>sx?tx-sx:sx-tx;
 			dy = ty>sy?ty-sy:sy-ty;
@@ -282,40 +286,44 @@ package com.netease.core.algorithm.astar{
 			stepY = ty-sy>0?1:-1;
 			x = sx;
 			y = sy;
-			inc1 = 2*dy;
+			inc1 = dy
 			inc2 = 2*dx;
 			d = - dx;
 			while(x != tx){
-				x += stepX;
-				d += inc1/2;
+				d += inc1;
+				flag = d<=0;
+				if(flag){
+					x += stepX;
+				}
 				if(d >= 0){
 					y += stepY;
 					d -= inc2;
 				}
 				if(iTag){
-					if(arcs[y][x] == 1){
+					if(arcs[y][x] != 0){
 						return false;
 					}
 				}
 				else{
-					if(arcs[x][y] == 1){
+					if(arcs[x][y] != 0){
 						return false;
 					}
 				}
-				
-				
-				d += inc1/2;
+				if(!flag){
+					x += stepX;
+				}
+				d += inc1;
 				if(d >= 0){
 					y += stepY;
 					d -= inc2;
 				}
 				if(iTag){
-					if(arcs[y][x] == 1){
+					if(arcs[y][x] != 0){
 						return false;
 					}
 				}
 				else{
-					if(arcs[x][y] == 1){
+					if(arcs[x][y] != 0){
 						return false;
 					}
 				}
