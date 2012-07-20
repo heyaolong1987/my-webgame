@@ -217,7 +217,6 @@ package com.netease.core.algorithm{
 			line23.y1 = edge.y2;
 			timeArr[0] -= getTimer();
 			for each(var vertex:CPoint in vertexList){
-				
 				//左边必定相交
 				if(line12.checkPointPos(vertex) != CLine.POINT_ON_RIGHT){
 					continue;
@@ -246,19 +245,21 @@ package com.netease.core.algorithm{
 			var isMaxAngle:Boolean;
 			do{
 				isMaxAngle = true;
-				var circle:CCircle = CCircle.createCircle(edge.x1,edge.y1,edge.x2,edge.y2,p3.x,p3.y);
+				var circle:CCircle = new CCircle(edge.x1,edge.y1,edge.x2,edge.y2,p3.x,p3.y);
 				var bounds:CRectangle = circleBounds(circle);
 				var angle132:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p3.x, p3.y, edge.x2, edge.y2));
 				for each(var p4:CPoint in allVisibleVertex){
+					//p3，p4是同一个点
 					if((p4.x == edge.x1 && p4.y == edge.y1)
 						|| (p4.x == edge.x2 && p4.y == edge.y2)
 						|| (p4.x == p3.x && p4.y == p3.y)){
 						continue;
 					}
+					//不在包围盒内
 					if(bounds.contains(p4.x,p4.y) == false){
 						continue;
 					}
-					
+					//在包围盒内，且角度不是最大的
 					var angle142:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p4.x, p4.y, edge.x2, edge.y2));
 					if(angle142 > angle132){
 						p3 = p4;

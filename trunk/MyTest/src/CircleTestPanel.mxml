@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import com.netease.core.geom.CCircle;
+			import com.netease.core.geom.CPoint;
+			import com.netease.core.geom.CTriangle;
+			private function init():void{
+				var triangle:CTriangle = new CTriangle(100,100,100,200,200,200);
+				var circle:CCircle = new CCircle(triangle.x1,triangle.y1,triangle.x2,triangle.y2,triangle.x3,triangle.y3);
+				graphics.lineStyle(1,0xff0000);
+				graphics.moveTo(triangle.x1,triangle.y1);
+				graphics.lineTo(triangle.x2,triangle.y2);
+				graphics.lineTo(triangle.x3,triangle.y3);
+				graphics.lineTo(triangle.x1,triangle.y1);
+				graphics.drawCircle(circle.cx,circle.cy,circle.r);
+				var flag:Boolean;
+				for(var i:int=0;i<100000;i++){
+					graphics.lineStyle(0,0,0);
+					var point:CPoint = new CPoint(Math.floor(Math.random()*300),Math.floor(Math.random()*300));
+					if(circle.isIn(point.x,point.y)){
+						graphics.beginFill(0xff0000);
+					}
+					else if(circle.isOn(point.x,point.y)){
+						graphics.beginFill(0x00ff00);
+					}
+					else{
+						graphics.beginFill(0x0000ff);
+					}
+					graphics.drawCircle(point.x,point.y,1);
+					graphics.endFill();
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

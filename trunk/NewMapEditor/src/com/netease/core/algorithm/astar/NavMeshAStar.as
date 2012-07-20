@@ -138,7 +138,7 @@ package com.netease.core.algorithm.astar{
 			var pathArr:Array = new Array();
 			var endX:int,endY:int,currentX:int,currentY:int;
 			var currentNode:NavmeshAstarNode;
-			var node:NavmeshAstarNode,lastNode:NavmeshAstarNode;
+			var node:NavmeshAstarNode,lastNode1:NavmeshAstarNode,lastNode2:NavmeshAstarNode;
 			var startIndex:int;	
 			var inSideEdge:CLine;	
 			var lastX1:int,lastY1:int,lastX2:int,lastY2:int;
@@ -154,9 +154,10 @@ package com.netease.core.algorithm.astar{
 			currentY = route[route.length-1][1];
 			pathArr.unshift(route[route.length-1]);
 			while(currentX!=endX || currentY!=endY) {
-				lastNode = currentNode;
-				startIndex = nodeRoute.indexOf(lastNode);	//开始路点所在的网格索引
-				inSideEdge = lastNode.edgeArr[lastNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
+				lastNode1 = currentNode;
+				lastNode2 = currentNode;
+				startIndex = nodeRoute.indexOf(currentNode);	//开始路点所在的网格索引
+				inSideEdge = currentNode.edgeArr[currentNode.arrivalEdgeIndex];	//路径线在网格中的穿出边
 				lastX1 = inSideEdge.x1;
 				lastY1 = inSideEdge.y1;
 				lastX2 = inSideEdge.x2;
@@ -180,13 +181,13 @@ package com.netease.core.algorithm.astar{
 						if (lastLine2.checkPointPos(new CPoint(testX1,testY1)) == CLine.POINT_ON_RIGHT) {
 							currentX = lastX2;
 							currentY = lastY2;
-							currentNode = lastNode;
+							currentNode = lastNode2;
 							break;
 						} else {
 							if (lastLine1.checkPointPos(new CPoint(testX1,testY1)) != CLine.POINT_ON_LEFT) {
 								lastX1 = testX1;
 								lastY1 = testY1;
-								lastNode = node;
+								lastNode1 = node;
 								lastLine1.x2 = lastX1;
 								lastLine1.y2 = lastY1;
 							}
@@ -197,13 +198,13 @@ package com.netease.core.algorithm.astar{
 						if (lastLine1.checkPointPos(new CPoint(testX2,testY2)) == CLine.POINT_ON_LEFT) {
 							currentX = lastX1;
 							currentY = lastY1;
-							currentNode = lastNode;
+							currentNode = lastNode1;
 							break;
 						} else {
 							if (lastLine2.checkPointPos(new CPoint(testX2,testY2)) != CLine.POINT_ON_RIGHT) {
 								lastX2 = testX2;
 								lastY2 = testY2;
-								lastNode = node;
+								lastNode2 = node;
 								lastLine2.x2 = lastX2;
 								lastLine2.y2 = lastY2;
 							}
@@ -211,9 +212,9 @@ package com.netease.core.algorithm.astar{
 					}
 				}
 				if(i<0){
-					currentNode = nodeRoute[0];
 					currentX = endX;
 					currentY = endY;
+					currentNode = nodeRoute[0];
 				}
 				pathArr.unshift([currentX,currentY]);
 			}

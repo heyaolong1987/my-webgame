@@ -25,10 +25,10 @@ package{
 	 * 2012-7-4
 	 */ 
 	public class DolygonTestPanel extends UIComponent{
-		private var mapWidth:int=1000;
-		private var mapHeight:int=600;
-		private var tileWidth:int=40;
-		private var tileHeight:int=40;
+		private var mapWidth:int=400;
+		private var mapHeight:int=400;
+		private var tileWidth:int=10;
+		private var tileHeight:int=10;
 		private var row:int = mapHeight/tileHeight;
 		private var col:int = mapWidth/tileWidth;
 		private var sprite:Sprite = new Sprite();
@@ -38,7 +38,6 @@ package{
 		private var routeSprite:Sprite = new Sprite();
 		private var polygonSprite:Sprite = new Sprite();
 		private var triangleSprite:Sprite = new Sprite();
-		private var flag:Array;
 		private var polygonList:Vector.<CPolygon> = new Vector.<CPolygon>();
 		private var triangleList:Vector.<CTriangle>;
 		private var astarNodeList:Vector.<NavmeshAstarNode>;
@@ -57,17 +56,14 @@ package{
 			for(i=0; i<col; i++){
 				arcs[i] = new Array(row);
 				for(j=0; j<row; j++){
-					flag[i][j] = 0;
 					if(i==0 || i==col-1 || j ==0 || j==row-1){
 						arcs[i][j] = 1;
 					}else{
 						arcs[i][j] = Math.floor(Math.random()*2) == 0?1:0;
 					}
-					
-					
 				}
 			}
-			polygonList = CNavMesh.getAllPolygons(arcs,row,col);
+			polygonList = CNavMesh.getAllPolygons(arcs,row,col,tileWidth,tileHeight);
 			triangleList = CDelaunay.createDelaunay(polygonList);
 			astarNodeList = CNavMesh.generalAstarNode(triangleList);
 			addAllChildren();

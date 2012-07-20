@@ -6,6 +6,7 @@
 			import com.netease.core.algorithm.CNavMesh;
 			import com.netease.core.algorithm.astar.NavMeshAStar;
 			import com.netease.core.algorithm.astar.NavmeshAstarNode;
+			import com.netease.core.geom.CTriangle;
 			
 			import flash.utils.getTimer;
 			
@@ -19,6 +20,7 @@
 			[Bindable]
 			private var _bmp:Bitmap=null;
 			private var _recordList:Array=[];
+			[Bindable]
 			private var _zoom:int = 100;
 			[Bindable]
 			private var _editMode:int;
@@ -45,7 +47,6 @@
 				uiBitmap.addChild(_bmp);
 				_gridBitmap = new Bitmap();
 				uiTerrain.addChild(_gridBitmap);
-				
 				refreshBitMapData();
 			}
 			override public function set visible(value:Boolean):void{
@@ -110,7 +111,7 @@
 					}
 				}
 				bytes.compress();
-				var file:File = new File( Data.file.nativePath + Config.datName);
+				var file:File = new File( Data.file.nativePath + Config.wallName);
 				var stream:FileStream = new FileStream();
 				var data:ByteArray = new ByteArray();
 				data.writeBytes( bytes );
@@ -120,7 +121,7 @@
 				stream.close();
 			}
 			private function loadTerrainInfoClick():void{
-				var file:File = new File( Data.file.nativePath + Config.datName);
+				var file:File = new File(Data.file.nativePath + Config.wallName);
 				var stream:FileStream = new FileStream();
 				var data:ByteArray = new ByteArray;
 				stream.open(file, FileMode.READ);
@@ -140,25 +141,31 @@
 					}
 				}
 			}
+			private function zoomMaxClick():void{
+				changeZoom(100);
+			}
+			private function zoomMinClick():void{
+				changeZoom(10);
+			}
+			
 			private function zoomInClick():void{
 				if(_zoom>=100){
 					return;
 				}
-				cvsMap.x = editWidth/2-(editWidth/2-cvsMap.x)*(_zoom+10)/_zoom;
-				cvsMap.y = editHeight/2-(editHeight/2-cvsMap.y)*(_zoom+10)/_zoom;
-				cvsMap.scaleX = (_zoom+10)/100;
-				cvsMap.scaleY = (_zoom+10)/100;
-				_zoom = _zoom+10;
+				changeZoom(_zoom+10);
+			}
+			private function changeZoom(zoom:int):void{
+				cvsMap.x = editWidth/2-(editWidth/2-cvsMap.x)*(zoom)/_zoom;
+				cvsMap.y = editHeight/2-(editHeight/2-cvsMap.y)*(zoom)/_zoom;
+				cvsMap.scaleX = (zoom)/100;
+				cvsMap.scaleY = (zoom)/100;
+				_zoom = zoom;
 			}
 			private function zoomOutClick():void{
 				if(_zoom<=10){
 					return;
 				}
-				cvsMap.x = editWidth/2-(editWidth/2-cvsMap.x)*(_zoom-10)/_zoom;
-				cvsMap.y = editHeight/2-(editHeight/2-cvsMap.y)*(_zoom-10)/_zoom;
-				cvsMap.scaleX = (_zoom-10)/100;
-				cvsMap.scaleY = (_zoom-10)/100;
-				_zoom  = _zoom-10;
+				changeZoom(_zoom-10);
 			}
 			private var isDraging:Boolean = false;
 			private var lastStageX:int;
@@ -213,11 +220,9 @@
 							else if(findPathStep == 1){
 								findPathEX = event.localX;
 								findPathEY = event.localY;
-								trace(getTimer());
 								path = NavMeshAStar.find(astarNodeList,findPathSX,findPathSY,findPathEX,findPathEY);
-								trace(getTimer());
-								drawPath();
 							}
+							drawPath();
 							findPathStep = (findPathStep+1)%2;
 						}
 						break;
@@ -228,19 +233,19 @@
 				uiRoute.graphics.clear();
 				if(findPathStep == 0){
 					uiRoute.graphics.beginFill(0xff0000);
-					uiRoute.graphics.drawCircle(findPathSX,findPathSY,2);
+					uiRoute.graphics.drawCircle(findPathSX,findPathSY,20);
 					uiRoute.graphics.endFill();
 				}
-				if(findPathStep==1){
+				if(findPathStep == 1){
 					uiRoute.graphics.beginFill(0xff0000);
-					uiRoute.graphics.drawCircle(findPathSX,findPathSY,2);
+					uiRoute.graphics.drawCircle(findPathSX,findPathSY,20);
 					uiRoute.graphics.endFill();
 					uiRoute.graphics.beginFill(0xff0000);
-					uiRoute.graphics.drawCircle(findPathEX,findPathEY,2);
+					uiRoute.graphics.drawCircle(findPathEX,findPathEY,20);
 					uiRoute.graphics.endFill();
 					if(path!=null){
 						if(path[0]!=null&&path[0].length>0){
-							uiRoute.graphics.lineStyle(3,0x00ff00);
+							uiRoute.graphics.lineStyle(5,0x00ff00);
 							uiRoute.graphics.moveTo(path[0][0][0],path[0][0][1]);
 							for(var i:int=1;i<path[0].length;i++){
 								uiRoute.graphics.lineTo(path[0][i][0],path[0][i][1]);
@@ -248,7 +253,7 @@
 						}
 						
 						if(path[1]!=null&&path[1].length>0){
-							uiRoute.graphics.lineStyle(3,0xff0000);
+							uiRoute.graphics.lineStyle(5,0xff0000);
 							uiRoute.graphics.moveTo(path[1][0][0],path[1][0][1]);
 							for(var i:int=1;i<path[1].length;i++){
 								uiRoute.graphics.lineTo(path[1][i][0],path[1][i][1]);
@@ -330,13 +335,64 @@
 				trace(getTimer());
 				astarNodeList = CNavMesh.createAstarNode(arcs,colNum,rowNum,Config.terrainWidth,Config.terrainHeight);
 				trace(getTimer());
-				for(var i:int=0;i<astarNodeList.length; i++){
-					var triangle:NavmeshAstarNode = astarNodeList[i];
-					uiTriangleList.graphics.lineStyle(2,0x0000ff);
-					uiTriangleList.graphics.moveTo(triangle.x1,triangle.y1);
-					uiTriangleList.graphics.lineTo(triangle.x2,triangle.y2);
-					uiTriangleList.graphics.lineTo(triangle.x3,triangle.y3);
-					uiTriangleList.graphics.lineTo(triangle.x1,triangle.y1);
+				onAstarNodeListChanged();
+			}
+			private function onAstarNodeListChanged():void{
+				uiTriangleList.graphics.clear();
+				if(astarNodeList){
+					for(var i:int=0;i<astarNodeList.length; i++){
+						var triangle:NavmeshAstarNode = astarNodeList[i];
+						uiTriangleList.graphics.lineStyle(2,0x0000ff);
+						uiTriangleList.graphics.moveTo(triangle.x1,triangle.y1);
+						uiTriangleList.graphics.lineTo(triangle.x2,triangle.y2);
+						uiTriangleList.graphics.lineTo(triangle.x3,triangle.y3);
+						uiTriangleList.graphics.lineTo(triangle.x1,triangle.y1);
+					}
+				}
+			}
+			private function loadTriangleListClick():void{
+				var file:File = new File( Data.file.nativePath + Config.triangleName);
+				var stream:FileStream = new FileStream();
+				var data:ByteArray = new ByteArray;
+				stream.open(file, FileMode.READ);
+				stream.readBytes(data, 0, stream.bytesAvailable);
+				data.uncompress();
+				var bytes:ByteArray = new ByteArray();
+				data.position = 0;
+				var dataList:Vector.<Object> = data.readObject() as Vector.<Object>;
+				var len:int = dataList.length;
+				var i:int;
+				astarNodeList = new Vector.<NavmeshAstarNode>();
+				var node:NavmeshAstarNode;
+				var nodeData:Object;
+				for(i=0; i<len; i++){
+					nodeData = dataList[i];
+					node = new NavmeshAstarNode(nodeData.x1,nodeData.y1,nodeData.x2,nodeData.y2,nodeData.x3,nodeData.y3);
+					node.id = nodeData.id;
+					node.linkArr = nodeData.linkArr;
+					astarNodeList.push(node);
+				}
+				onAstarNodeListChanged();
+			}
+			
+			private function saveTriangleListClick():void{
+				if(astarNodeList){
+					var i:int,len:int;
+					len = astarNodeList.length;
+					var node:NavmeshAstarNode;
+					var triangleList:Array;
+					for(i=0; i<len; i++){
+						node = astarNodeList[i];
+						triangleList.push({x1:node.x1,y1:node.y1,x2:node.x2,y2:node.y2,x3:node.x3,y3:node.y3,linkArr:node.linkArr,id:node.id});
+					}
+					var file:File = new File( Data.file.nativePath + Config.triangleName);
+					var stream:FileStream = new FileStream();
+					var data:ByteArray = new ByteArray();
+					data.writeObject(triangleList);
+					data.compress();
+					stream.open(file, FileMode.WRITE);
+					stream.writeBytes(data)
+					stream.close();
 				}
 			}
 			private function findPathTestClick():void{
@@ -353,7 +409,9 @@
 			<mx:Button label="全部清除"  width="80"/>
 			<mx:Button label="撤销"  width="80" click="undoClick()" enabled="{_recordList.length>0}"/>
 			<mx:Button label="保存地形信息"  width="80" click="saveTerrianInfoClick()" />
-			<mx:Button label="生成网格"  width="80" click="generalTriangleListClick()" />
+			<mx:Button label="载入三角网格"  width="80" click="loadTriangleListClick()" />
+			<mx:Button label="生成三角网格"  width="80" click="generalTriangleListClick()" />
+			<mx:Button label="保存三角网格"  width="80" click="saveTriangleListClick()" />
 			<mx:Button label="寻路测试"  width="80" click="onChangeEditMode(MODE_FIND_PATH)" />
 		</mx:VBox>
 	</mx:Canvas>
@@ -365,14 +423,17 @@
 				   click="onClick(event)">
 			<mx:UIComponent id="uiBitmap"/>
 			<mx:UIComponent id="uiTerrain" alpha="0.7"/>
-			<mx:UIComponent id="uiTerrainGrid" />
-			<mx:UIComponent id="uiTriangleList" />
-			<mx:UIComponent id="uiRoute" visible="{_editMode == MODE_FIND_PATH}" />
+			<mx:UIComponent id="uiTerrainGrid" visible="{_zoom>=30}" />
+			<mx:UIComponent id="uiTriangleList" visible="{_editMode == MODE_FIND_PATH || _editMode == MODE_NORMAL}" />
+			<mx:UIComponent id="uiRoute" visible="{_editMode == MODE_FIND_PATH || _editMode == MODE_NORMAL}" />
 		</mx:Canvas>
-		<mx:Button x="400" label="+" click="zoomInClick()" />
-		<mx:Button x="500" label="-" click="zoomOutClick()" />
 	</mx:Canvas>
-	<mx:Canvas y="{editHeight+20}" visible="{_editMode==MODE_EDIT_ROAD || _editMode ==MODE_EDIT_WALL}">
+	<mx:Button x="650" y="{editHeight+5}" width="50" label="max" click="zoomMaxClick()" />
+	<mx:Button x="705" y="{editHeight+5}" width="50" label="+" click="zoomInClick()" />
+	<mx:Button x="760" y="{editHeight+5}" width="50" label="-" click="zoomOutClick()" />
+	<mx:Button x="815" y="{editHeight+5}" width="50" label="min" click="zoomMinClick()" />
+	
+	<mx:Canvas y="{editHeight+30}" visible="{_editMode==MODE_EDIT_ROAD || _editMode ==MODE_EDIT_WALL}">
 		<mx:Label text="大小" x="20"/>
 		<mx:TextInput id="tiEditTerrainSize" text="{_editTerrainSize}" width="20" x="50" change="onChangeTerrainSize()" />
 	</mx:Canvas>

@@ -5,8 +5,8 @@ package{
 	 * 2012-7-16
 	 */ 
 	public class Config{
-		public static var datName:String = "/wall.dat";
-		public static var wallName:String = "/wall.jpg";
+		public static var wallName:String = "/wall.dat";
+		public static var triangleName:String = "/triangle.dat";
 		public static var upName:String = "/..";
 		public static var jpgName:String = "/map.jpg";
 		public static var cutImageWidth:int = 120;
