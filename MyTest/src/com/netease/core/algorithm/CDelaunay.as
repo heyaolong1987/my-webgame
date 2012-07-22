@@ -281,7 +281,7 @@ package com.netease.core.algorithm{
 		 * @return 
 		 */		
 		private static function circleBounds(c:CCircle):CRectangle {
-			return new CRectangle(c.x-c.r, c.y-c.r, c.r*2, c.r*2);
+			return new CRectangle(c.cx-c.r, c.cy-c.r, c.r*2, c.r*2);
 		}
 		
 		

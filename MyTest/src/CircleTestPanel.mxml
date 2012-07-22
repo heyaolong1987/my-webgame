@@ -3,33 +3,45 @@
 	<mx:Script>
 		<![CDATA[
 			import com.netease.core.geom.CCircle;
+			import com.netease.core.geom.CLine;
 			import com.netease.core.geom.CPoint;
 			import com.netease.core.geom.CTriangle;
 			private function init():void{
-				var triangle:CTriangle = new CTriangle(100,100,100,200,200,200);
-				var circle:CCircle = new CCircle(triangle.x1,triangle.y1,triangle.x2,triangle.y2,triangle.x3,triangle.y3);
-				graphics.lineStyle(1,0xff0000);
-				graphics.moveTo(triangle.x1,triangle.y1);
-				graphics.lineTo(triangle.x2,triangle.y2);
-				graphics.lineTo(triangle.x3,triangle.y3);
-				graphics.lineTo(triangle.x1,triangle.y1);
+				var x1:int = 200;
+				var y1:int = 300;
+				var x2:int = 330;
+				var y2:int = 220;
+				var x3:int = 330;
+				var y3:int = 400;
+				
+				var circle:CCircle = new CCircle(x1,y1,x2,y2,x3,y3);
+				graphics.lineStyle(1,0x00ff00);
 				graphics.drawCircle(circle.cx,circle.cy,circle.r);
+				var line12:CLine = new CLine(x1,y1,x2,y2);
 				var flag:Boolean;
 				for(var i:int=0;i<100000;i++){
-					graphics.lineStyle(0,0,0);
-					var point:CPoint = new CPoint(Math.floor(Math.random()*300),Math.floor(Math.random()*300));
-					if(circle.isIn(point.x,point.y)){
-						graphics.beginFill(0xff0000);
+					var x4:int,y4:int;
+					x4 = Math.floor(Math.random()*500);
+					y4 = Math.floor(Math.random()*500);
+					if(line12.checkPointPos(new CPoint(x4,y4)) == CLine.POINT_ON_LEFT && circle.checkPointPos(x4,y4) == CCircle.POINT_OUT){
+						var circle2:CCircle = new CCircle(x1,y1,x2,y2,x4,y4);
+						if(circle2.checkPointPos(x3,y3) == CCircle.POINT_OUT){
+							graphics.lineStyle(1,0xff0000);
+							graphics.drawCircle(circle2.cx,circle2.cy,circle2.r);
+							graphics.moveTo(x1,y1);
+							graphics.lineTo(x2,y2);
+							graphics.lineTo(x4,y4);
+							graphics.lineTo(x1,y1);
+							
+						}
 					}
-					else if(circle.isOn(point.x,point.y)){
-						graphics.beginFill(0x00ff00);
-					}
-					else{
-						graphics.beginFill(0x0000ff);
-					}
-					graphics.drawCircle(point.x,point.y,1);
-					graphics.endFill();
 				}
+				graphics.lineStyle(1,0x00ff00);
+				graphics.moveTo(x1,y1);
+				graphics.lineTo(x2,y2);
+				graphics.lineTo(x3,y3);
+				graphics.lineTo(x1,y1);
+				
 			}
 		]]>
 	</mx:Script>
