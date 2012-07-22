@@ -2,15 +2,9 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
-			import com.adobe.images.JPGEncoder;
 			import com.netease.core.algorithm.CNavMesh;
 			import com.netease.core.algorithm.astar.NavMeshAStar;
 			import com.netease.core.algorithm.astar.NavmeshAstarNode;
-			import com.netease.core.geom.CTriangle;
-			
-			import flash.utils.getTimer;
-			
-			import mx.controls.List;
 			private var MODE_NORMAL:int = 0;
 			private var MODE_EDIT_WALL:int = 1;
 			private var MODE_EDIT_ROAD:int = 2;

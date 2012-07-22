@@ -77,6 +77,8 @@ package com.netease.core.algorithm{
 					if(vertex == null){
 						continue;
 					}
+					trace(edge.x1,edge.y1,edge.x2,edge.y2,vertex.x,vertex.y);
+					
 					var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
 					var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
 					
@@ -248,22 +250,25 @@ package com.netease.core.algorithm{
 			}
 			timeArr[0] += getTimer();
 			timeArr[1] -= getTimer();
-			var isMaxAngle:Boolean;
+			var isDTPoint:Boolean;
 			do{
-				isMaxAngle = true;
+				isDTPoint = true;
 				var circle:CCircle = new CCircle(edge.x1,edge.y1,edge.x2,edge.y2,p3.x,p3.y);
-				var bounds:CRectangle = circleBounds(circle);
 				var angle132:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p3.x, p3.y, edge.x2, edge.y2));
-				var nextPoint:Point;
+				var nextPoint:CPoint;
+				var nextAngle:Number = 0;
+				var angle142:Number = 0;
 				for each(var p4:CPoint in allVisibleVertex){
 					if((p4.x == edge.x1 && p4.y == edge.y1)
 						|| (p4.x == edge.x2 && p4.y == edge.y2)
 						|| (p4.x == p3.x && p4.y == p3.y)){
 						continue;
 					}
-					if(circle.contains(e
-					var angle142:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p4.x, p4.y, edge.x2, edge.y2));
-					if(angle142 > angle132){
+					if(circle.checkPointPos(p4.x,p4.y) != CCircle.POINT_OUT){
+						angle142 = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p4.x, p4.y, edge.x2, edge.y2));
+						if(angle142 < nextAngle){
+							continue;
+						}
 						line14.x2 = p4.x;
 						line14.y2 = p4.y;
 						if(isIntersectWidthLines(line14,edgeList)){
@@ -274,27 +279,23 @@ package com.netease.core.algorithm{
 						if(isIntersectWidthLines(line24,edgeList)){
 							continue;
 						}
-						nextPoint = p4;
-						isMaxAngle = false;
+						if(angle142 > nextAngle){
+							nextAngle = angle142;
+							nextPoint = p4;
+							isDTPoint = false;
+						}
+						
 					}
 				}
-				if(isMaxAngle == false){
-					
+				if(isDTPoint == false){
+					p3 = nextPoint;
 				}
 			}
-			while(isMaxAngle==false);
+			while(isDTPoint==false);
 			timeArr[1] += getTimer();
 			trace(timeArr[0],timeArr[1],timeArr[2]);
 			return p3;
 			
-		}
-		/**
-		 * 返回圆的包围盒
-		 * @param c
-		 * @return 
-		 */		
-		private static function circleBounds(c:CCircle):CRectangle {
-			return new CRectangle(c.cx-c.r, c.cy-c.r, c.r*2, c.r*2);
 		}
 		
 		
