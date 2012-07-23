@@ -1,10 +1,10 @@
 package com.netease.model.vo.moveobj{
-	import com.netease.core.map.moveobj.MoveObjVO;
+	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
 	import com.netease.model.constants.MapConstants;
 
 	/**
 	 * @author heyaolong
-	 * 
+	 * 角色VO
 	 * 2012-5-23
 	 */ 
 	public class CharVO extends MoveObjVO{

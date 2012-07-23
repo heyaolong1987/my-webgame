@@ -1,4 +1,6 @@
 package com.netease.view.map.moveobj{
+	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
+
 	/**
 	 * @author heyaolong
 	 * 
@@ -6,8 +8,9 @@ package com.netease.view.map.moveobj{
 	 */ 
 	public class Player extends Char{
 		
-		public function Player()
+		public function Player(moveData:MoveObjVO)
 		{
+			super(moveData);
 		}
 	}
 }
