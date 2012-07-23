@@ -1,5 +1,6 @@
-package com.netease.core.map.moveobj{
+package com.netease.core.model.vo.map.moveobj{
 	import com.netease.core.utils.MovingTween;
+	import com.netease.core.view.map.moveobj.MoveObj;
 
 	/**
 	 * @author heyaolong
@@ -13,8 +14,7 @@ package com.netease.core.map.moveobj{
 		public var action:int;
 		public var x:Number;
 		public var y:Number;
-		public var route:MovingTween;
-		public var container:MoveObj;
+		public var movingTween:MovingTween;
 		public var dir:int;
 		public var sex:int;
 		public function MoveObjVO()

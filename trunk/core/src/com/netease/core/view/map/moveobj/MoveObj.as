@@ -1,5 +1,6 @@
-package com.netease.core.map.moveobj{
+package com.netease.core.view.map.moveobj{
 	import com.greensock.TweenMax;
+	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
 	import com.netease.core.utils.MovingTween;
 	
 	import flash.display.DisplayObject;
@@ -22,8 +23,9 @@ package com.netease.core.map.moveobj{
 	public class MoveObj extends Sprite{
 		public var tween:TweenMax;
 		public var moveData:MoveObjVO;
-		public function MoveObj()
+		public function MoveObj(moveData:MoveObjVO)
 		{
+			this.moveData = moveData;
 			var txt:TextField = new TextField();
 			txt.text = "我的名字叫啥啥啥";
 			txt.textColor = 0xff0000;
@@ -32,6 +34,12 @@ package com.netease.core.map.moveobj{
 			mouseEnabled = false;
 		}
 		public function tweenUpdate(value:Object):void{
+			
+		}
+		public function dispose():void{
+			
+		}
+		public function run():void{
 			
 		}
 	}

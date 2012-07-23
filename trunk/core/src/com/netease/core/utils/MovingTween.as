@@ -1,11 +1,13 @@
 package com.netease.core.utils{
 	import com.netease.core.events.RouteTweenEvent;
 	import com.netease.core.manager.FrameManager;
-	import com.netease.core.map.moveobj.MoveObjVO;
+	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
 	
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
+	
+	import mx.core.Container;
 	
 	/**
 	 * @author heyaolong
@@ -36,8 +38,9 @@ package com.netease.core.utils{
 		public var container:Object;
 		public var _lastMoveTime:int;
 		
-		public function MovingTween(){
-			FrameManager.getInstance().registProcessFunction(move);
+		public function MovingTween(container:Object=null){
+			this.container = container;
+			FrameManager.getInstance().registProcessFunction(stepMove);
 		}
 		public function setPos(x:Number,y:Number,direction:int=-1):void{
 			var changed:Boolean = false;
@@ -52,7 +55,7 @@ package com.netease.core.utils{
 				this.direction = direction;
 			}
 			if(changed){
-				this.dispatchEvent(new RouteTweenEvent(RouteTweenEvent.ROUTE_UPDATE,this,Math.floor(this.x),Math.floor(this.y),direction));
+				this.dispatchEvent(new RouteTweenEvent(RouteTweenEvent.POS_UPDATE,this,Math.floor(this.x),Math.floor(this.y),direction));
 			}
 		}
 		/**
@@ -87,7 +90,7 @@ package com.netease.core.utils{
 			
 		}
 		
-		public function move():void{
+		public function stepMove():void{
 			if(_route == null){
 				return;
 			}

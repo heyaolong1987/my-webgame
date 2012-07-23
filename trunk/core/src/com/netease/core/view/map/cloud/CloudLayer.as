@@ -1,4 +1,4 @@
-package com.netease.core.map.cloud{
+package com.netease.core.view.map.cloud{
 		import flash.display.Bitmap;
 		import flash.display.BitmapData;
 		import flash.display.Sprite;
