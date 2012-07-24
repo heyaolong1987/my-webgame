@@ -1,19 +1,11 @@
 package com.netease.core.view.map.moveobj{
-	import com.greensock.TweenMax;
+	import com.netease.core.display.ResGraphic;
 	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
-	import com.netease.core.utils.MovingTween;
 	
-	import flash.display.DisplayObject;
+	import flash.display.BitmapData;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.events.DataEvent;
 	import flash.text.TextField;
-	
-	import mx.containers.Canvas;
-	import mx.controls.Label;
-	import mx.controls.Text;
-	import mx.core.Container;
-	import mx.core.UIComponent;
-	import mx.effects.Tween;
 	
 	/**
 	 * @author heyaolong
@@ -21,26 +13,46 @@ package com.netease.core.view.map.moveobj{
 	 * 2012-5-17
 	 */ 
 	public class MoveObj extends Sprite{
-		public var tween:TweenMax;
 		public var moveData:MoveObjVO;
+		private var _model:ResGraphic;
+		private var  _dirChanged:Boolean = true;
+		private var _avtar:Sprite = new Sprite();
 		public function MoveObj(moveData:MoveObjVO)
 		{
 			this.moveData = moveData;
 			var txt:TextField = new TextField();
-			txt.text = "我的名字叫啥啥啥";
+			if(moveData.name){
+				txt.text = moveData.name;
+			}
 			txt.textColor = 0xff0000;
+			txt.cacheAsBitmap = true;
 			addChild(txt);
+			addChild(_avtar);
 			mouseChildren = false;
 			mouseEnabled = false;
 		}
-		public function tweenUpdate(value:Object):void{
-			
+		
+		protected function loadModelRes():void{
+			ResLoader.getInstance().load(url,this,loadModelComplete);
 		}
+		protected function loadModelComplete(client:Object,data:Object):void{
+			_model = new ResGraphic(data as MovieClip);
+		}
+		
 		public function dispose():void{
 			
 		}
 		public function run():void{
-			
+			moveData.run();
+			if(_dirChanged){
+				_url = "../res/model/"+1001+"_"+moveData.dir+".swf";
+				loadModelRes();
+				_dirChanged = false;
+			}
+			_avtar.graphics.clear();
+			if(_model){
+				_avtar.graphics.beginBitmapFill(_model.bitmapData);
+			}
 		}
 	}
 }

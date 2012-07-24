@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import com.netease.core.model.vo.map.moveobj.MoveObjVO;
+			import com.netease.core.view.map.scene.SceneMap;
+			import com.netease.model.vo.moveobj.OtherPlayerVO;
+			import com.netease.model.vo.moveobj.PlayerVO;
+			import com.netease.view.map.moveobj.OtherPlayer;
+			import com.netease.view.map.moveobj.Player;
+			private var objArr:Array = [];
+			private var objNum:int = 1000;
+			private var mapWidth:int = 1000;
+			private var mapHeight:int = 500;
+			
+			private var speed:int = 120;
+			private var showObj:Boolean = false;
+			private var useTween:Boolean = false;
+			private var _scene:SceneMap;
+			
+			private function init():void{
+				_scene = new SceneMap(stage);
+				addChild(_scene);
+				var playerVO:PlayerVO = new PlayerVO();
+				playerVO.speed = speed/40;
+				playerVO.id = 0;
+				playerVO.x = 0;
+				playerVO.y = 0;
+				playerVO.name = "易梦";
+				_scene.addPlayer(new Player(playerVO));
+				objArr.push(playerVO);
+				for(var i:int=1;i<objNum;i++){
+					var otherPlayerVO:OtherPlayerVO = new OtherPlayerVO();
+					otherPlayerVO.speed = speed/40;
+					otherPlayerVO.id = i;
+					otherPlayerVO.name = "玩家" + i.toString();
+					otherPlayerVO.x = 0;
+					otherPlayerVO.y = 0;
+					_scene.addOtherPlayer(new OtherPlayer(otherPlayerVO));
+					objArr.push(otherPlayerVO);
+				}
+				_scene.enterMap(0,0,0);
+				setTimeout(onTime,0);
+				
+			}
+			private function onTime():void{
+				var moveIndex:int = Math.floor(Math.random()*objNum)*(Math.floor(Math.random()*50)>0?1:0);
+				var moveVO:MoveObjVO = objArr[moveIndex] as MoveObjVO;
+				var tx:int = Math.floor(Math.random()*mapWidth);
+				var ty:int = Math.floor(Math.random()*mapHeight);
+				moveVO.route = [[tx,ty]];
+				setTimeout(onTime,Math.floor(Math.random()*3000/objNum));
+			}
+			
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>
