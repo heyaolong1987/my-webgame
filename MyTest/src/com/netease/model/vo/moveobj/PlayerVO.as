@@ -1,4 +1,5 @@
 package com.netease.model.vo.moveobj{
+	import com.netease.manager.WalkStepManager;
 	import com.netease.model.constants.MapConstants;
 
 	/**
@@ -8,9 +9,11 @@ package com.netease.model.vo.moveobj{
 	 */ 
 	public class PlayerVO extends CharVO{
 		
+		
 		public function PlayerVO()
 		{
 			type = MapConstants.MOVE_OBJ_TYPE_PLAYER;
 		}
+		
 	}
 }

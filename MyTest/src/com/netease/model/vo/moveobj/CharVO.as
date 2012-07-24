@@ -1,5 +1,7 @@
 package com.netease.model.vo.moveobj{
 	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
+	import com.netease.manager.MoveManager;
+	import com.netease.manager.WalkStepManager;
 	import com.netease.model.constants.MapConstants;
 
 	/**
@@ -18,6 +20,9 @@ package com.netease.model.vo.moveobj{
 		public function CharVO()
 		{
 			type = MapConstants.MOVE_OBJ_TYPE_CHAR;
+		}
+		override public function run():void{
+			WalkStepManager.stepRoute(this);
 		}
 	}
 }

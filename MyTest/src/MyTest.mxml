@@ -8,54 +8,11 @@
 		<![CDATA[
 			import com.netease.core.manager.CallLaterManager;
 			import com.netease.core.manager.FrameManager;
-			import com.netease.core.utils.MovingTween;
-			import com.netease.core.view.map.moveobj.MoveObj;
-			import com.netease.core.view.map.scene.SceneMap;
-			import com.netease.model.vo.moveobj.OtherPlayerVO;
-			import com.netease.view.map.moveobj.OtherPlayer;
-			private var objArr:Array = [];
-			private var objNum:int = 1;
-			private var mapWidth:int = 950;
-			private var mapHeight:int = 550;
-			
-			private var speed:int = 100;
-			private var showObj:Boolean = false;
-			private var useTween:Boolean = false;
-			private var _scene:SceneMap;
 			private function init():void{
-				
 				FrameManager.getInstance().init(stage);
 				CallLaterManager.getInstance().init(stage);
-				_scene = new SceneMap();
-				var otherPlayerVO:OtherPlayerVO = new OtherPlayerVO();
-				otherPlayerVO.movingTween = new MovingTween(otherPlayerVO);
-				
-				var sx:int = 100;
-				var sy:int = 100;
-				var tx:int = Math.floor(Math.random()*mapWidth);
-				var ty:int = Math.floor(Math.random()*mapHeight);
-				var dis:int = Math.sqrt((tx-sx)*(tx-sx)+(ty-sy)*(ty-sy));
-				var time:int = Math.ceil(1000*dis/speed);
-				otherPlayerVO.movingTween.setRouteInfo([[sx,sy],[tx,ty]],getTimer(),time);
-				_scene.addOtherPlayer(new OtherPlayer(otherPlayerVO));
-				addChild(_scene);
-				return;
-				setTimeout(onTime,0);
+				addChild(new SceneTestPanel());
 			}
-			private function onTime():void{
-				var moveIndex:int = Math.floor(Math.random()*objNum);
-				var obj:MoveObj = objArr[moveIndex];
-				var sx:int = obj.x;
-				var sy:int = obj.y;
-				var tx:int = Math.floor(Math.random()*mapWidth);
-				var ty:int = Math.floor(Math.random()*mapHeight);
-				
-				var dis:int = Math.sqrt((tx-sx)*(tx-sx)+(ty-sy)*(ty-sy));
-				var time:int = Math.ceil(1000*dis/speed);
-				obj.moveData.movingTween.setRouteInfo([[sx,sy],[tx,ty]],getTimer(),time);
-				setTimeout(onTime,Math.floor(Math.random()*3000/objNum));
-			}
-			
 			private function onTweenUpdate(obj:Object):void{
 				
 			}
