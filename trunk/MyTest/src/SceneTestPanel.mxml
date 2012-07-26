@@ -9,7 +9,7 @@
 			import com.netease.view.map.moveobj.OtherPlayer;
 			import com.netease.view.map.moveobj.Player;
 			private var objArr:Array = [];
-			private var objNum:int = 1000;
+			private var objNum:int = 1;
 			private var mapWidth:int = 1000;
 			private var mapHeight:int = 500;
 			
