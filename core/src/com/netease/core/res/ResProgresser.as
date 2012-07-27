@@ -1,6 +1,6 @@
 package com.netease.core.res{
 	import flash.display.Bitmap;
-	import com.netease.core.display.cell.Cell;
+	import com.netease.core.componentell.Cell;
 
 	/**
 	 * @author heyaolong

@@ -1,4 +1,5 @@
-package {
+package com.netease.core.res{
+	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
@@ -9,6 +10,7 @@ package {
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.getQualifiedClassName;
 	
 	import mx.messaging.AbstractConsumer;
 	
@@ -27,25 +29,25 @@ package {
 		protected var _loaderContext:LoaderContext;
 		private var _loadingBytesLoaderList:Dictionary = new Dictionary();
 		private static var _instance:ResLoader;
+		public var map:Dictionary = new Dictionary();
+		
 		public function ResLoader()
 		{
-			createLoaderContext();
+			createLoaderContent();
 			createLoaders();
+		}
+		private function createLoaderContent():void{
+			_loaderContext = new LoaderContext(false);
+			_loaderContext.applicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);
+		}
+		public function get applicationDomain():ApplicationDomain{
+			return _loaderContext.applicationDomain;
 		}
 		public static function getInstance():ResLoader{
 			if(_instance==null){
 				_instance = new ResLoader();
 			}
 			return _instance;
-		}
-		/**
-		 *创建context 
-		 * 
-		 */
-		protected function createLoaderContext():void{
-			_loaderContext = new LoaderContext(true);
-			_loaderContext.applicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);	
-			
 		}
 		/**
 		 *创建loader池 
@@ -68,27 +70,37 @@ package {
 		 *载入资源 
 		 * @param url
 		 * @param client
-		 * @param loadedFunc 回调参数 client,data
+		 * @param loadedFunc 
 		 * 
 		 */
-		public function load(url:String,client:Object,loadedFunc:Function):void{
+		/**
+		 * 
+		 * @param url
+		 * @param loadedFunc
+		 * @param args
+		 * @param needCache 回调参数 data,args
+		 * 
+		 */
+		public function load(url:String,loadedFunc:Function, args:Array=null, needCache:Boolean=false):void{
 			var res:Object = _resCacher.getRes(url);
 			if(res){
-				loadedFunc(res);
+				loadedFunc(res,args);
 				return;
 			}
 			if(_loadingFuncList[url]!=null){
-				_loadingFuncList[url].push([client,loadedFunc]);
+				_loadingFuncList[url].push([loadedFunc, args, needCache]);
 				return;
 			}
 			if(_freeLoaderList.length>0){
 				var loader:Loader = _freeLoaderList.shift() as Loader;
-				_loadingFuncList[url] = [[client,loadedFunc]];
-				_loadingLoaderList[loader] = [loader,url];
+				_loadingFuncList[url] = [[loadedFunc, args]];
+				_loadingLoaderList[loader] = [loader,url,needCache];
 				loader.load(new URLRequest(url),_loaderContext);
+				var app:ApplicationDomain = _loaderContext.applicationDomain;
+				var currentDomain:ApplicationDomain = ApplicationDomain.currentDomain;
 			}
 			else{
-				_waitingFuncList.push([url,client,loadedFunc]);
+				_waitingFuncList.push([url, loadedFunc, args, needCache]);
 			}
 			
 			
@@ -100,15 +112,20 @@ package {
 			var info:LoaderInfo = e.currentTarget as LoaderInfo;
 			var loader:Loader = info.loader;
 			var url:String = _loadingLoaderList[loader][1];
+			var needCache:Boolean = _loadingLoaderList[loader][2];
 			var funcList:Array = _loadingFuncList[url];
 			_loadingFuncList[url] = null;
 			_loadingLoaderList[loader] = null;
+			map[url] = info.applicationDomain;
 			if(funcList){
 				var len:int = funcList.length;
 				var func:Array;
 				for(var i:int=0; i<len; i++){
 					func = funcList[i];
-					func[1](func[0],info.content);
+					func[0](info.content,func[1]);
+				}
+				if(needCache){
+					ResCacher.getInstance().addRes(url,info.content);
 				}
 			}
 			addLoaderToFreeList(loader);
@@ -143,11 +160,11 @@ package {
 			
 		}
 		
-		public function loadBytes(bytes:ByteArray,client:Object=null,callBack:Function=null):void{
+		public function loadBytes(bytes:ByteArray,callBack:Function=null, args:Array=null):void{
 			var loader:Loader = new Loader();
 			var loaderInfo:LoaderInfo = loader.contentLoaderInfo;
 			loaderInfo.addEventListener(Event.COMPLETE, onLoadBytesComplete);
-			_loadingBytesLoaderList[loader] = [client,callBack];
+			_loadingBytesLoaderList[loader] = [callBack,args];
 			loader.loadBytes(bytes,_loaderContext);
 		}
 		private function onLoadBytesComplete(e:Event):void{
@@ -156,7 +173,7 @@ package {
 			var loadInfo:Array = _loadingBytesLoaderList[loader];
 			_loadingBytesLoaderList[loader] = null;
 			if(loadInfo){
-				loadInfo[1](loadInfo[0],info.content);
+				loadInfo[0](info.content,loadInfo[1]);
 			}
 		}
 	}
