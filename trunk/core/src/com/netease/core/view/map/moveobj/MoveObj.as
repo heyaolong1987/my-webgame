@@ -1,10 +1,16 @@
 package com.netease.core.view.map.moveobj{
-	import com.netease.core.display.ResGraphic;
+	import com.netease.core.interfaces.IPreciseClickAble;
 	import com.netease.core.model.vo.map.moveobj.MoveObjVO;
+	import com.netease.core.res.ClassLoader;
+	import com.netease.core.res.ResLoader;
+	import com.netease.view.map.avatar.AvatarPart;
 	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.geom.Matrix;
+	import flash.system.ApplicationDomain;
 	import flash.text.TextField;
 	
 	/**
@@ -12,9 +18,9 @@ package com.netease.core.view.map.moveobj{
 	 * 
 	 * 2012-5-17
 	 */ 
-	public class MoveObj extends Sprite{
+	public class MoveObj extends Sprite implements IPreciseClickAble{
 		public var moveData:MoveObjVO;
-		private var _model:ResGraphic;
+		private var _model:AvatarPart;
 		private var  _dirChanged:Boolean = true;
 		private var _avtar:Sprite = new Sprite();
 		public function MoveObj(moveData:MoveObjVO)
@@ -26,17 +32,20 @@ package com.netease.core.view.map.moveobj{
 			}
 			txt.textColor = 0xff0000;
 			txt.cacheAsBitmap = true;
+			txt.y = -10;
 			addChild(txt);
 			addChild(_avtar);
 			mouseChildren = false;
 			mouseEnabled = false;
+			_model = new AvatarPart();
 		}
-		
 		protected function loadModelRes():void{
-			ResLoader.getInstance().load(url,this,loadModelComplete);
+			var url:String = "../res/stage/model/1001.swf";
+			ResLoader.getInstance().load(url,loadModelComplete,null);
 		}
-		protected function loadModelComplete(client:Object,data:Object):void{
-			_model = new ResGraphic(data as MovieClip);
+	
+		protected function loadModelComplete(mc:MovieClip,args:Array):void{
+			
 		}
 		
 		public function dispose():void{
@@ -45,13 +54,18 @@ package com.netease.core.view.map.moveobj{
 		public function run():void{
 			moveData.run();
 			if(_dirChanged){
-				_url = "../res/model/"+1001+"_"+moveData.dir+".swf";
 				loadModelRes();
 				_dirChanged = false;
 			}
+			_model.setUrl("../res/stage/model/1001.swf");
+			_model.setId("mode_1001_2"+"_"+moveData.dir,_model.currentFrame);
+			_model.run();
 			_avtar.graphics.clear();
-			if(_model){
-				_avtar.graphics.beginBitmapFill(_model.bitmapData);
+			if(_model.bitmapData){
+				var matrix:Matrix = new Matrix(1,0,0,1,-100,-170);
+				_avtar.graphics.beginBitmapFill(_model.bitmapData,matrix);
+				_avtar.graphics.drawRect(-100,-170,_model.bitmapData.width,_model.bitmapData.height);
+				_avtar.graphics.endFill();
 			}
 		}
 	}
