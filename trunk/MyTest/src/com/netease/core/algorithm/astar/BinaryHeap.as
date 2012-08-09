@@ -1,7 +1,5 @@
 package com.netease.core.algorithm.astar
 {
-	import com.netease.flash.common.log.Console;
-	
 	import flash.utils.getTimer;
 	
 	
