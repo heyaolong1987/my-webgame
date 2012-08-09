@@ -31,16 +31,20 @@ package com.netease.view.map.avatar{
 				_currentFrame = 0;
 				_totalFrames = _map.length;
 			}
-			
 		}
-		public function setId(id:String):void{
+		public function setId(id:String,startFrame:int=0):void{
 			if(_id != id){
 				_id = id;
 				_bmpData = null;
-				_currentFrame = 0;
+				_currentFrame = startFrame;
 				_totalFrames = _map.length;
 			}
-			
+		}
+		public function set currentFrame(value:int):void{
+			_currentFrame = value;
+		}
+		public function get currentFrame():int{
+			return _currentFrame;
 		}
 		public function run(){
 			if(_url&&_id){
