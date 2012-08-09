@@ -81,7 +81,7 @@ package com.netease.core.algorithm{
 						while(true);
 						
 						polygonList.push(new CPolygon(vertexList));
-						dfs(arcs,row,col,flag,i,j,0);
+						bfs(arcs,row,col,flag,i,j);
 					}
 				}
 			}
@@ -161,21 +161,31 @@ package com.netease.core.algorithm{
 			}
 			return astarNodeList;
 		}
-		private static function dfs(arcs:Array,row:int,col:int,flag:Array,x:int,y:int,d:int):void{
-			flag[x][y] = 1;
+		private static function bfs(arcs:Array,row:int,col:int,flag:Array,x:int,y:int):void{
+			var queue:Array = [];
 			var addArr:Array = [[0,1],[1,0],[0,-1],[-1,0]];
 			var i:int;
 			var tx:int;
 			var ty:int;
-			for(i=0;i<4;i++){
-				tx = x+addArr[(i+d)%4][0];
-				ty = y+addArr[(i+d)%4][1];
-				if(tx>=0&&tx<col && ty>=0 && ty<row){
-					if(flag[tx][ty] == 0 && arcs[x][y] == arcs[tx][ty]){
-						dfs(arcs,row,col,flag,tx,ty,(i+d+3)%4);
+			var pos:Array;
+			queue.push([x,y]);
+			flag[x][y] = 1;
+			while(queue.length>0){
+				pos = queue.shift() as Array;
+				x = pos[0];
+				y = pos[1];
+				for(i=0;i<4;i++){
+					tx = x+addArr[i][0];
+					ty = y+addArr[i][1];
+					if(tx>=0&&tx<col && ty>=0 && ty<row){
+						if(flag[tx][ty] == 0 && arcs[x][y] == arcs[tx][ty]){
+							queue.push([tx,ty]);
+							flag[tx][ty] = 1;
+						}
 					}
 				}
 			}
+			
 		}
 	}
 }

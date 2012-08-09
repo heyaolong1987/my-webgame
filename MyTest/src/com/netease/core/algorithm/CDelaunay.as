@@ -10,8 +10,6 @@ package com.netease.core.algorithm{
 	import flash.utils.Dictionary;
 	import flash.utils.getTimer;
 	
-	import mx.messaging.errors.NoChannelAvailableError;
-	
 	/**
 	 * @author heyaolong
 	 * Delaunay三角剖分
@@ -79,6 +77,8 @@ package com.netease.core.algorithm{
 					if(vertex == null){
 						continue;
 					}
+					trace(edge.x1,edge.y1,edge.x2,edge.y2,vertex.x,vertex.y);
+					
 					var line13:CLine = new CLine(edge.x1, edge.y1, vertex.x, vertex.y);
 					var line32:CLine = new CLine(vertex.x, vertex.y, edge.x2, edge.y2);
 					
@@ -119,7 +119,6 @@ package com.netease.core.algorithm{
 				initEdge = getInitOutEdge(edgeList,noVisitEdgeList,vertexList);
 				timeArr[3] += getTimer();
 				timeArr[0] += getTimer();
-				trace(timeArr[0],timeArr[1],timeArr[2],timeArr[3],timeArr[4],timeArr[5]);
 				
 			}
 			
@@ -186,13 +185,13 @@ package com.netease.core.algorithm{
 					}
 					line13.x2 = vertex.x;
 					line13.y2 = vertex.y;
-					if(isIntersectWidthLines(line13,edgeList)== false){
+					if(isIntersectWidthLines(line13,edgeList)){
 						continue;
 					}
 					
 					line23.x2 = vertex.x;
 					line23.y2 = vertex.y;
-					if(isIntersectWidthLines(line23,edgeList)== false){
+					if(isIntersectWidthLines(line23,edgeList)){
 						continue;
 					}
 					noVisitEdgeList[k] = null;
@@ -204,84 +203,99 @@ package com.netease.core.algorithm{
 		}
 		
 		private static function findDT(vertexList:Vector.<CPoint>, edgeList:Vector.<CLine>, edge:CLine):CPoint{
-			var timeArr:Array = [0,0];
+			var timeArr:Array = [0,0,0];
 			var allVisibleVertex:Vector.<CPoint> = new Vector.<CPoint>();
 			
 			var line12:CLine = edge;
 			var line13:CLine = new CLine();
 			var line23:CLine = new CLine();
-			
+			var line14:CLine = new CLine();
+			var line24:CLine = new CLine();
 			line13.x1 = edge.x1;
 			line13.y1 = edge.y1;
 			line23.x1 = edge.x2;
 			line23.y1 = edge.y2;
+			
+			
+			line14.x1 = edge.x1;
+			line14.y1 = edge.y1;
+			line24.x1 = edge.x2;
+			line24.y1 = edge.y2;
+			
 			timeArr[0] -= getTimer();
 			for each(var vertex:CPoint in vertexList){
 				//左边必定相交
 				if(line12.checkPointPos(vertex) != CLine.POINT_ON_RIGHT){
 					continue;
 				}
-				
-				line13.x2 = vertex.x;
-				line13.y2 = vertex.y;
-				if(isIntersectWidthLines(line13,edgeList)== false){
-					continue;
-				}
-				
-				line23.x2 = vertex.x;
-				line23.y2 = vertex.y;
-				if(isIntersectWidthLines(line23,edgeList)== false){
-					continue;
-				}
 				allVisibleVertex.push(vertex);
 			}
-			
-			if(allVisibleVertex.length == 0){
+			var p3:CPoint;
+			for each(var vertex:CPoint in allVisibleVertex){
+				line13.x2 = vertex.x;
+				line13.y2 = vertex.y;
+				if(isIntersectWidthLines(line13,edgeList)){
+					continue;
+				}
+				line23.x2 = vertex.x;
+				line23.y2 = vertex.y;
+				if(isIntersectWidthLines(line23,edgeList)){
+					continue;
+				}
+				p3 = vertex;
+				break;
+			}
+			if(p3 == null){
 				return null;
 			}
 			timeArr[0] += getTimer();
 			timeArr[1] -= getTimer();
-			var p3:CPoint = allVisibleVertex[0];
-			var isMaxAngle:Boolean;
+			var isDTPoint:Boolean;
 			do{
-				isMaxAngle = true;
+				isDTPoint = true;
 				var circle:CCircle = new CCircle(edge.x1,edge.y1,edge.x2,edge.y2,p3.x,p3.y);
-				var bounds:CRectangle = circleBounds(circle);
 				var angle132:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p3.x, p3.y, edge.x2, edge.y2));
+				var nextPoint:CPoint;
+				var nextAngle:Number = 0;
+				var angle142:Number = 0;
 				for each(var p4:CPoint in allVisibleVertex){
-					//p3，p4是同一个点
 					if((p4.x == edge.x1 && p4.y == edge.y1)
 						|| (p4.x == edge.x2 && p4.y == edge.y2)
 						|| (p4.x == p3.x && p4.y == p3.y)){
 						continue;
 					}
-					//不在包围盒内
-					if(bounds.contains(p4.x,p4.y) == false){
-						continue;
+					if(circle.checkPointPos(p4.x,p4.y) != CCircle.POINT_OUT){
+						angle142 = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p4.x, p4.y, edge.x2, edge.y2));
+						if(angle142 < nextAngle){
+							continue;
+						}
+						line14.x2 = p4.x;
+						line14.y2 = p4.y;
+						if(isIntersectWidthLines(line14,edgeList)){
+							continue;
+						}
+						line24.x2 = p4.x;
+						line24.y2 = p4.y;
+						if(isIntersectWidthLines(line24,edgeList)){
+							continue;
+						}
+						if(angle142 > nextAngle){
+							nextAngle = angle142;
+							nextPoint = p4;
+							isDTPoint = false;
+						}
+						
 					}
-					//在包围盒内，且角度不是最大的
-					var angle142:Number = Math.abs(CTriangle.lineAngle(edge.x1, edge.y1, p4.x, p4.y, edge.x2, edge.y2));
-					if(angle142 > angle132){
-						p3 = p4;
-						isMaxAngle = false;
-						break;
-					}
-					
+				}
+				if(isDTPoint == false){
+					p3 = nextPoint;
 				}
 			}
-			while(isMaxAngle==false);
+			while(isDTPoint==false);
 			timeArr[1] += getTimer();
-			trace(timeArr[0],timeArr[1]);
+			trace(timeArr[0],timeArr[1],timeArr[2]);
 			return p3;
 			
-		}
-		/**
-		 * 返回圆的包围盒
-		 * @param c
-		 * @return 
-		 */		
-		private static function circleBounds(c:CCircle):CRectangle {
-			return new CRectangle(c.cx-c.r, c.cy-c.r, c.r*2, c.r*2);
 		}
 		
 		
@@ -291,11 +305,11 @@ package com.netease.core.algorithm{
 				if(edge.intersection(line,point) == CLine.SEGMENTS_INTERSECT){
 					if((edge.x1 != point.x || edge.y1 != point.y)
 						&& (edge.x2 != point.x || edge.y2 != point.y)){
-						return false;
+						return true;
 					}
 				}
 			}
-			return true;
+			return false;
 		}
 		
 		public static function unionAllPolygons(polygonList:Vector.<CPolygon>):Vector.<CPolygon>{
@@ -307,7 +321,6 @@ package com.netease.core.algorithm{
 					if(p0.isClockwise() && p1.isClockwise()){
 						var v:Vector.<CPolygon> = union(p0,p1);	//合并
 						if (v != null && v.length > 0) {
-							trace("delete");
 							polygonList.splice(polygonList.indexOf(p0), 1);
 							polygonList.splice(polygonList.indexOf(p1), 1);
 							
