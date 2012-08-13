@@ -3,7 +3,7 @@ package{
 	import com.netease.core.algorithm.CNavMesh;
 	import com.netease.core.algorithm.astar.AStar;
 	import com.netease.core.algorithm.astar.NavMeshAStar;
-	import com.netease.core.algorithm.astar.NavmeshAstarNode;
+	import com.netease.core.algorithm.astar.NavMeshAstarNode;
 	import com.netease.core.geom.CLine;
 	import com.netease.core.geom.CPoint;
 	import com.netease.core.geom.CPolygon;
@@ -40,7 +40,7 @@ package{
 		private var triangleSprite:Sprite = new Sprite();
 		private var polygonList:Vector.<CPolygon> = new Vector.<CPolygon>();
 		private var triangleList:Vector.<CTriangle>;
-		private var astarNodeList:Vector.<NavmeshAstarNode>;
+		private var astarNodeList:Vector.<NavMeshAstarNode>;
 		private var sx:int;
 		private var sy:int;
 		private var ex:int;
@@ -94,7 +94,7 @@ package{
 				triangleSprite.removeChildAt(0);
 			}
 			for(var i:int=0;i<astarNodeList.length; i++){
-				var triangle:NavmeshAstarNode = astarNodeList[i];
+				var triangle:NavMeshAstarNode = astarNodeList[i];
 				triangleSprite.graphics.lineStyle(2,0x0000ff);
 				triangleSprite.graphics.moveTo(triangle.x1,triangle.y1);
 				triangleSprite.graphics.lineTo(triangle.x2,triangle.y2);

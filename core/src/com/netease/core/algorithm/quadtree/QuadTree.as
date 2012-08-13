@@ -1,4 +1,3 @@
-
 package com.netease.core.algorithm.quadtree{
 	import flash.display.DisplayObject;
 	import flash.geom.Point;

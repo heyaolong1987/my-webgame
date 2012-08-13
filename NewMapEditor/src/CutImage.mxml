@@ -30,6 +30,7 @@
 					output.text += "地图资源不存在或未加载完\n";
 					return;
 				}
+				output.text = "";
 				btn1.enabled = false;
 				bitmapData = Data.bitmapData;
 				var w:Number = Number(inWidth.text);
@@ -49,11 +50,11 @@
 				var jpg:JPGEncoder = new JPGEncoder(80);
 				var data:ByteArray = jpg.encode(bmd);
 				var fileStream:FileStream = new FileStream;
-				fileStream.open(new File(Data.file.nativePath+"\\"+(y/h)+"\\"+(x/w)+".jpg"), FileMode.WRITE);
+				fileStream.open(new File(Data.file.nativePath+"\\"+(x/w)+"_"+(y/h)+".jpg"), FileMode.WRITE);
 				fileStream.writeBytes(data);
-				output.text += Data.file.nativePath+"\\"+(y/h)+"\\"+(x/w)+".jpg 完成\n";
+				output.text += Data.file.nativePath+"\\"+(x/w)+"_"+(y/h)+".jpg 完成\n";
 				output.verticalScrollPosition = output.maxVerticalScrollPosition;
-				if(x<bitmapData.width){
+				if(x+w < bitmapData.width){
 					x += w;
 				}
 				else{

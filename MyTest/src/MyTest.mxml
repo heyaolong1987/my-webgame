@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 				layout="absolute" width="1000" height="600" addedToStage="init()" frameRate="40" backgroundColor="0x000000"
-				xmlns:component="com.netease.webgame.bitchwar.component.*" xmlns:local="*"
-				verticalScrollPolicy="off" horizontalScrollPolicy="off" 
-				xmlns:display="com.netease.core.display.*">
+				xmlns:local="*"
+				verticalScrollPolicy="off" horizontalScrollPolicy="off" xmlns:component="com.netease.core.component.*">
 	<mx:Script>
 		<![CDATA[
+			import com.netease.core.geom.CTriangle;
 			import com.netease.core.manager.CallLaterManager;
 			import com.netease.core.manager.FrameManager;
 			private function init():void{
+				var t:Number = CTriangle.lineAngle(0,0,1, 1, 0,1);
+				var s:Number = CTriangle.lineAngle(0,0,1, 2, 0,1);
+				var a:Number = CTriangle.lineAngle(0,0,2, 1, 0,1);
+				var b:Number = CTriangle.lineAngle(0,0,0, 1, 0,2);
+				
 				FrameManager.getInstance().init(stage);
 				CallLaterManager.getInstance().init(stage);
-				addChild(new SceneTestPanel());
+				addChildAt(new DolygonTestPanel(),0);
+				
 			}
 			private function onTweenUpdate(obj:Object):void{
 				
 			}
 		]]>
 	</mx:Script>
-	<display:FPSTracer x="700" y="10" isOpen="true"/>
+	<component:FPSTracer x="700" y="10" isOpen="true"/>
 </mx:Application>

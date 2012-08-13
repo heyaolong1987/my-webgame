@@ -16,10 +16,10 @@ package{
 	 *2012-7-1
 	 */
 	public class DelaunayTest extends UIComponent{
-		private var mapWidth:int=50;
-		private var mapHeight:int=100;
-		private var tileWidth:int=50;
-		private var tileHeight:int=50;
+		private var mapWidth:int=200;
+		private var mapHeight:int=200;
+		private var tileWidth:int=40;
+		private var tileHeight:int=40;
 		private var row:int = mapHeight/tileHeight;
 		private var col:int = mapWidth/tileWidth;
 		private var arcs:Array;
