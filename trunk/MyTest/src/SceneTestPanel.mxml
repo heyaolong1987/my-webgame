@@ -13,7 +13,8 @@
 			private var mapWidth:int = 1000;
 			private var mapHeight:int = 500;
 			
-			private var speed:int = 120;
+			private var speed:int = 300;
+			
 			private var showObj:Boolean = false;
 			private var useTween:Boolean = false;
 			private var _scene:SceneMap;
@@ -24,8 +25,8 @@
 				var playerVO:PlayerVO = new PlayerVO();
 				playerVO.speed = speed/40;
 				playerVO.id = 0;
-				playerVO.x = 0;
-				playerVO.y = 0;
+				playerVO.x = 1100;
+				playerVO.y = 1100;
 				playerVO.name = "易梦";
 				_scene.addPlayer(new Player(playerVO));
 				objArr.push(playerVO);
@@ -34,13 +35,13 @@
 					otherPlayerVO.speed = speed/40;
 					otherPlayerVO.id = i;
 					otherPlayerVO.name = "玩家" + i.toString();
-					otherPlayerVO.x = 0;
-					otherPlayerVO.y = 0;
+					otherPlayerVO.x = 1100;
+					otherPlayerVO.y = 1100;
 					_scene.addOtherPlayer(new OtherPlayer(otherPlayerVO));
 					objArr.push(otherPlayerVO);
 				}
 				_scene.enterMap(0,0,0);
-				setTimeout(onTime,0);
+				//setTimeout(onTime,0);
 				
 			}
 			private function onTime():void{

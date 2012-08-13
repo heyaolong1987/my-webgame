@@ -4,13 +4,18 @@
 		<![CDATA[
 			import com.netease.core.algorithm.CNavMesh;
 			import com.netease.core.algorithm.astar.NavMeshAStar;
-			import com.netease.core.algorithm.astar.NavmeshAstarNode;
+			import com.netease.core.algorithm.astar.NavMeshAstarNode;
+			
+			import mx.controls.Alert;
 			private var MODE_NORMAL:int = 0;
 			private var MODE_EDIT_WALL:int = 1;
 			private var MODE_EDIT_ROAD:int = 2;
 			private var MODE_FIND_PATH:int = 3;
+			private var MODE_EDIT_ALPHA:int = 4;
+			
 			private var TERRAIN_ROAD:int = 0;
 			private var TERRAIN_WALL:int = 1;
+			private var TERRAIN_ALPHA:int = 2;
 			[Bindable]
 			private var _bmp:Bitmap=null;
 			private var _recordList:Array=[];
@@ -24,12 +29,12 @@
 			private var arcsGrid:Array;
 			private var gridBitmapData:BitmapData;
 			private var _gridBitmap:Bitmap;
-			private var rowNum:int;
 			private var colNum:int;
+			private var rowNum:int;
 			[Bindable]
 			private var _editTerrainSize:int=1;
 			
-			private var astarNodeList:Vector.<NavmeshAstarNode>;
+			private var astarNodeList:Vector.<NavMeshAstarNode>;
 			private var findPathStep:int = 0;
 			private var findPathSX:int;
 			private var findPathSY:int;
@@ -57,8 +62,8 @@
 						uiTerrainGrid.graphics.lineStyle(2,0xcccccc);
 						var bmpWidth:int = _bmp.bitmapData.width;
 						var bmpHeight:int = _bmp.bitmapData.height;
-						rowNum = Math.ceil(bmpWidth/Config.terrainWidth);
-						colNum = Math.ceil(bmpHeight/Config.terrainHeight);
+						colNum = Math.ceil(bmpWidth/Config.terrainWidth);
+						rowNum = Math.ceil(bmpHeight/Config.terrainHeight);
 						for(i=0; i<=bmpWidth; i+=Config.terrainWidth){
 							uiTerrainGrid.graphics.moveTo(i-1,0);
 							uiTerrainGrid.graphics.lineTo(i-1,bmpHeight);
@@ -83,55 +88,61 @@
 				var _record:Object = _recordList.pop();
 			}
 			private function saveTerrianInfoClick():void{
-				var mapId : int = 0;
-				var mapWidth : int = _bmp.width;
-				var mapHeight : int = _bmp.height;
-				var stepX : int = Config.terrainWidth;
-				var stepY : int = Config.terrainHeight;
-				var bytes:ByteArray = new ByteArray();
-				var index:int = 0;
-				for( var i:int=0; i < rowNum; i++)
-				{
-					for( var j:int=0; j<colNum; j++)
-					{
-						var byteIndex:int = index/8;
-						var bitIndex:int = index%8;
-						var isWall:Boolean = arcs[i][j]==1?true:false;
-						var ori:uint = bytes[byteIndex];
-						if( isWall ) {
-							bytes[byteIndex] = bytes[byteIndex] | (1 << bitIndex);
-						}
-						index++;
-					}
-				}
-				bytes.compress();
 				var file:File = new File( Data.file.nativePath + Config.wallName);
 				var stream:FileStream = new FileStream();
-				var data:ByteArray = new ByteArray();
-				data.writeBytes( bytes );
-				data.compress();
+				var data:ByteArray = generalTerrianInfoByteArray();
 				stream.open(file, FileMode.WRITE);
-				stream.writeBytes(data)
+				stream.writeBytes(data);
 				stream.close();
+			}
+			private function generalTerrianInfoByteArray():ByteArray{
+				var mapId : int = 0;
+				var data:ByteArray = new ByteArray();
+				data.endian = Endian.LITTLE_ENDIAN;
+				data.writeInt(_bmp.width);
+				data.writeInt(_bmp.height);
+				data.writeInt(Config.terrainWidth);
+				data.writeInt(Config.terrainHeight);
+				data.writeInt(rowNum);
+				data.writeInt(colNum);
+				for( var i:int=0; i < colNum; i++)
+				{
+					for( var j:int=0; j<rowNum; j++)
+					{
+						data.writeInt(arcs[i][j]);
+					}
+				}
+				return data;
 			}
 			private function loadTerrainInfoClick():void{
 				var file:File = new File(Data.file.nativePath + Config.wallName);
+				if(file.exists == false){
+					Alert.show("地形信息不存在");
+					return;
+				}
 				var stream:FileStream = new FileStream();
-				var data:ByteArray = new ByteArray;
+				var data:ByteArray = new ByteArray();
+				data.endian = Endian.LITTLE_ENDIAN;
+				var mapWidth:int;
+				var mapHeight:int;
+				var stepX:int;
+				var stepY:int;
+				var rowNum:int;
+				var colNum:int;
+				var i:int,j:int;
 				stream.open(file, FileMode.READ);
 				stream.readBytes(data, 0, stream.bytesAvailable);
-				data.uncompress();
-				var bytes : ByteArray = new ByteArray();
-				data.readBytes(bytes,0,stream.bytesAvailable);
-				bytes.uncompress();
-				var index:int = 0;
-				for(var i:int=0; i<rowNum; i++){
-					for(var j:int=0; j<colNum; j++){
-						var byteIndex:int = index / 8;
-						var bitIndex:int = index % 8;
-						var byte:uint = bytes[byteIndex];
-						setTerrainInfo(i, j,(byte & (1 << bitIndex))>0?1:0);
-						index++;
+				data.position = 0;
+				data.endian = Endian.LITTLE_ENDIAN;
+				mapWidth = data.readInt();
+				mapHeight = data.readInt();
+				stepX = data.readInt();
+				stepY = data.readInt();
+				rowNum = data.readInt();
+				colNum = data.readInt();
+				for(i=0; i<colNum; i++){
+					for(j=0; j<rowNum; j++){
+						setTerrainInfo(i, j, data.readInt());
 					}
 				}
 			}
@@ -177,6 +188,9 @@
 					case MODE_EDIT_WALL:
 						setTerrainGridsInfo(Math.floor(event.localX/Config.terrainWidth),Math.floor(event.localY/Config.terrainHeight),TERRAIN_WALL,_editTerrainSize);
 						break;
+					case MODE_EDIT_ALPHA:
+						setTerrainGridsInfo(Math.floor(event.localX/Config.terrainWidth),Math.floor(event.localY/Config.terrainHeight),TERRAIN_ALPHA,_editTerrainSize);
+						break;
 				}
 			}
 			private function onMouseMove(event:MouseEvent):void{
@@ -193,6 +207,9 @@
 							break;
 						case MODE_EDIT_WALL:
 							setTerrainGridsInfo(Math.floor(event.localX/Config.terrainWidth),Math.floor(event.localY/Config.terrainHeight),TERRAIN_WALL,_editTerrainSize);
+							break;
+						case MODE_EDIT_ALPHA:
+							setTerrainGridsInfo(Math.floor(event.localX/Config.terrainWidth),Math.floor(event.localY/Config.terrainHeight),TERRAIN_ALPHA,_editTerrainSize);
 							break;
 					}
 					lastStageX = stageX;
@@ -270,6 +287,9 @@
 					case MODE_EDIT_WALL:
 						this._editMode = mode;
 						break;
+					case MODE_EDIT_ALPHA:
+						this._editMode = mode;
+						break;
 					case MODE_FIND_PATH:
 						this._editMode = mode;
 						break;
@@ -281,7 +301,7 @@
 			private function setTerrainGridsInfo(x:int,y:int,terrainType:int,size:int=1):void{
 				for(var i:int=0;i<size;i++){
 					for(var j:int=0; j<size; j++){
-						if(x+i>=0&&x+i<rowNum&&y+j>=0&&y+j<colNum){
+						if(x+i>=0&&x+i<colNum&&y+j>=0&&y+j<rowNum){
 							setTerrainInfo(x+i,y+j,terrainType);
 						}
 					}
@@ -289,32 +309,33 @@
 				onTerrainChange();
 				
 			}
+			
 			private function clearTerrainInfo():void{
 				arcs = [];
-				for(var i:int=0; i<rowNum; i++){
+				for(var i:int=0; i<colNum; i++){
 					arcs[i] = [];
-					for(var j:int=0;j<=colNum; j++){
+					for(var j:int=0; j<rowNum; j++){
 						arcs[i][j] = TERRAIN_ROAD;
 					}
 				}
-				for(var i:int=0;i<rowNum;i++){
-					for(var j:int=0;j<colNum;j++){
+				for(var i:int=0;i<colNum;i++){
+					for(var j:int=0;j<rowNum;j++){
 						setTerrainInfo(i,j,TERRAIN_ROAD);
 					}
 				}
 			}
 			private function setTerrainInfo(x:int,y:int,terrainType:int):void{
-				if(terrainType !=0 && terrainType!=1){
-					arcs[x][y] = terrainType;
-				}
 				arcs[x][y] = terrainType;
 				if(gridBitmapData){
 					if(arcs[x][y] == TERRAIN_ROAD){
 						gridBitmapData.fillRect(new Rectangle(Config.terrainWidth*x+1,Config.terrainHeight*y+1,Config.terrainWidth-2,Config.terrainHeight-2),0xffffff);
 						
 					}
-					else{
+					else if(arcs[x][y] == TERRAIN_WALL){
 						gridBitmapData.fillRect(new Rectangle(Config.terrainWidth*x+1,Config.terrainHeight*y+1,Config.terrainWidth-2,Config.terrainHeight-2),0xfed094);
+					}
+					else if(arcs[x][y] == TERRAIN_ALPHA){
+						gridBitmapData.fillRect(new Rectangle(Config.terrainWidth*x+1,Config.terrainHeight*y+1,Config.terrainWidth-2,Config.terrainHeight-2),0xff0000);
 					}
 				}
 			}
@@ -327,7 +348,17 @@
 			}
 			private function generalTriangleListClick():void{
 				trace(getTimer());
-				astarNodeList = CNavMesh.createAstarNode(arcs,colNum,rowNum,Config.terrainWidth,Config.terrainHeight);
+				var t:Array = [];
+				var i:int,j:int;
+				for(i=0; i < colNum; i++)
+				{
+					t[i] = [];
+					for(j=0; j<rowNum; j++)
+					{
+						t[i][j] = arcs[i][j] == 1?1:0;
+					}
+				}
+				astarNodeList = CNavMesh.createAstarNode(t,rowNum,colNum,Config.terrainWidth,Config.terrainHeight);
 				trace(getTimer());
 				onAstarNodeListChanged();
 			}
@@ -335,7 +366,7 @@
 				uiTriangleList.graphics.clear();
 				if(astarNodeList){
 					for(var i:int=0;i<astarNodeList.length; i++){
-						var triangle:NavmeshAstarNode = astarNodeList[i];
+						var triangle:NavMeshAstarNode = astarNodeList[i];
 						uiTriangleList.graphics.lineStyle(2,0x0000ff);
 						uiTriangleList.graphics.moveTo(triangle.x1,triangle.y1);
 						uiTriangleList.graphics.lineTo(triangle.x2,triangle.y2);
@@ -346,24 +377,26 @@
 			}
 			private function loadTriangleListClick():void{
 				var file:File = new File( Data.file.nativePath + Config.triangleName);
+				if(file.exists == false){
+					Alert.show("三角网格信息不存在");
+					return;
+				}
 				var stream:FileStream = new FileStream();
-				var data:ByteArray = new ByteArray;
+				var data:ByteArray = new ByteArray();
+				data.endian = Endian.LITTLE_ENDIAN;
+				var i:int;
+				var len:int;
 				stream.open(file, FileMode.READ);
 				stream.readBytes(data, 0, stream.bytesAvailable);
-				data.uncompress();
-				var bytes:ByteArray = new ByteArray();
-				data.position = 0;
-				var dataList:Vector.<Object> = data.readObject() as Vector.<Object>;
-				var len:int = dataList.length;
-				var i:int;
-				astarNodeList = new Vector.<NavmeshAstarNode>();
-				var node:NavmeshAstarNode;
-				var nodeData:Object;
+				len = data.readInt();
+				astarNodeList = new Vector.<NavMeshAstarNode>();
+				var node:NavMeshAstarNode;
 				for(i=0; i<len; i++){
-					nodeData = dataList[i];
-					node = new NavmeshAstarNode(nodeData.x1,nodeData.y1,nodeData.x2,nodeData.y2,nodeData.x3,nodeData.y3);
-					node.id = nodeData.id;
-					node.linkArr = nodeData.linkArr;
+					node = new NavMeshAstarNode(data.readInt(),data.readInt(),data.readInt(),data.readInt(),data.readInt(),data.readInt());
+					node.linkArr[0] = data.readInt();
+					node.linkArr[1] = data.readInt();
+					node.linkArr[2] = data.readInt();
+					node.id = data.readInt();
 					astarNodeList.push(node);
 				}
 				onAstarNodeListChanged();
@@ -371,35 +404,110 @@
 			
 			private function saveTriangleListClick():void{
 				if(astarNodeList){
+					var data:ByteArray = generalTriangleListByteArray();
+					if(data){
+						var file:File = new File( Data.file.nativePath + Config.triangleName);
+						var stream:FileStream = new FileStream();
+						stream.open(file, FileMode.WRITE);
+						stream.writeBytes(data);
+						stream.close();
+					}
+					
+				}
+			}
+			private function generalTriangleListByteArray():ByteArray{
+				if(astarNodeList){
 					var i:int,len:int;
 					len = astarNodeList.length;
-					var node:NavmeshAstarNode;
-					var triangleList:Array;
+					var node:NavMeshAstarNode;
+					var triangleList:Array = [];
 					for(i=0; i<len; i++){
 						node = astarNodeList[i];
 						triangleList.push({x1:node.x1,y1:node.y1,x2:node.x2,y2:node.y2,x3:node.x3,y3:node.y3,linkArr:node.linkArr,id:node.id});
 					}
-					var file:File = new File( Data.file.nativePath + Config.triangleName);
-					var stream:FileStream = new FileStream();
 					var data:ByteArray = new ByteArray();
-					data.writeObject(triangleList);
-					data.compress();
-					stream.open(file, FileMode.WRITE);
-					stream.writeBytes(data)
-					stream.close();
+					data.endian = Endian.LITTLE_ENDIAN;
+					data.writeInt(len);
+					var obj:Object;
+					for(i=0; i<len; i++){
+						obj = triangleList[i];
+						data.writeInt(obj.x1);
+						data.writeInt(obj.y1);
+						data.writeInt(obj.x2);
+						data.writeInt(obj.y2);
+						data.writeInt(obj.x3);
+						data.writeInt(obj.y3);
+						data.writeInt(obj.linkArr[0]);
+						data.writeInt(obj.linkArr[1]);
+						data.writeInt(obj.linkArr[2]);
+						data.writeInt(obj.id);
+					}
+					return data;
 				}
+				return null;
 			}
 			private function findPathTestClick():void{
 				
 			}
+			private function onShowGridClick():void{
+				uiTerrainGrid.visible = cbShowGrid.selected;
+			}
+			private function showTerrainInfoClick():void{
+				uiTerrain.visible = cbShowTerrainInfo.selected;
+			}
+			private function showAlphaClick():void{
+				
+			}
+			private function showTriangleClick():void{
+				uiTriangleList.visible = cbShowTriangle.selected;
+			}
+			private function showRouteClick():void{
+				uiRoute.visible = cbShowRoute.selected;
+			}
+			private function saveTerrianConfigClick():void{
+				var file:File;
+				var stream:FileStream;
+				var wallBytes:ByteArray;
+				var triangleBytes:ByteArray;
+				var configBytes:ByteArray;
+				if(astarNodeList == null){
+					Alert.show("请先生成三角网格信息");
+					return;
+				}
+				file= new File( Data.file.nativePath + Config.wallName);
+				stream = new FileStream();
+				wallBytes = generalTerrianInfoByteArray();
+				stream.open(file, FileMode.WRITE);
+				stream.writeBytes(wallBytes);
+				stream.close();
+				
+				triangleBytes = generalTriangleListByteArray();
+				file = new File( Data.file.nativePath + Config.triangleName);
+				stream = new FileStream();
+				stream.open(file, FileMode.WRITE);
+				stream.writeBytes(triangleBytes);
+				stream.close();
+				
+				configBytes = new ByteArray();
+				configBytes.endian = Endian.LITTLE_ENDIAN;
+				configBytes.writeBytes(wallBytes);
+				configBytes.writeBytes(triangleBytes);
+				
+				file = new File( Data.file.nativePath + Config.configName);
+				stream = new FileStream();
+				stream.open(file, FileMode.WRITE);
+				stream.writeBytes(configBytes);
+				stream.close();
+			}
 		]]>
 	</mx:Script>
-	<mx:Canvas>
+	<mx:Canvas y="25">
 		<mx:VBox verticalGap="2">
 			<mx:Button label="载入地形信息" width="80" click="loadTerrainInfoClick()" />
 			<mx:Button label="普通"  width="80" click="onChangeEditMode(MODE_NORMAL)"/>
 			<mx:Button label="标记可过"  width="80" click="onChangeEditMode(MODE_EDIT_ROAD)"/>
 			<mx:Button label="标记不可过"  width="80" click="onChangeEditMode(MODE_EDIT_WALL)"/>
+			<mx:Button label="标记透明" width="80" click="onChangeEditMode(MODE_EDIT_ALPHA)"/>
 			<mx:Button label="全部清除"  width="80"/>
 			<mx:Button label="撤销"  width="80" click="undoClick()" enabled="{_recordList.length>0}"/>
 			<mx:Button label="保存地形信息"  width="80" click="saveTerrianInfoClick()" />
@@ -407,25 +515,38 @@
 			<mx:Button label="生成三角网格"  width="80" click="generalTriangleListClick()" />
 			<mx:Button label="保存三角网格"  width="80" click="saveTriangleListClick()" />
 			<mx:Button label="寻路测试"  width="80" click="onChangeEditMode(MODE_FIND_PATH)" />
+			<mx:Button label="生成配置" width="80" click="saveTerrianConfigClick()"/>
 		</mx:VBox>
 	</mx:Canvas>
-	<mx:Canvas x="80" id="cvsTerrainEdit" width="{editWidth}" height="{editHeight}" scrollRect="{new Rectangle(0,0,editWidth,editHeight)}" >
-		<mx:Canvas id="cvsMap" mouseChildren="false"
-				   mouseMove="onMouseMove(event)" 
-				   mouseUp="onMouseUp(event)" 
-				   mouseDown="onMouseDown(event)"
-				   click="onClick(event)">
-			<mx:UIComponent id="uiBitmap"/>
-			<mx:UIComponent id="uiTerrain" alpha="0.7"/>
-			<mx:UIComponent id="uiTerrainGrid" visible="{_zoom>=30}" />
-			<mx:UIComponent id="uiTriangleList" visible="{_editMode == MODE_FIND_PATH || _editMode == MODE_NORMAL}" />
-			<mx:UIComponent id="uiRoute" visible="{_editMode == MODE_FIND_PATH || _editMode == MODE_NORMAL}" />
-		</mx:Canvas>
+	<mx:Canvas x="100">
+		<mx:HBox horizontalGap="2">
+			<mx:CheckBox label="显示网格" id="cbShowGrid" click="onShowGridClick()" selected="true"/>
+			<mx:CheckBox label="显示地形信息" id="cbShowTerrainInfo" click="showTerrainInfoClick()" selected="true"/>
+			<mx:CheckBox label="显示透明区域" id="cbShowAlpha" click="showAlphaClick()" selected="true"/>
+			<mx:CheckBox label="显示三角剖分" id="cbShowTriangle" click="showTriangleClick()" selected="true"/>
+			<mx:CheckBox label="显示寻路路径" id="cbShowRoute" click="showRouteClick()" selected="true"/>
+		</mx:HBox>
 	</mx:Canvas>
-	<mx:Button x="650" y="{editHeight+5}" width="50" label="max" click="zoomMaxClick()" />
-	<mx:Button x="705" y="{editHeight+5}" width="50" label="+" click="zoomInClick()" />
-	<mx:Button x="760" y="{editHeight+5}" width="50" label="-" click="zoomOutClick()" />
-	<mx:Button x="815" y="{editHeight+5}" width="50" label="min" click="zoomMinClick()" />
+	<mx:Canvas  x="80" y="25" >
+		<mx:Canvas id="cvsTerrainEdit" width="{editWidth}" height="{editHeight}" scrollRect="{new Rectangle(0,0,editWidth,editHeight)}" >
+			<mx:Canvas id="cvsMap" mouseChildren="false"
+					   mouseMove="onMouseMove(event)" 
+					   mouseUp="onMouseUp(event)" 
+					   mouseDown="onMouseDown(event)"
+					   click="onClick(event)">
+				<mx:UIComponent id="uiBitmap"/>
+				<mx:UIComponent id="uiTerrain" alpha="0.7"/>
+				<mx:UIComponent id="uiTerrainGrid"/>
+				<mx:UIComponent id="uiTriangleList"/>
+				<mx:UIComponent id="uiRoute"/>
+				<mx:UIComponent id="uiAlpha" />
+			</mx:Canvas>
+		</mx:Canvas>
+		<mx:Button x="570" y="{editHeight+5}" width="50" label="max" click="zoomMaxClick()" />
+		<mx:Button x="625" y="{editHeight+5}" width="50" label="+" click="zoomInClick()" />
+		<mx:Button x="680" y="{editHeight+5}" width="50" label="-" click="zoomOutClick()" />
+		<mx:Button x="735" y="{editHeight+5}" width="50" label="min" click="zoomMinClick()" />
+	</mx:Canvas>
 	
 	<mx:Canvas y="{editHeight+30}" visible="{_editMode==MODE_EDIT_ROAD || _editMode ==MODE_EDIT_WALL}">
 		<mx:Label text="大小" x="20"/>
